@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "ViewMerchantUser";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@model cgpay.wallet.application.Models.MerchantModel
+
+@Html.AntiForgeryToken()
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class=""> </i> <span class="font-weight-semibold"></span>  Users </h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/admin/Merchant/Index" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>Index</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+
+</div>
+<script>
+    $('.icon-lock2').parent().on('click', function e() {
+        /*debugger*/;
+        let i = $(this).attr("data-val");
+        let ii = $(this).attr("data-val1");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + i + "'," + "merchantid:'" + ii + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/MerchantManagement/BlockUser','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Block this user?", funcText);
+    });
+    $('.icon-unlocked2').parent().on('click', function e() {
+        /*debugger*/;
+        let i = $(this).attr("data-val");
+        let ii = $(this).attr("data-val1");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + i + "'," + "merchantid:'" + ii + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/MerchantManagement/UnBlockUser','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Un-Block this user?", funcText);
+    });
+    $('.icon-key').parent().on('click', function e() {
+        debugger;
+        //var agentId = $(this).attr("data-val");
+        var userId = $(this).attr("data-val");
+        var agentId = $(this).attr("data-val1");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + userId + "'," + "merchantid:'" + agentId + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/MerchantManagement/ResetPassword','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Reset Password?", funcText);
+    });
+</script>
+
+

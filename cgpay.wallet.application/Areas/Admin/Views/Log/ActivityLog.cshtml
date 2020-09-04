@@ -1,0 +1,81 @@
+﻿@model cgpay.wallet.application.Models.ActivityLogModel
+@{
+    ViewBag.Title = "ActivityLog";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/Log/ActivityLog", "List", ControllerDisplayName: "Activity Log");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+@using (Html.BeginForm("ActivityLog", "Log", new { }, FormMethod.Post, new { @role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                @Html.NTextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "Email Address", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.MobileNumber, new { @class = "form-control", placeholder = "Mobile Number", autocomplete = "off", @onkeypress = "return isNumberKey(event)" }, 3)
+
+            </div>
+            <div class="row">
+                @Html.NTextBoxFor(model => model.FromDate, new { @class = "form-control", id = "FromDate", placeholder = "From Date", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.ToDate, new { @class = "form-control", id = "ToDate", placeholder = "To Date", autocomplete = "off" }, 3)
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ViewData["grid"] != null)
+{
+    @Html.Raw(ViewData["grid"].ToString());
+}
+
+<script>
+    function isNumberKey(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $(document).ready(function () {
+
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        $("#FromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#ToDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+    });
+
+</script>

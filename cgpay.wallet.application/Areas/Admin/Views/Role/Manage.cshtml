@@ -1,0 +1,26 @@
+﻿@model cgpay.wallet.shared.Models.Role.RoleCommon
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Role", "Add Role", ""); }
+@section BreadCum{
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Manage", "Role", new { }, FormMethod.Post, new { @role = "form", @id = "addrole", @class = "form-validate-jquery" }))
+        {
+            <div class="row">
+                @Html.AntiForgeryToken()
+                @Html.NTextBoxFor(model => model.RoleName, new { @class = "form-control", autocomplete = "off" }, 2)
+                @Html.NTextBoxFor(model => model.RoleType, new { @class = "form-control", autocomplete = "off" }, 2)
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm"><i class="icon-floppy-disk mr-2"></i> save</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

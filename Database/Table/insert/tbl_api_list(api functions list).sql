@@ -1,0 +1,21 @@
+insert into tbl_api_list( function_Name, function_description,Status, created_local_date, created_UTC_Date, Created_nepali_Date)
+values 
+('SignUp','Customer SignUp','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('SignIn','Customer Sign In','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('CustomerKyc','Customer Kyc Form','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('FileUpload','Customer File Upload','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetBalance','Get Customer Balance','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetServiceList','Get Service List','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('SendNotification','Send Notification','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetNotificationStatus','Send Notification','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('ChangePinCode','change current Pin Code','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('ChangePassword','change current Password','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('SignOut','customer Sign out','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetUserDetail','get User Detail','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('QueryTransactionStatus','get Transaction Status','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('TransactionReport','Get Transaction report','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetReward','Get transaction Reward','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('GetTxnCashBack','Get Transaction CashBack','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('LoadFund','load fund','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('BalanceTransfer','Balance Transfer','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default)),
+('ResetDeviceId','Reset Device Id','Y',GETDATE(), GETUTCDATE(), dbo.func_get_nepali_date(default))

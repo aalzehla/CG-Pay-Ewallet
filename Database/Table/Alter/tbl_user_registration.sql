@@ -1,0 +1,2 @@
+alter table tbl_User_registration add  generate_date_time datetime
+alter table tbl_User_registration add  send_date_time datetime

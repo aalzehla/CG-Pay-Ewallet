@@ -1,0 +1,25 @@
+/*body {
+  padding: 50px;
+  font-family: Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}*/
+
+.info-card {
+  background-color: #eee;
+  width: 500px;
+  height: auto;
+  border-radius: 15px;
+}
+.info-card .info-card-body {
+  padding: 50px;
+  text-align: center !important;
+}
+
+.info-card svg {
+    text-align: center;
+}
+.info-card .info-card-body .card-table {
+  font-size: 11pt;
+}
+.info-card .info-card-body .card-table .border {
+  border-bottom: solid 1px #000;
+}

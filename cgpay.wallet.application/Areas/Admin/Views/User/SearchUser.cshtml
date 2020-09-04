@@ -1,0 +1,130 @@
+﻿@model cgpay.wallet.shared.Models.UserSearchFilter
+@{
+    ViewBag.Title = "Search User";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2" onclick="GoBack();"></i> <span class="font-weight-semibold">Search User</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("SearchUser", "User", new { }, FormMethod.Post, new { @role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                @Html.NDropDownListFor(model => model.SearchFilter, new SelectList(ViewBag.SearchFilter, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 5)
+                @Html.NTextBoxFor(model => model.SearchField, new { @class = "form-control", autocomplete = "off" }, 3)
+            </div>
+            <br />
+
+            <div class="col-md-6" >
+                <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+            </div>
+
+        </div>
+    </div>
+}
+
+<div>
+    <div class="modal fade" id="ChangePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="ModalTitle">Change Password</h4>
+                    @*<a href="#" class="close" data-dismiss="modal">&times;</a>*@
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    @*<h4 class="modal-title" id="myChangePassword">
+                            Change Password
+                        </h4>*@
+                </div>
+                @using (Html.BeginForm("ChangeuserPassword", "User", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "ChangeuserPassword" }))
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    @Html.HiddenFor(model => model.UserNamePassword)
+
+                    <div class="modal-body">
+                        <div class="row">
+                            @Html.NTextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "off", @type = "password" }, 1)
+                            @Html.NTextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", autocomplete = "off", @type = "password" }, 1)
+
+                            @*<p> Are You Sure You Want To Change The Password?</p>*@
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary"> Yes</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" id="btnClose">
+                                No
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewData["grid"] != null)
+{
+    @Html.Raw(ViewData["grid"].ToString());
+}
+
+<script>
+    function isNumberKey(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+            && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+
+    $('.icon-lock2').parent().on('click', function e() {
+        debugger;
+        let i = $(this).attr("data-val");
+        let agentid = $(this).attr("data-val1");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + i + "'," + "agentid: '" + agentid + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/User/BlockSearchUser','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Block this user?", funcText);
+    });
+    $('.icon-unlocked2').parent().on('click', function e() {
+        let i = $(this).attr("data-val");
+        let agentid = $(this).attr("data-val1");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + i + "'," + "agentid: '" + agentid + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/User/UnBlockSearchUser','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Un-Block this user?", funcText);
+    });
+
+    function changePassword(userName) {
+        $("#UserNamePassword").val(userName);
+        $("#ChangePassword").modal();
+    }
+    function assignRole(userName, roleName) {
+        $("#UserNameRole").val(userName);
+        $("#RoleName").val(roleName);
+        $("#AssignModel").modal();
+    }
+</script>

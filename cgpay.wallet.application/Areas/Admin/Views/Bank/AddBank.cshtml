@@ -1,0 +1,101 @@
+﻿@model cgpay.wallet.shared.Models.Bank.BankCommon
+
+@{
+    ViewBag.Title = "AddBank";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Bank</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active"> @Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" listing-container>
+    <div class="card">
+        <div class="card-header header-elements-inline">
+
+            <legend class="card-title text-uppercase font-size-sm font-weight-bold"> @Html.Raw(String.IsNullOrEmpty(Model.BankID) ? "Add New" : "Update") Bank Information</legend>
+            @*<div class="header-elements">
+                  <div class="list-icons">
+                    <a class="list-icons-item" data-action="collapse"></a>
+                    <a class="list-icons-item" data-action="reload"></a>
+                    <a class="list-icons-item" data-action="remove"></a>
+                  </div>
+                </div>*@
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("AddBank", "Bank", new { }, FormMethod.Post, new { @role = "form", @id = "addbank" }))
+            {
+                @Html.AntiForgeryToken()
+                @*@Html.ValidationSummary()*@
+                @Html.HiddenFor(m => m.BankID)
+            <fieldset class="mb-3">
+                @if (Model.BankID != null)
+                {
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.BankName, new { @class = "form-control", autocomplete = "off", @readonly = "true" }, 3)
+                        @Html.NTextBoxFor(model => model.BankBranch, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.BankAccountNo, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <div class="row" style="visibility:hidden">
+                        @Html.NSwitchBoxFor(model => model.BankStatus, Model.BankStatus == "Y" ? true : false, "Y", 2)
+
+                    </div>
+
+                }
+                else
+                {
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.BankName, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.BankBranch, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.BankAccountNo, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <div class="row">
+                        @*@Html.NSwitchBoxFor(model => model.BankStatus, Model.BankStatus == "y" ? true : false, "Y", 2)*@
+                        @*<div class="form-check form-check-switchery form-check-switchery-double">
+                            <label class="form-check-label">
+                                Disable*@
+                                @Html.NSwitchBoxFor(model => model.BankStatus, Model.BankStatus == "Y" ? true : false, "Y", 2)
+                                @*Enable
+                            </label>
+                        </div>*@
+                    </div>
+      
+                }
+
+                @if (Model.BankID == null)
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="submit" class="btn btn-success btn-sm">Update <i class="icon-floppy-disk ml-2"></i></button>
+                        </div>
+                    </div>
+                }
+
+            </fieldset>
+
+            }
+        </div>
+    </div>
+
+
+</div>
+

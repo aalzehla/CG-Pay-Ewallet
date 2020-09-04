@@ -1,0 +1,430 @@
+﻿@model cgpay.wallet.application.Models.MerchantModel
+
+@{
+    ViewBag.Title = "View Merchant Detail";
+}
+@*<link href="~/Content/merchantqr/css/qrboard.css" rel="stylesheet" />*@
+@{
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/MerchantManagement", "Detail", ControllerDisplayName: "Merchant List");
+}
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">Merchant Detail </legend>
+    </div>
+
+
+
+    <div class="card-body">
+
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-8" style="float: left">
+                    <table class="table table-borderless table-hover">
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantName</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Phone Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantPhoneNumber</td>
+                        </tr>
+                        @*<tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Mobile Number</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left">@Model.MerchantMobileNumber</td>
+                            </tr>*@
+                        @*<tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Email</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left">@Model.MerchantEmail</td>
+                            </tr>*@
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Web Url</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantWebUrl</td>
+                        </tr>
+
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Country</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantCountry</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Province</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantProvince</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant District</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantDistrict</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant VDC/Muncipality</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantVDC_Muncipality</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Ward No</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantWardNo</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Street</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantStreet</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">User Full Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.FullName</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">User Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.UserName</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">User Email</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.UserEmail</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">User Mobile</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.UserMobileNumber</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Pan</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantPanNumber</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Registration</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.MerchantRegistrationNumber</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Merchant Pan Certificate</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" align="left">
+                                @if (Model.MerchantPanCertificate != null)
+                                {<img style="width: 100%; height: 40%" src="@Model.MerchantPanCertificate" />}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="30%" class="font-weight-bold" height="30"> Merchant Registration Certificate</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" align="left">
+                                @if (Model.MerchantRegistrationCertificate != null)
+                                {<img style="width: 100%; height: 40%" src="@Model.MerchantRegistrationCertificate" />}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-sm-4">
+                    <style>
+
+                        .qr-board {
+                            -webkit-print-color-adjust: exact !important;
+                            color-adjust: exact !important;
+                            width: 400px;
+                            position: relative;
+                            height: auto;
+                            padding-top: 666px;
+                            background-color: #ffffff
+                        }
+
+                        @@media (max-width:575.98px) {
+                            .qr-board {
+                                width: 100%;
+                                padding-top: 166.5%
+                            }
+                        }
+
+                        @@media print {
+                            .qr-board {
+                                width: 15cm !important;
+                                height: 25cm !important;
+                                display: table-cell !important
+                            }
+                        }
+
+                        .qr-board .board-header {
+                            position: absolute;
+                            width: 100%;
+                            left: 0;
+                            right: 0;
+                            top: 0;
+                            text-align: center;
+                            height: 300px;
+                            background-color: #002e5f !important;
+                            padding-top: 40px;
+                            z-index: 1000
+                        }
+
+                        @@media (max-width:575.98px) {
+                            .qr-board .board-header {
+                                height: 50%;
+                                font-family: "Poppins"
+                            }
+                        }
+
+                        @@media print {
+                            .qr-board .board-header {
+                                height: 48%;
+                                top: 0;
+                                padding-top: 70px
+                            }
+                        }
+
+                        .qr-board .board-header img {
+                            width: 50%;
+                            display: block;
+                            margin: 0 auto
+                        }
+
+                        @@media print {
+                            .qr-board .board-header img {
+                                width: 50% !important
+                            }
+                        }
+
+                        .qr-board .board-header .sub-title {
+                            color: #00adbe;
+                            text-transform: uppercase;
+                            font-size: 1.6rem;
+                            font-weight: 600
+                        }
+
+                        @@media (max-width:575.98px) {
+                            .qr-board .board-header .sub-title {
+                                font-size: 1.1rem
+                            }
+                        }
+
+                        @@media print {
+                            .qr-board .board-header .sub-title {
+                                font-size: 2.3rem
+                            }
+                        }
+
+                        .qr-board .board-header:before {
+                            position: absolute;
+                            content: "";
+                            left: 0;
+                            right: 0;
+                            bottom: -15px;
+                            z-index: 100px;
+                            width: 0;
+                            height: 0;
+                            border-top: 10px solid transparent;
+                            border-right: 400px solid #00adbe;
+                            border-bottom: 15px solid transparent
+                        }
+
+                        @@media (max-width:575.98px) {
+                            .qr-board .board-header:before {
+                                border-right: 400px solid #00adbe !important
+                            }
+                        }
+
+                        @@media print {
+                            .qr-board .board-header:before {
+                                border-right: 15cm solid #00adbe !important
+                            }
+                        }
+
+                        .qr-board .qr-box {
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            margin: 0 auto;
+                            top: 180px;
+                            width: 60%;
+                            height: auto;
+                            background-color: #ffffff;
+                            display: inline-block;
+                            border-radius: 20px;
+                            padding: 15px;
+                            box-shadow: 0px 0px 0px 12px rgba(238,238,238,0.9);
+                            z-index: 100000
+                        }
+
+                        @@media print {
+                            .qr-board .qr-box {
+                                position: absolute;
+                                left: 0;
+                                right: 0;
+                                margin: 0 auto;
+                                top: 265px;
+                                width: 60%;
+                                height: auto;
+                                background-color: #ffffff;
+                                display: inline-block;
+                                border-radius: 30px;
+                                padding: 20px;
+                                box-shadow: 0px 0px 0px 16px rgba(238,238,238,0.9) !important;
+                                z-index: 100000
+                            }
+                        }
+
+                        .qr-board .qr-box .qr-code {
+                            width: 100%
+                        }
+
+                        @@media print {
+                            .qr-board .qr-box .qr-code {
+                                width: 100%
+                            }
+                        }
+
+                        .qr-board .merchant-info {
+                            position: absolute;
+                            top: 450px;
+                            left: 0;
+                            right: 0;
+                            margin: 0 auto;
+                            z-index: 1000
+                        }
+
+                        @@media print {
+                            .qr-board .merchant-info {
+                                top: 660px
+                            }
+                        }
+
+                        .qr-board .merchant-info .merchant-title {
+                            font-size: 1.1rem;
+                            color: #002e5f;
+                            font-weight: 700;
+                            width: 70%;
+                            line-height: 150%;
+                            margin: 0 auto;
+                            text-align: center;
+                            margin-bottom: 10px;
+                            text-transform: capitalize;
+                        }
+
+                        @@media print {
+                            .qr-board .merchant-info .merchant-title {
+                                font-size: 2rem;
+                                width: 80%
+                            }
+                        }
+
+                        .qr-board .merchant-info .merchant-detail {
+                            font-size: 0.8rem;
+                            text-align: center;
+                        }
+
+                        @@media print {
+                            .qr-board .merchant-info .merchant-detail {
+                                font-size: 1.2rem
+                            }
+                        }
+
+                        .qr-board footer {
+                            background-color: #e2ecf1;
+                            padding: 20px 30px;
+                            border-bottom: solid 20px #002e5f;
+                            position: absolute;
+                            bottom: 0px;
+                            width: 100%
+                        }
+
+                            .qr-board footer ul {
+                                padding: 0;
+                                margin: 0
+                            }
+
+                                .qr-board footer ul li {
+                                    font-size: 0.8rem;
+                                    list-style-type: none
+                                }
+
+                        @@media print {
+                            .qr-board footer ul li {
+                                font-size: 1rem
+                            }
+                        }
+
+                        .qr-board footer ul li span {
+                            display: inline-block;
+                            width: 31px;
+                            height: 31px;
+                            background-color: #002e5f;
+                            color: #ffffff;
+                            padding: 6px 8px;
+                            border-radius: 50rem;
+                            margin-right: 10px;
+                            text-align: center
+                        }
+
+                        @@media print {
+                            .qr-board {
+                                -webkit-print-color-adjust: exact !important;
+                                color-adjust: exact !important
+                            }
+                        }
+                    </style>
+                    <div id="printMe" class="qr-board row">
+                        <div class="board-header">
+                            <img src="~/Content/merchantqr/img/cg-logo.png" alt="" />
+                            <span class="sub-title">Accepted Here</span>
+                        </div>
+
+                        <div class="qr-box">
+                            <img src="@Model.MerchantQr" alt="" class="qr-code">
+                        </div>
+
+                        <div class="merchant-info">
+                            <div class="merchant-title">@Model.MerchantName</div>
+                            <div class="merchant-detail">Merchant Code : #@Html.Raw(@Model.MerchantCode)</div>
+                            @*<div class="merchant-detail text-right float-right pr-4">Terminal ID : #023650</div>*@
+                        </div>
+                        <footer>
+                            <ul>
+                                <li class="mb-2"><span>01</span>Open your CG Pay app and tap QR icon</li>
+                                <li><span>02</span>Bring your phone near to the QR code above.</li>
+                            </ul>
+                        </footer>
+                    </div>
+                    <div class="row mt-2 mb-2 ml-1">
+                        <a href="@Url.Action("PrintQR","MerchantManagement",new {@Model.MerchantID})" target="_blank" class="btn btn-success btn-sm">Print <i class="icon-floppy-disk ml-2"></i></a>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="row mt-1 mb-4 ml-2">
+        <button type="button" class="btn btn-light btn-sm bg-primary" onclick="window.history.back();">Back</button>
+    </div>
+</div>
+<script>
+
+</script>
+
+
+
+
+
+
+
+
+

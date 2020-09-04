@@ -1,0 +1,97 @@
+﻿@model cgpay.wallet.application.Models.WalletBalanceModel
+@{
+    ViewBag.Title = "Load Balance";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Load Balance");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Index", "LoadBalance", new { }, FormMethod.Post, new { @role = "form", @id = "LoadBalance" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.NTextBoxFor(model => model.MobileNumber, new { @class = "form-control", @placeholder = "Mobile(10 digits)",@maxlength = "10", autocomplete = "off",@onkeypress = "return isNumber(event)",@oninput = "checkValidation()" }, 1)
+                        <div class="form-group col-md-12" id="MobNoError" style="margin-top:-11px;"></div>
+                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @placeholder = "Amount Between 10-1000", @maxlength = "4", @onkeypress = "return isNumberDot(event)" }, 1)
+                        @Html.NTextAreaFor(model => model.Remarks, new { @class = "form-control", @maxlength = "500", @title = "Please use Remarks", @placeholder = "Remarks should be less then 500 characters", @style = "min-height: 100px", autocomplete = "off" }, 1)
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Transfer <i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+<script>
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    function checkValidation() {
+        var mobileNo = $("#MobileNumber").val();
+        if (mobileNo.trim() != "" && mobileNo.length >= 10) {
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("CheckMobileNumber")',
+                dataType: 'json',
+                data: { MobileNo: mobileNo },
+                success: function(validMob) {
+                    var Code = validMob.Code;
+                    if (Code == 0) {
+                        $('#MobNoError').removeClass("text-danger");
+                        $('#MobNoError').addClass("text-success").html("Valid User");
+
+                        $("#ReceiverName").show();
+                    } else {
+                        $('#MobNoError').removeClass("text-success");
+                        $('#MobNoError').addClass("text-danger").html("Invalid Mobile Number");
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to Determine Mobile Number!!' + ex);
+                }
+            });
+            return false;
+        } else {
+            $('#MobNoError').removeClass("text-success").html("");
+            $('#MobNoError').removeClass("text-danger").html("");
+            return false;
+        }
+    }
+</script>
+

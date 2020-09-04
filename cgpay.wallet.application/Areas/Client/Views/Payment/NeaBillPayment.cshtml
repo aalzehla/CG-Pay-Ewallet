@@ -1,0 +1,245 @@
+﻿@model cgpay.wallet.application.Models.Utilities.NeaBillPaymentModel
+
+@{
+    ViewBag.Title = "Nea Bill Payment";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/Payment/NeaBillInquiry", "Nea Bill Payment", ControllerDisplayName: "Nea Bill Payment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("NeaBillPayment", "Payment", new { }, FormMethod.Post, new { @role = "form", @id = "NeabillPayment" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.ProductId)
+            @Html.HiddenFor(Model => Model.CommissionType)
+            @Html.HiddenFor(Model => Model.CommissionValue)
+            @Html.HiddenFor(Model => Model.MinAmount)
+            @Html.HiddenFor(Model => Model.MaxAmount)
+            @Html.HiddenFor(Model => Model.ProductLogo)
+            
+            
+            
+            
+            
+            @Html.HiddenFor(Model => Model.DueDate)
+            @Html.HiddenFor(Model => Model.CustomerName)
+            @Html.HiddenFor(Model => Model.BranchName)
+            @Html.HiddenFor(Model => Model.BranchCode)
+            @Html.HiddenFor(Model => Model.CustomerId)
+            @Html.HiddenFor(Model => Model.ScNo)
+            @Html.HiddenFor(Model => Model.BillNumber)
+            @Html.HiddenFor(Model => Model.ReferenceNo)
+            @Html.HiddenFor(Model => Model.BillAmount)
+
+
+
+
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <table class="table table-borderless table-hover">
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Date</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model=>Model.DueDate)
+                                    <td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Customer Name</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left" id="CustomerName">@Html.DisplayFor(Model => Model.CustomerName)
+<td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Branch Name</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.BranchName)
+<td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Customer Id</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left" id="CustomerId">@Html.DisplayFor(Model => Model.CustomerId)</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">SC No</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.ScNo)</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Bill Number</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.BillNumber)</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Reference No</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.ReferenceNo)</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-weight-bold" width="30%" height="30" align="right">Bill Amount</td>
+                                    <td width="10%" height="30"></td>
+                                    <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.BillAmount)</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-6">
+                                    @Html.NTextBoxFor(model => model.PayableAmount, new { @class = "form-control",placeholder="Amount must be in between "+Model.MinAmount +" & "+@Model.MaxAmount, autocomplete = "off", @onkeypress = "return isNumberdot(event)", @onfocusout = "amtValid()" }, 1)
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><img id="LogoView" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                    </div>
+                    <div class="col-md-2">&nbsp;</div>
+                </div>
+
+                <div class="row ml-2" id="model-info-button">
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_backdrop" id="ConfirmButton">Confirm <i class="icon-play3"></i></button>
+
+                </div>
+                <div class="col-md-6 alert alert-success bg-white">
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Transaction Limit: @Model.TxnLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Daily Transaction Limit: @Model.TxnDailyLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Monthly Transaction Limit: @Model.TxnMonthlyLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Remaining Daily Transaction Limit: @Model.TxnDailyRemainingLimit</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Remaining Monthly Transaction Limit: @Model.TxnMonthlyRemainingLimit</label>
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+    </div>
+</div>
+<div id="modal_backdrop" class="modal fade" data-backdrop="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @*<p id="DetailsHere"></p>*@
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Yes <i class="icon-floppy-disk ml-2"></i></button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnReject" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/assets/js/plugins/notifications/sweet_alert.min.js"></script>
+<script>
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+
+    var minAmount = $("#MinAmount").val();
+    debugger;
+        var maxAmount = $("#MaxAmount").val();
+
+        document.getElementById("LogoView").src = $("#ProductLogo").val();
+
+    
+
+
+    function amtValid() {
+        debugger;
+        var amount = $("[name='PayableAmount']").val();
+        if (amount == "") {
+            amount = 0;
+        }
+        amount = parseFloat(amount);
+        if (amount<minAmount || amount>maxAmount ) {
+            $('[name="PayableAmount"]').addClass("input-validation-error");
+            //$('[name="Amount"]').removeClass("valid");
+            $('span[data-valmsg-for="PayableAmount"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="PayableAmount"]').addClass("field-validation-error text-danger").html("Amount is Not Valid");
+        }
+
+        else {
+            $('span[data-valmsg-for="PayableAmount"]').html("");
+        }
+    }
+
+    $('#ConfirmButton').click(function (e) {
+
+        var Amount = $("[name='PayableAmount']").val();
+        debugger;
+
+        if (Amount == "") {
+            Amount = 0;
+        }
+        Amount = parseFloat(Amount);
+        if (Amount < minAmount || Amount > maxAmount) {
+            return false;
+        }
+        var CustomerId = $("[name='CustomerId']").val();
+        var CustomerName = $("[name='CustomerName']").val();
+        var commissionType = $("#CommissionType").val();
+        var commissionValue = $("#CommissionValue").val();
+        if (commissionValue == "") {
+            commissionValue = 0;
+        }
+        commissionValue = parseFloat(commissionValue);
+
+        Number.prototype.toFixedDown = function (digits) {
+            var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+                m = this.toString().match(re);
+            return m ? parseFloat(m[1]) : this.valueOf();
+        };
+
+        if (Amount === "") {
+            $(".modal-body").empty().prepend('<p>Please enter Amount</p>');
+            $("#btnSubmit").hide();
+            $("#btnReject").html('Okay');
+        } else {
+            $(".modal-body").empty().prepend("<p><h4 class=" + "modal-title" + ">You're about to perform this transaction. Are you sure?</h4></p>");
+            if (commissionType == "P") {
+                /*debugger*/;
+                var perCashBack = (parseFloat(Amount) / 100) * commissionValue;
+                perCashBack = perCashBack.toFixedDown(2),
+                    $(".modal-body").append("<p>Customer ID: " + CustomerId + "</br>Customer Name:" + CustomerName + " </br>Amount: Rs. " + Amount + "</p><br /><p>Cash Back: " + commissionValue + "% <br /> Cashback Amount: Rs." + perCashBack + "</p>");
+            }
+            if (commissionType == "F") {
+                var flatCashBack = commissionValue;
+                $(".modal-body").append("<p>LandLine Payment: " + customerid + " Amount: Rs. " + Amount + "</p><br /><p> Cashback Amount: Rs." + flatCashBack + "</p>");
+            }
+
+            $("#btnSubmit").show();
+            $("#btnReject").html('No');
+        }
+        //$("#DetailsHere").empty().prepend("Topup Amount Rs."+$("[name='Amount']").val()+" to "+$("[name='MobileNo']").val());
+    });
+    $('#btnSubmit').click(function (e) {
+        $("#btnSubmit").attr("disabled", true);
+        $("#btnReject").attr("disabled", true);
+
+        document.getElementById("NeabillPayment").submit();
+    });
+</script>

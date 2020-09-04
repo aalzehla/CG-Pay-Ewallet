@@ -1,0 +1,184 @@
+﻿@model cgpay.wallet.application.Models.AgentNewModel
+@{
+    ViewBag.Title = "Manage Agent";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Agent", "Manage");
+}
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card" style="zoom: 1;">
+    <div class="card-header header-elements-inline">
+        <h6 class="card-title">
+            <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+        </h6>
+    </div>
+    <div class="card-body" style="">
+        @using (Html.BeginForm("Manage", "Agent", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "Index", enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.AgentID)
+            @Html.HiddenFor(model => model.ParentID)
+            @Html.HiddenFor(Model => Model.AgentRegistrationCertificate)
+            @Html.HiddenFor(Model => Model.AgentLogo)
+            @Html.HiddenFor(Model => Model.AgentPanCertificate)
+
+            <ul class="nav nav-tabs nav-tabs-highlight">
+                <li class="nav-item"><a href="#agentinformation" class="nav-link active " data-toggle="tab">Agent Information</a></li>
+                <li class="nav-item"><a href="#userinformation" class="nav-link " data-toggle="tab">User Information</a></li>
+                @if (String.IsNullOrEmpty(Model.AgentID) || Model.AgentOperationType == "Business")
+                {
+                    <li class="nav-item" id="contactpersondtl"><a href="#contactpersondetail" class="nav-link " data-toggle="tab">Contact Details</a></li>
+                }
+            </ul>
+            <div class="tab-content">
+                <div id="agentinformation" class="tab-pane fade active show">
+
+                    <div class="form-group mb-3 mb-md-2">
+                        @Html.Label("Agent Type :", new { @class = "d-block font-weight-semibold" })
+                        <div class="form-check form-check-inline form-check-right">
+                            <label class="form-check-label">
+                                Individual
+                                @Html.RadioButtonFor(model => model.AgentOperationType, "Individual", new { @name = "AgentOperationType", @id = "utype_ind", @class = "form-check-input-styled" })
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline form-check-right">
+                            <label class="form-check-label">
+                                Business
+                                @Html.RadioButtonFor(model => model.AgentOperationType, "Business", new { @name = "AgentOperationType", @id = "utype_bus", @class = "form-check-input-styled" })
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3 mb-md-2 ">
+                        @Html.Label("Is auto commission :", new { @class = "d-block font-weight-semibold" }) &nbsp;&nbsp;
+                        <label class="form-check-label">
+                            @Html.CheckBoxFor(model => model.AgentCommissionType, new { @name = "is_auto_commission", @class = "form-check-input-styled" })
+                        </label>
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentName, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentRegistrationNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentPanNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentContractDate, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentPhoneNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+
+                        @Html.NTextBoxFor(model => model.AgentEmail, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentWebUrl, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentCountry, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentProvince, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                        @Html.NTextBoxFor(model => model.AgentDistrict, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentVDC_Muncipality, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentWardNo, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentStreet, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.AgentBalance, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                        @Html.NTextBoxFor(model => model.AgentCreditLimit, new { @class = "form-control", autocomplete = "off", placeholder = "(-1) if unlimited credit limit", @onkeypress = "return isNumber(event)" }, 3)
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group row">
+                            <div class="col-md-4 Individual_hide">
+                                @Html.LabelFor(model => model.AgentLogo, "Agent Logo", new { @class = "label", autocomplete = "off" })
+                                <div><img id="logo_view" height="150" width="150" style="border: none" /></div>
+                                <div> <input type="file" title="Agent Logo" id="Agent_Logo" name="Agent_Logo" accept="image/x-png,image/jpeg,image/jpg" onchange="showLogo(this)" /> </div>
+                            </div>
+                            <div class="col-md-4 Business_hide">
+                                @Html.LabelFor(model => model.AgentPanCertificate, "Pan Certificate", new { @class = "label", autocomplete = "off" })
+                                <div><img id="pan_view" height="150" width="150" style="border: none" /></div>
+                                <div> <input type="file" title="Pan Certiticate" id="Pan_Certiticate" name="Pan_Certiticate" accept="image/x-png,image/jpeg,image/jpg" onchange="showpan(this)" /> </div>
+                            </div>
+
+                            <div class="col-md-4 Individual_hide">
+                                @Html.LabelFor(model => model.AgentRegistrationNumber, "Registration Certificate", new { @class = "label", autocomplete = "off" })
+                                <div><img id="reg_view" height="150" width="150" style="border: none" /></div>
+                                <div> <input type="file" title="Registration Certificate" id="Registration_Certificate" name="Registration_Certificate" accept="image/x-png,image/jpeg,image/jpg" onchange="showReg(this)" /> </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+                <div id="userinformation" class="tab-pane fade active show">
+                    <h8 class="card-title">
+                        <b>[Note: Please Note this user will be your primary user for login] </b>
+                    </h8>
+                    @Html.HiddenFor(model => model.UserID)
+                    <div class="card-header">
+                        <h6>
+                            <b>Basic Information</b>
+                        </h6>
+                        @if (Model.AgentOperationType == "BUSINESS" || string.IsNullOrEmpty(Model.AgentID))
+
+                        {
+                            <div class="row">
+                                @Html.NTextBoxFor(model => model.UserName, new { @class = "form-control", autocomplete = "off" }, 3)
+                                @Html.NTextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                                @Html.NTextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                            </div>
+                        }
+                        <div class="row">
+                            @Html.NTextBoxFor(model => model.FirstName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.MiddleName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.LastName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                        </div>
+                        <div>
+                            @Html.NTextBoxFor(model => model.UserMobileNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.UserEmail, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+
+                        </div>
+                    </div>
+                </div>
+                @if (Model.AgentOperationType == "BUSINESS" || string.IsNullOrEmpty(Model.AgentID))
+                {
+                    <div id="contactpersondetail" class="tab-pane fade">
+                        <div class="card-body">
+                            <h6>
+                                <b>Contact Person Info</b>
+                            </h6>
+                            <div class="row">
+                                @Html.NTextBoxFor(model => model.ContactPersonName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                                @Html.NTextBoxFor(model => model.ContactPersonMobileNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                                @Html.NDropDownListFor(model => model.ContactPersonIdType, new SelectList(ViewBag.DoctypeList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                                @*@Html.NTextBoxFor(model => model.ContactPersonNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)*@
+                            </div>
+                            <div class="row">
+                                @Html.NDropDownListFor(model => model.ContactPersonIdIssueCountry, new SelectList(ViewBag.IssueDistrictList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                                @Html.NTextBoxFor(model => model.ContactPersonIdNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                                @Html.NDropDownListFor(model => model.ContactPersonIdIssueDistrict, new SelectList(ViewBag.IssueDistrictList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                            </div>
+                            <div class="row">
+                                @Html.NTextBoxFor(model => model.ContactPersonIdIssueDate, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+                                @Html.NTextBoxFor(model => model.ContactPersonIdIssueDate_BS, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+                                @Html.NTextBoxFor(model => model.ContactPersonIdExpiryDate, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 4)
+                                @Html.NTextBoxFor(model => model.ContactPersonIdExpiryDate_BS, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 4)
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save<i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

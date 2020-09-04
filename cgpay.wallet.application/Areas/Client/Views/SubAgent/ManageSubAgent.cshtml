@@ -1,0 +1,294 @@
+﻿@model cgpay.wallet.application.Models.SubAgentClientModel
+
+@{
+    ViewBag.Title = "Manage Sub-Agent";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("SubAgent", "Manage");
+}
+
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card" style="zoom: 1;">
+    <div class="card-header header-elements-inline">
+        <h6 class="card-title">
+            <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+        </h6>
+        @if (!string.IsNullOrEmpty(Model.AgentID))
+        {
+            @Html.Raw("<script>$(document).ready(function () {$('#ConfirmPassword').rules('remove', 'required');$('#Password').rules('remove', 'required');});</script>");
+        }
+    </div>
+    <div class="card-body" style="">
+        @using (Html.BeginForm("ManageSubAgent", "SubAgent", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "Index", enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.AgentID)
+            @Html.HiddenFor(model => model.ParentID)
+            @Html.HiddenFor(Model => Model.AgentRegistrationCertificate)
+            @Html.HiddenFor(Model => Model.AgentLogo)
+            @Html.HiddenFor(Model => Model.AgentPanCertificate)
+            @Html.HiddenFor(Model => Model.AgentOperationType)
+            @Html.HiddenFor(Model => Model.AgentBalance)
+            @Html.HiddenFor(model => model.UserID)
+
+            @*<ul class="nav nav-tabs nav-tabs-highlight">
+                    <li class="nav-item"><a href="#agentinformation" class="nav-link active " data-toggle="tab">Agent Information</a></li>
+                    <li class="nav-item"><a href="#userinformation" class="nav-link " data-toggle="tab">User Information</a></li>
+                </ul>*@
+        <div class="tab-content">
+            <div id="agentinformation" class="tab-pane fade active show">
+                <div class="form-group mb-3 mb-md-2 ">
+                    @Html.Label("Is auto commission :", new { @class = "d-block font-weight-semibold" }) &nbsp;&nbsp;
+                    <label class="form-check-label">
+                        @Html.CheckBoxFor(model => model.AgentCommissionType, new { @name = "is_auto_commission", @class = "form-check-input-styled" })
+                    </label>
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.AgentName, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.AgentRegistrationNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.AgentPanNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.AgentContractDate, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                </div>
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.AgentCountry, new SelectList(ViewBag.AgentCountryList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.AgentProvince, new SelectList(ViewBag.AgentProvinceList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.AgentDistrict, new SelectList(ViewBag.AgentDistrictList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.AgentVDC_Muncipality, new SelectList(ViewBag.AgentVDC_MuncipilityList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    @Html.NTextBoxFor(model => model.AgentWardNo, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)", @maxlength = "3" }, 3)
+                    @Html.NTextBoxFor(model => model.AgentStreet, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.AgentWebUrl, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    @*@Html.NTextBoxFor(model => model.AgentBalance, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)*@
+                    @Html.NTextBoxFor(model => model.AgentCreditLimit, new { @class = "form-control", autocomplete = "off", placeholder = "(-1) if unlimited credit limit", @onkeypress = "return isNumberMinusDot(event)" }, 3)
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4 Individual_hide">
+                        @Html.LabelFor(model => model.AgentLogo, "Agent Logo", new { @class = "label", autocomplete = "off" })
+                        <div><img id="logo_view" height="150" width="150" style="border: none" /></div>
+                        <div> <input type="file" title="Agent Logo" id="Agent_Logo" name="Agent_Logo" accept="image/x-png,image/jpeg,image/jpg" onchange="showLogo(this)" /> </div>
+                    </div>
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.AgentPanCertificate, "Pan Certificate", new { @class = "label", autocomplete = "off" })
+                        <div><img id="pan_view" height="150" width="150" style="border: none" /></div>
+                        <div> <input type="file" title="Pan Certiticate" id="Pan_Certiticate" name="Pan_Certiticate" accept="image/x-png,image/jpeg,image/jpg" onchange="showpan(this)" /> </div>
+                    </div>
+
+                    <div class="col-md-4 Individual_hide">
+                        @Html.LabelFor(model => model.AgentRegistrationNumber, "Registration Certificate", new { @class = "label", autocomplete = "off" })
+                        <div><img id="reg_view" height="150" width="150" style="border: none" /></div>
+                        <div> <input type="file" title="Registration Certificate" id="Registration_Certificate" name="Registration_Certificate" accept="image/x-png,image/jpeg,image/jpg" onchange="showReg(this)" /> </div>
+                    </div>
+                </div>
+                <hr />
+                <b class="row">[Note: Please Note this information will be your primary details for login] </b>
+                <br />
+                <div class="row">
+                    @if (string.IsNullOrEmpty(Model.AgentID))
+
+                    {
+                        @Html.NTextBoxFor(model => model.UserName, new { @class = "form-control", autocomplete = "off" }, 3)
+                    }
+                    else
+                    {
+                        <div class="col-lg-4 col-md-4">
+                            <label>ChangePassword</label><input type="checkbox" name="changepassword" class="form-check-input-styled" />
+                        </div>
+                    }
+                    @Html.NTextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                    @Html.NTextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                    @Html.NTextBoxFor(model => model.FirstName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.MiddleName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.LastName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.AgentMobileNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)", @maxlength = "10" }, 3)
+
+                    @Html.NTextBoxFor(model => model.AgentEmail, new { @class = "form-control", autocomplete = "off", @type = "email" }, 3)
+                    @*@Html.NTextBoxFor(model => model.UserMobileNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)", @maxlength = "10" }, 3)*@
+                    @*@Html.NTextBoxFor(model => model.UserEmail, new { @class = "form-control", autocomplete = "off", @type = "email" }, 3)*@
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm">Save<i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var yearRangeDOB = "1944:-10"; //"1944:+0";
+    var yearRangeExpire = "1944:+10"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+    var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+    function AddressInital() {
+
+        if ($("#AgentProvince").val() === "") {
+            $("#AgentDistrict").empty().prepend("<option value='' selected>--Select District--</option>");//.prop("disabled", true);
+            $("#AgentVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");//.prop("disabled", true);
+        }
+    }
+    $(document).ready(function () {
+        AddressInital();
+
+        $("#AgentContractDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            min: [1943, 04, 14],
+            //  yearRange: yearRangeDOB,
+            showAnim: "slideDown",
+            autoSize: true
+        });
+
+        if ($("#AgentID").val() != "") {
+
+            document.getElementById("reg_view").src = $("#AgentRegistrationCertificate").val();
+            document.getElementById("logo_view").src = $("#AgentLogo").val();
+            document.getElementById("pan_view").src =$("#AgentPanCertificate").val();
+            $('#UserEmail').addClass("disabled"); //prop("disabled", true);
+            $('#UserMobileNumber').addClass("disabled");
+            $('#AgentMobileNumber').addClass("disabled");
+            $('#AgentEmail').addClass("disabled");
+        }
+        else {
+
+            $("#contactpersondetail").prop("hidden",true);
+            $("#contactpersondtl").hide();
+            $("#AgentOperationType").val("INDIVIDUAL");
+
+        }
+    });
+
+    //Agent Address
+    $("#AgentProvince").change(function () {
+        AddressInital();
+        $("#AgentDistrict").empty().prepend("<option value=''  selected>--Select District--</option>");
+        $("#AgentVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");
+        var provinceid = $("#AgentProvince").val();
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '@Url.Action("GetDistrictsByProvince")',
+            dataType: 'json',
+            data: { provinceId: provinceid },
+            success: function (districts) {
+                $.each(districts, function (i, district) {
+                    $("#AgentDistrict").append('<option value="' + district.Value + '">' + district.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve Province Districts.' + ex);
+            }
+        });
+        return false;
+    });
+    $("#AgentDistrict").change(function () {
+
+        $("#AgentVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");
+        var district = $("#AgentDistrict").val();
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '@Url.Action("GetMuncipalityByDistrict")',
+            dataType: 'json',
+            data: { district: district },
+            success: function (vdc_muncipality) {
+                $.each(vdc_muncipality, function (i, vdc_munciple) {
+                    $("#AgentVDC_Muncipality").append('<option value="' + vdc_munciple.Value + '">' + vdc_munciple.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve District VDC/Muncipality.' + ex);
+            }
+        });
+        return false;
+    });
+
+
+    //alphabet and whitespace
+    function isAlphabateOnly(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+            return true;
+        }
+        return false;
+    }
+    //Text and dot
+    function isAlphabaticChar(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 32 && charCode < 46) || (charCode > 46 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127) || (charCode > 47 && charCode < 58)) {
+            return false;
+        }
+        return true;
+    }
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    //Number and - sign
+    function isNumberMinusDot(evt) {
+        /*debugger*/;
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 45 && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+    function showLogo(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#logo_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function showpan(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#pan_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+    function showReg(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#reg_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>
+

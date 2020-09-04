@@ -1,0 +1,630 @@
+﻿@model cgpay.wallet.application.Models.KYCModel
+@{
+    ViewBag.Title = "EditDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/KYC/Index", "KYC Update", ControllerDisplayName: "KYC List");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+
+        .disabled-select {
+            pointer-events: none;
+            background-color: #fafafa;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    @*<div class="card-header header-elements-inline">
+            <legend class="card-title text-uppercase font-size-sm font-weight-bold">@Html.Raw(String.IsNullOrEmpty(Model.AgentId) ? "Add New" : "Update") User</legend>
+        </div>*@
+    <div class="card-body">
+        @using (Html.BeginForm("EditDetails", "KYC", new { }, FormMethod.Post, new { @role = "form", @id = "EditKycDetails", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.AgentId)
+            @Html.HiddenFor(Model => Model.AgentType)
+            @Html.HiddenFor(Model => Model.PPImage)
+            @Html.HiddenFor(Model => Model.Id_DocumentFront)
+            @Html.HiddenFor(Model => Model.Id_DocumentBack)
+            @Html.HiddenFor(model => model.KycStatus)
+            @Html.HiddenFor(model => model.MobileNo)
+            @Html.HiddenFor(model => model.EmailAddress)
+            <input id="submitbutton" name="submitbutton" type="hidden">
+            <fieldset class="mb-3">
+                <h4>Personal Information</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-md-4">
+                        @*@Html.NTextBoxFor(model => model.AgentId, new { @class = "form-control", autocomplete = "off" }, 1)*@
+                        @Html.NTextBoxFor(model => model.FirstName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+                        @Html.NTextBoxFor(model => model.MiddleName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+                        @Html.NTextBoxFor(model => model.LastName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+
+                    </div>
+                    <div class="col-md-4">
+                        @*<div class="col-md-4">&nbsp;</div>*@
+                        @*<div class="col-md-8">*@
+                        @Html.LabelFor(model => model.PPImage, new { @class = "label", autocomplete = "off" })
+                        <div><img id="PPImageView" height="200" width="200" style="border: solid" /></div>
+                        <div><input class="mt-1" type="file" title="Profile Picture" id="PPImageFile" name="PPImageFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showPPImage(this)" /></div>
+                        @Html.ValidationMessageFor(model => model.PPImage, null, new { @class = "form-text text-danger" })
+                        @*</div>*@
+                        @*@Html.NTextBoxFor(model => model.PPImage, new { @class = "form-control", autocomplete = "off" }, 3)*@
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.Gender, ViewBag.GenderList as List<SelectListItem>, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.DOB_Eng, new { @class = "form-control", @id = "DOB_Eng", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.DOB_Nep, new { @class = "form-control", @id = "DOB_Nep", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.PhoneNo, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.MobileNo, new { @class = "form-control", @id = "MobileNo", autocomplete = "off", @maxlength = "10", @onkeypress = "return isNumber(event)" }, 3, disable: true)
+                    @Html.NTextBoxFor(model => model.EmailAddress, new { @class = "form-control", autocomplete = "off" }, 3, disable: true)
+                    @Html.NDropDownListFor(model => model.Occupation, new SelectList(ViewBag.OccupationList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.MaritalStatus, new SelectList(ViewBag.MaritalStatusList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.SpouseName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.FatherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.MotherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.GrandFatherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NDropDownListFor(model => model.Nationality, ViewBag.NationalityList as List<SelectListItem>, new { @class = "form-control ", @autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.Country, new SelectList(ViewBag.CountryList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <hr />
+                <h4>Address Information</h4>
+                <hr />
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.PProvince, new SelectList(ViewBag.PProvinceList, "Value", "Text"), new { @class = "form-control", @id = "PProvince", autocomplete = "off" }, 3)
+                    @*@Html.NDropDownListFor(model => model.PProvince, new SelectList(ViewBag.PProvinceList, "Value", "Text"), new { @class = "form-control", @id = "PProvince", autocomplete = "off" }, 3)*@
+                    @Html.NDropDownListFor(model => model.PDistrict, new SelectList(ViewBag.PDistrictList, "Value", "Text"), new { @class = "form-control", @id = "PDistrict", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.PLocalBody, new SelectList(ViewBag.PMunicipalityList, "Value", "Text"), new { @class = "form-control", @id = "PLocalBody", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.PWardNo, new { @class = "form-control", @maxlength = "2", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.PAddress, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateComHyp(event)" }, 3)
+                </div>
+                <hr />
+                <div class="form-group mb-3 mb-md-2 ">
+                    @Html.Label("Temporary Address Same as permanent address : ", new { @class = "d-block font-weight-semibold" }) &nbsp;&nbsp;
+                    <label class="form-check-label">
+                        @Html.CheckBoxFor(model => model.SameAsPermanentAddress, new { @name = "is_same_as_permanent", @class = "form-check-input-styled" })
+                    </label>
+                </div>
+                <div class="row temporary_hide">
+                    <br />
+                    @Html.NDropDownListFor(model => model.TProvince, new SelectList(ViewBag.TProvinceList, "Value", "Text"), new { @class = "form-control", @id = "TProvince", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.TDistrict, new SelectList(ViewBag.TDistrictList, "Value", "Text"), new { @class = "form-control", @id = "TDistrict", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.TLocalBody, new SelectList(ViewBag.TMunicipalityList, "Value", "Text"), new { @class = "form-control", @id = "TLocalBody", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.TWardNo, new { @class = "form-control", @maxlength = "2", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NTextBoxFor(model => model.TAddress, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateComHyp(event)" }, 3)
+                </div>
+                <hr />
+                <h4>Document Information</h4>
+                <hr />
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.Id_type, new SelectList(ViewBag.DocTypeList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.Id_No, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateNum(event)" }, 3)
+                    @Html.NDropDownListFor(model => model.Id_IssuedPlace, new SelectList(ViewBag.Id_IssuedPlaceList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @*@Html.NTextBoxFor(model => model.Id_IssuedPlace, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateComHyp(event)" }, 3)*@
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.Id_IssuedDateAD, new { @class = "form-control", @id = "IssueDateAD", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.Id_IssuedDateBS, new { @class = "form-control", @id = "IssueDateBS", autocomplete = "off" }, 3)
+
+                    @Html.NTextBoxFor(model => model.Id_ExpiryDateAD, new { @class = "form-control", @id = "ExpireDateAD", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.Id_ExpiryDateBS, new { @class = "form-control", @id = "ExpireDateBS", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.Id_DocumentFront, new { @class = "label", autocomplete = "off" })
+                        <div><img id="Id_DocumentFrontView" height="200" width="200" style="border: solid" /></div>
+                        <div> <input class="mt-1" type="file" title="Id DocumentFront" id="Id_DocumentFrontFile" name="Id_DocumentFrontFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showDFImage(this)" /> </div>
+                        @Html.ValidationMessageFor(model => model.Id_DocumentFront, null, new { @class = "form-text text-danger" })
+
+                    </div>
+                    <div class="col-md-4 CitizenshipShow">
+                        @Html.LabelFor(model => model.Id_DocumentBack, new { @class = "label", autocomplete = "off" })
+                        <div><img id="Id_DocumentBackView" height="200" width="200" style="border: solid" /></div>
+                        <div> <input class="mt-1" type="file" title="Id DocumentBack" id="Id_DocumentBackFile" name="Id_DocumentBackFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showDBImage(this)" /> </div>
+                        @Html.ValidationMessageFor(model => model.Id_DocumentBack, null, new { @class = "form-text text-danger" })
+
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm ApproveUpdate" id="btnUpdate" value="Update">Update <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                <hr />
+                <div class="row ApprovedOkStatus">
+                    <div class="col-lg-12">
+                        <button type="button" class="btn btn-success btn-sm" @*id="btnGoBack" value="GoBack"*@ onclick="window.history.back();">Go Back <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                @*<div class="row ApprovedStatus">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm" id="btnApprove" value="Approve">Approve <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                <hr />
+                <div class="row ApprovedStatus">
+                    @Html.NDropDownListFor(model => model.Remarks, new SelectList(ViewBag.RemarksList, "Value", "Text"), new { @class = "form-control", @id = "txtRemarks", autocomplete = "off" }, 3)
+                    <b style="color:red">*</b><b> Note Please fill out remarks before rejecting </b>
+                </div>
+                <div class="row ApprovedStatus">
+                    <div class="col-lg-4">
+                        <textarea class="form-control" name="OthersRemarks" id="txtOthersRemarks"
+                                  placeholder="Please Insert Remarks to Reject, maxlength- 200" maxlength="200"
+                                  rows="4" cols="50" style="display: none; min-height: 100px; min-width: 200px; max-height: 150px; max-width: 400px;"></textarea>
+                        @Html.ValidationMessage("OtherRemarks", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <hr />
+                <div class="row ApprovedStatus">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-danger btn-sm" id="btnReject" value="Reject">Reject <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>*@
+            </fieldset>
+
+
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeIssue = "1944:-0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var today = new Date();
+        var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+        var nepaliDOB=NepaliFunctions.ConvertDateFormat({year: NepaliFunctions.GetCurrentBsYear()-9, month: 1, day: 1}, "YYYY-MM-DD");
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+        //alphabet and whitespace
+
+        //alphabet and whitespace
+        function isAlphabateOnly(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+                return true;
+            }
+            return false;
+        }
+        //alphabet number>47<58 -46 /47
+        function isAlphabateNum(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 45 || charCode == 47 || (charCode>47 && charCode<58)) {
+                return true;
+            }
+            return false;
+        }
+        //alphabet whitespace 32  ,44 -45
+        function isAlphabateComHyp(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            /*debugger*/;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32) || charCode==44 || charCode==45 ) {
+                return true;
+            }
+            return false;
+        }
+        //Number Only
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        //For Remarks..
+        var remarks = $('#txtRemarks');
+        var select = this.value;
+        remarks.change(function () {
+            if ($(this).val().toUpperCase() === 'OTHERS') {
+                $('#txtOthersRemarks').show();
+            } else {
+                $('#txtOthersRemarks').hide();
+                $("#txtOthersRemarks").html("");
+            }
+        });
+
+        $('#btnUpdate').click(function (e) {
+            $("#submitbutton").val('Update');
+            $('#txtRemarks').rules('remove');
+            $('#txtRemarks-error').text('');
+        });
+        $('#btnGoBack').click(function (e) {
+            $("#submitbutton").val('GoBack');
+            $('#txtRemarks').rules('remove');
+            $('#txtRemarks-error').text('');
+        });
+        $('#btnApprove').click(function (e) {
+            $("#submitbutton").val('Approve');
+            $('#txtRemarks').rules('remove');
+            $('#txtRemarks-error').text('');
+            //$("#txtRemarks").rules("add", 'required');
+            //            $('#txtRemarks-error').text('Reject remarks is required');
+        });
+        $('#btnReject').click(function (e) {
+            /*debugger*/;
+            $("#FirstName").rules('remove', 'required');
+            //$("#field").removeAttr('required');
+            $("#submitbutton").val('Reject');
+            var remarks = $("#txtRemarks").val();
+            if (remarks) {
+                document.getElementById("KycDetails").submit();
+            }
+        });
+        $('#Id_type').change(function () {
+            if (($(this).val() === 'Citizenship') ||  ($(this).val() === "")) {
+                $('.CitizenshipShow').show();
+                $('.Id_ExpiryDateADdivClass').hide();
+                $('.Id_ExpiryDateBSdivClass ').hide();
+                $('#ExpireDateAD ').val('');
+                $('#ExpireDateBS ').val('');
+            } else {
+                $('.CitizenshipShow').hide();
+                $('.Id_ExpiryDateADdivClass ').show();
+                $('.Id_ExpiryDateBSdivClass ').show();
+                $('#Id_DocumentBackFile ').val('');
+                $('#ExpireDateAD ').val('@ViewBag.ExpireDateAD');
+                $('#ExpireDateBS ').val('@ViewBag.ExpireDateBS');
+            }
+        });
+        $('#MaritalStatus').change(function () {
+            if (($('#MaritalStatus').val() === "Single") || ($('#MaritalStatus').val() === "") || ($('#MaritalStatus').val() === "Divorced")) {
+                $('.SpouseNamedivClass  ').hide();
+                $('#SpouseName ').val('');
+            } else {
+                $('.SpouseNamedivClass  ').show();
+                $('#SpouseName ').val('@ViewBag.SpouseName');
+            }
+        });
+
+        $(document).ready(function () {
+            var KycStatus = @Html.Raw(Json.Encode(Model.KycStatus));
+            if (KycStatus.toUpperCase() === 'APPROVED') {
+                $('.ApprovedStatus').hide();
+                $('.ApprovedOkStatus').show();
+            }
+
+
+            ProvinceInital();
+            var OthersRemarks = '@ViewBag.OtherRemarks';
+            if (OthersRemarks !="") {
+                $('#txtOthersRemarks').val(OthersRemarks);
+                $('#txtRemarks').val("Others");
+                $('#txtOthersRemarks').show();
+            } else {
+                $('#txtOthersRemarks').hide();
+                $("#txtOthersRemarks").html("");
+            }
+            if (($('#Id_type').val() === "Citizenship") || ($('#Id_type').val() === "")) {
+                $('.CitizenshipShow').show();
+                $('.Id_ExpiryDateADdivClass').hide();
+                $('.Id_ExpiryDateBSdivClass ').hide();
+                $('#ExpireDateAD ').val('');
+                $('#ExpireDateBS ').val('');
+            } else {
+                $('.CitizenshipShow').hide();
+                $('.Id_ExpiryDateADdivClass ').show();
+                $('.Id_ExpiryDateBSdivClass ').show();
+                $('#Id_DocumentBackFile ').val('');
+                $('#ExpireDateAD ').val('@ViewBag.ExpireDateAD');
+                $('#ExpireDateBS ').val('@ViewBag.ExpireDateBS');
+            }
+            if (($('#MaritalStatus').val() === "Single") || ($('#MaritalStatus').val() === "") || ($('#MaritalStatus').val() === "Divorced")) {
+                $('.SpouseNamedivClass  ').hide();
+                $('#SpouseName ').val('');
+            } else {
+                $('.SpouseNamedivClass  ').show();
+                $('#SpouseName ').val('@ViewBag.SpouseName');
+            }
+
+            if ($("#AgentId").val() != null) {
+                //document.getElementById("PPImageView").src = '@ViewBag.FileLocation' + $("#PPImage").val();
+                document.getElementById("PPImageView").src = $("#PPImage").val();
+                document.getElementById("Id_DocumentFrontView").src = $("#Id_DocumentFront").val();
+                document.getElementById("Id_DocumentBackView").src = $("#Id_DocumentBack").val();
+            }
+
+            $("#DOB_Eng").datepicker({
+                dateFormat: dateFormat,
+                defaultDate: startDate,
+                maxDate: new Date,
+                changeMonth: true,
+                changeYear: true,
+                //min: [1943, 04, 14],
+                yearRange: yearRangeDOB,
+                showAnim: "slideDown",
+                autoSize: true
+            }).attr('readonly', 'readonly');
+            $("#IssueDateAD").datepicker({
+                dateFormat: dateFormat,
+                maxDate: new Date,
+                changeMonth: true,
+                changeYear: true,
+                showAnim: "slideDown",
+                //min: [1943, 04, 14],
+                yearRange: yearRangeDOB,
+                autoSize: true
+            }).attr('readonly', 'readonly');
+            $("#ExpireDateAD").datepicker({
+                dateFormat: dateFormat,
+                minDate: new Date,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: yearRangeExpire,
+                showAnim: "slideDown",
+                autoSize: true
+            }).attr('readonly', 'readonly');
+
+            $("#DOB_Nep").nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                defaultDate: nepaliDOB,
+                readOnlyInput: true,
+                ndpEnglishInput: 'DOB_Eng',
+                disableAfter: NepalDateToday,
+                onChange: function() {
+                    $('#DOB_Nep').removeClass("input-validation-error");
+                    if ($('#DOB_Nep-error').length > 0) {
+                        $('#DOB_Nep-error').html("");
+                    };
+                    $('#DOB_Eng').removeClass("input-validation-error");
+                    if ($('#DOB_Eng-error').length > 0) {
+                        $('#DOB_Eng-error').html("");
+                    }
+                }
+            });
+            $('#IssueDateBS').nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                readOnlyInput: true,
+                ndpEnglishInput: 'IssueDateAD',
+                disableAfter: NepalDateToday,
+                onChange: function() {
+                    $('#IssueDateBS').removeClass("input-validation-error");
+                    if ($('#IssueDateBS-error').length > 0) {
+                        $('#IssueDateBS-error').html("");
+                    };
+                    $('#IssueDateAD').removeClass("input-validation-error");
+                    if ($('#IssueDateAD-error').length > 0) {
+                        $('#IssueDateAD-error').html("");
+                    }
+                }
+
+            });
+            $('#ExpireDateBS').nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                readOnlyInput: true,
+                ndpEnglishInput: 'ExpireDateAD',
+                disableBefore: NepalDateToday,
+                onChange: function() {
+                    $('#ExpireDateBS').removeClass("input-validation-error");
+                    if ($('#ExpireDateBS-error').length > 0) {
+                        $('#ExpireDateBS-error').html("");
+                    };
+                    $('#ExpireDateAD').removeClass("input-validation-error");
+                    if ($('#ExpireDateAD-error').length > 0) {
+                        $('#ExpireDateAD-error').html("");
+                    }
+                }
+
+            });
+        });
+
+        $('#DOB_Eng').change(function () {
+            var dateObj = NepaliFunctions.ConvertToDateObject($('#DOB_Eng').val(), "YYYY-MM-DD");
+            $('#DOB_Nep').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+            $('#DOB_Eng').removeClass("input-validation-error");
+            if ($('#DOB_Eng-error').length > 0) {
+                $('#DOB_Eng-error').html("");
+            }
+            $('#DOB_Nep').removeClass("input-validation-error");
+            if ($('#DOB_Nep-error').length > 0) {
+                $('#DOB_Nep-error').html("");
+            }
+        });
+        $('#IssueDateAD').change(function () {
+            var dateObj = NepaliFunctions.ConvertToDateObject($('#IssueDateAD').val(), "YYYY-MM-DD");
+            $('#IssueDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+            $('#IssueDateAD').removeClass("input-validation-error");
+            if ($('#IssueDateAD-error').length > 0) {
+                $('#IssueDateAD-error').html("");
+            }
+            $('#IssueDateBS').removeClass("input-validation-error");
+            if ($('#IssueDateBS-error').length > 0) {
+                $('#IssueDateBS-error').html("");
+            }
+        });
+        $('#ExpireDateAD').change(function () {
+            var dateObj = NepaliFunctions.ConvertToDateObject($('#ExpireDateAD').val(), "YYYY-MM-DD");
+            $('#ExpireDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+            $('#ExpireDateAD').removeClass("input-validation-error");
+            if ($('#ExpireDateAD-error').length > 0) {
+                $('#ExpireDateAD-error').html("");
+            }
+            $('#ExpireDateBS').removeClass("input-validation-error");
+            if ($('#ExpireDateBS-error').length > 0) {
+                $('#ExpireDateBS-error').html("");
+            }
+        });
+
+        function ProvinceInital() {
+            if ($("#PProvince").val() === "") {
+                $("#PDistrict").empty().prepend("<option value='' disabled selected>--Permanent District--</option>").addClass("disabled-select");
+                //$("#PDistrict").empty().prepend("<option value='' disabled selected>--Permanent District--</option>").prop("disabled", true);
+                $("#PLocalBody").empty().prepend("<option value='' disabled selected>--Permanent Municipality--</option>").addClass("disabled-select");
+            } else {
+                $("#PDistrict").removeClass("disabled-select");
+            }
+            if ($("#TProvince").val() === "") {
+                $("#TDistrict").empty().prepend("<option value='' disabled selected>--Temporary District--</option>").addClass("disabled-select");
+                $("#TLocalBody").empty().prepend("<option value='' disabled selected>--Temporary Municipality--</option>").addClass("disabled-select");
+            } else {
+                $("#TDistrict").removeClass("disabled-select");
+            }
+        }
+
+        // Same as permanent address
+        $("#SameAsPermanentAddress").change(function () {
+            var permanent_address_check = $('input[name=SameAsPermanentAddress]:checked').val();
+            if (permanent_address_check == "true") {
+                $(".temporary_hide").hide();
+            }
+            else {
+                $(".temporary_hide").show();
+            }
+        });
+        $("#SameAsPermanentAddress").ready(function () {
+            var permanent_address_check = $('input[name=SameAsPermanentAddress]:checked').val();
+            if (permanent_address_check == "true") {
+                $(".temporary_hide").hide();
+            }
+            else {
+                $(".temporary_hide").show();
+            }
+        });
+
+        //For Permanent District
+        $("#PProvince").change(function () {
+            ProvinceInital();
+            //$("#PDistrict").empty().prepend("<option value='' disabled selected>--Permanent District--</option>");
+            //$("#PLocalBody").empty().prepend("<option value='' disabled selected>--Permanent Municipality--</option>");
+            var provinceid = $("#PProvince").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetDistrictsByProvince")',
+                dataType: 'json',
+                data: { provinceId: provinceid },
+                success: function (districts) {
+                    $.each(districts, function (i, district) {
+                        $("#PDistrict").append('<option value="' + district.Value + '">' + district.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Province districts.' + ex);
+                }
+            });
+            return false;
+        });
+        //For Permanent LocalBody
+        $("#PDistrict").change(function () {
+            $("#PLocalBody").empty().prepend("<option value='' disabled selected>--Permanent Municipality--</option>").removeClass("disabled-select");
+            var district = $("#PDistrict").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetLocalbodyByDistrict")',
+                dataType: 'json',
+                data: { DistrictId: district },
+                success: function (localbodys) {
+                    $.each(localbodys, function (i, localbody) {
+                        $("#PLocalBody").append('<option value="' + localbody.Value + '">' + localbody.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve District Municipalities .' + ex);
+                }
+            });
+            return false;
+        });
+        //For Temporary District
+        $("#TProvince").change(function () {
+            ProvinceInital();
+            //$("#TDistrict").empty().prepend("<option value='' disabled selected>--Temporary District--</option>");
+            //$("#TLocalBody").empty().prepend("<option value='' disabled selected>--Temporary Municipality--</option>");
+            var provinceid = $("#TProvince").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetDistrictsByProvince")',
+                dataType: 'json',
+                data: { provinceId: provinceid },
+                success: function (districts) {
+                    $.each(districts, function (i, district) {
+                        $("#TDistrict").append('<option value="' + district.Value + '">' + district.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Province districts.' + ex);
+                }
+            });
+            return false;
+        });
+        //For Temporary LocalBody
+        $("#TDistrict").change(function () {
+            $("#TLocalBody").empty().prepend("<option value='' disabled selected>--Temporary Municipality--</option>").removeClass("disabled-select");
+            var district = $("#TDistrict").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetLocalbodyByDistrict")',
+                dataType: 'json',
+                data: { DistrictId: district },
+                success: function (localbodys) {
+                    $.each(localbodys, function (i, localbody) {
+                        $("#TLocalBody").append('<option value="' + localbody.Value + '">' + localbody.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve District Municipalities .' + ex);
+                }
+            });
+            return false;
+        });
+
+        //For Profile Pic
+        function showPPImage(input) {
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#PPImageView').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+                $('[data-valmsg-for="PPImage"]').html("");
+            }
+        }
+        //For Document Front Pic
+        function showDFImage(input) {
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#Id_DocumentFrontView').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+                $('[data-valmsg-for="Id_DocumentFront"]').html("");
+            }
+        }
+        //For Document Back Pic
+        function showDBImage(input) {
+            if (input.files && input.files[0]) {
+                var filerdr = new FileReader();
+                filerdr.onload = function (e) {
+                    $('#Id_DocumentBackView').attr('src', e.target.result);
+                }
+                filerdr.readAsDataURL(input.files[0]);
+                $('[data-valmsg-for="Id_DocumentBack"]').html("");
+            }
+        }
+    </script>
+}

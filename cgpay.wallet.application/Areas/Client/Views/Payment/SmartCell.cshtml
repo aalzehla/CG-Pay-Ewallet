@@ -1,0 +1,279 @@
+﻿@model cgpay.wallet.application.Models.SmartCell
+
+@{
+    ViewBag.Title = "SmartCell";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/Home/Index", "SmartCell Topup", ControllerDisplayName: "Dashboard");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">SmartCell Topup</legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("TopUpMobile", "Payment", new { }, FormMethod.Post, new { @role = "form", @id = "MobileTopupPage" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.ProductId)
+            @Html.HiddenFor(Model => Model.CommissionType)
+            @Html.HiddenFor(Model => Model.CommissionValue)
+            @Html.HiddenFor(Model => Model.Ctrl)
+            @*@Html.HiddenFor(Model => Model.Type)*@
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.NTextBoxFor(model => model.MobileNo, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @placeholder = "96********", @onkeypress = "return isNumber(event)" ,@oninput="checkdenomination()"}, 1)
+                        @*<div class="form-group col-md-12" id="MobNoError" style="margin-top: -11px;"></div>*@
+                        <div data-amt="amount">
+                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @placeholder = "Amount must be in between " + @Model.MinAmount + " & " + @Model.MaxAmount, @onkeypress = "return isNumber(event)", @onfocusout = "amtValid()" }, 1)
+                        </div>
+    @*<div class="col-12 mb-2 cardclass">
+                            <a href="#" id="filter-statement">
+                                <i class="icon-credit-card"></i>&nbsp; Have a Card?
+                            </a>
+                        </div>
+                        <div class="row" id="filter-box" style="display: none">
+                            <div class="col-md-12">
+                                @Html.NTextBoxFor(model => model.CardNo, new { @class = "form-control", @maxlength = "16", autocomplete = "off", @PlaceHolder = "ENTER YOUR CARD NUMBER", @onkeypress = "return isNumber(event)" }, 1)
+                            </div>
+                        </div>*@
+                        <!-- Styled inline radio group -->
+                        <div class="form-group col-md-12" style="display: none">
+                            <label class="col-form-label">Payment By <span class="text-danger">*</span></label>
+                            <div class="col-lg-9">
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        @*@Html.RadioButtonFor(model => model.TxtType, "Wallet", new { @name = "AgentOperationType", @class = "form-check-input-styled" })*@
+                                        <input type="radio" name="styled_inline_radio" class="form-check-input-styled" required data-fouc value="Wallet">
+                                        Wallet
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" name="styled_inline_radio" class="form-check-input-styled" data-fouc value="EBank">
+                                        E Banking
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <label class="form-check-label">
+                                        <input type="radio" name="styled_inline_radio" class="form-check-input-styled" data-fouc value="MBank">
+                                        Mobile Banking
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /styled inline radio group -->
+
+                    </div>
+                    <div class="col-md-3">
+                        <div><img id="LogoView" src="@Model.ProductLogo" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                    </div>
+                    <div class="col-md-3 alert alert-success bg-white">@Html.Raw(@Model.ProductServiceInfo)</div>
+                </div>
+                <div class="row ml-2" id="model-info-button">
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_backdrop" id="ConfirmButton">Confirm <i class="icon-play3"></i></button>
+
+                </div>
+                <br />
+                <div class="col-md-6 alert alert-success bg-white">
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Transaction Limit: @Model.TxnLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Daily Transaction Limit: @Model.TxnDailyLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Monthly Transaction Limit: @Model.TxnMonthlyLimitMax</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Remaining Daily Transaction Limit: @Model.TxnDailyRemainingLimit</label>
+                    </div>
+                    <div class="row">
+                        <label style="font-weight: bold; font-size: 80%;">Remaining Monthly Transaction Limit: @Model.TxnMonthlyRemainingLimit</label>
+                    </div>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+<!-- Disabled backdrop -->
+<div id="modal_backdrop" class="modal fade" data-backdrop="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @*<p id="DetailsHere"></p>*@
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Yes <i class="icon-floppy-disk ml-2"></i></button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnReject" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="~/Content/assets/js/plugins/notifications/sweet_alert.min.js"></script>*@
+
+<script>
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+
+    var minAmount=@Model.MinAmount;
+    var maxAmount=@Model.MaxAmount;
+    function amtValid() {
+        var amount = $("[name='Amount']").val();
+
+        amount = parseFloat(amount);
+        if (!amount || amount == "") {
+            $('[name="Amount"]').addClass("input-validation-error");
+            $('span[data-valmsg-for="Amount"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="Amount"]').addClass("field-validation-error text-danger").html("Required");
+        }
+        else if (amount<minAmount || amount>maxAmount ) {
+            $('[name="Amount"]').addClass("input-validation-error");
+            $('span[data-valmsg-for="Amount"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="Amount"]').addClass("field-validation-error text-danger").html("Amount is Not Valid");
+        }
+
+        else {
+            $('span[data-valmsg-for="Amount"]').html("");
+        }
+    }
+
+    $("#filter-statement").click(function (e) {
+        e.preventDefault();
+        $("#filter-box").fadeToggle();
+    });
+     $(document).ready(function () {
+        $("div[data-amt='amount']").hide();
+
+    });
+    function checkdenomination() {
+      
+        var MobileNo = $("#MobileNo").val();
+        var Ctrl = $("#Ctrl").val();
+        if (MobileNo.trim() != "" && MobileNo.length == 10) {
+              //debugger;
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("CheckDenomination")',
+                dataType: 'json',
+                data: { MobileNo: MobileNo, Ctrl: Ctrl },
+                success: function (validmobilenumber) {
+                    //debugger;
+                    var denomitationlist = validmobilenumber.denomitation;
+                    if (Object.keys(validmobilenumber.Denomitation).length > 0) {
+                        var select = $("<select class='form-control input-validation-error' data-val-required='Required' id='Amount' name='Amount'>");
+                        $.each(validmobilenumber.Denomitation, function (i, denominations) {
+                            select.append($("<option>").val(denominations).html(i));
+
+                        });
+
+                        $("#Amount").replaceWith(select);
+                    }
+                    var validNumber = validmobilenumber.Code;
+                    if (validNumber == Ctrl) {
+                        $("div[data-amt='amount']").show();
+                    }
+                }
+            });
+        }
+        else {
+            $("div[data-amt='amount']").hide();
+        }
+    }   
+    $('#ConfirmButton').click(function (e) {
+
+        //debugger;
+        var MobileNum = $("[name='MobileNo']").val();
+        if (MobileNum =="") {
+            $('[name="MobileNo"]').addClass("input-validation-error");
+            $('span[data-valmsg-for="MobileNo"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="MobileNo"]').addClass("field-validation-error text-danger").html("Required");
+        }
+
+        else {
+            $('span[data-valmsg-for="MobileNo"]').html("");
+        }
+
+        amtValid();
+        var Amount = $("[name='Amount']").val();
+
+        if (Amount == "") {
+            Amount = 0;
+        }
+        Amount = parseFloat(Amount);
+        if (Amount<minAmount || Amount>maxAmount ) {
+            return false;
+        }
+        var commissionType= $("#CommissionType").val();
+        var commissionValue = $("#CommissionValue").val();
+        if (commissionValue == "") {
+            commissionValue = 0;
+        }
+        commissionValue = parseFloat(commissionValue);
+
+        Number.prototype.toFixedDown = function(digits) {
+            var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+                m = this.toString().match(re);
+            return m ? parseFloat(m[1]) : this.valueOf();
+        };
+
+        if (Amount === "" || MobileNum === "") {
+            $(".modal-body").empty().prepend('<p>Please enter Mobile Number and Amount</p>');
+            $("#btnSubmit").hide();
+            $("#btnReject").html('Okay');
+        } else {
+            $(".modal-body").empty().prepend("<p><h4 class=" + "modal-title" + ">You're about to perform this transaction. Are you sure?</h4></p>");
+            if (commissionType == "P") {
+                var perCashBack = (parseFloat(Amount) / 100) * commissionValue;
+                perCashBack=perCashBack.toFixedDown(2),
+                $(".modal-body").append("<p>Topup Mobile Number: " + MobileNum + " Amount: Rs. " + Amount + "</p><br /><p>Cash Back: " + commissionValue +"% <br /> Cashback Amount: Rs."+perCashBack+"</p>");
+            }
+            if (commissionType == "F") {
+                var flatCashBack = commissionValue;
+                $(".modal-body").append("<p>Topup Mobile Number: " + MobileNum + " Amount: Rs. " + Amount + "</p><br /><p> Cashback Amount: Rs."+flatCashBack+"</p>");
+            }
+
+            $("#btnSubmit").show();
+            $("#btnReject").html('No');
+        }
+        //$("#DetailsHere").empty().prepend("Topup Amount Rs."+$("[name='Amount']").val()+" to "+$("[name='MobileNo']").val());
+    });
+    $('#btnSubmit').click(function (e) {
+        $("#btnSubmit").attr("disabled", true);
+        $("#btnReject").attr("disabled", true);
+
+        document.getElementById("MobileTopupPage").submit();
+    });
+    $(document).ready(function () {
+
+    });
+</script>
+

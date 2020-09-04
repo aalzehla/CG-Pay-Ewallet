@@ -1,0 +1,8 @@
+update tbl_manage_Services set product_logo = 'icon-share-inverse.png' where product_id = '68'
+update tbl_manage_Services set product_logo = 'icon-creditcard-inverse.png' where product_id = '69'
+update tbl_manage_Services set product_logo = 'icon-school-inverse.png' where product_id = '70'
+update tbl_manage_Services set product_logo = 'icon-voting-inverse.png' where product_id = '71'
+update tbl_manage_Services set product_logo = 'icon-ride.png' where product_id = '72'
+update tbl_manage_Services set product_logo = 'icon-events-inverse.png' where product_id = '73'
+update tbl_manage_Services set product_logo = '20.EMI.download.png' where product_id = '74'
+update tbl_manage_Services set product_logo = 'icon-newspapers-inverse.png' where product_id = '74'

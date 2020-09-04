@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "ViewReportDetailList";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData["grid"] != null)
+{
+    @Html.Raw(ViewData["grid"].ToString());
+}
+@Html.AntiForgeryToken()
+<div class="modal fade bd-example-modal-xl" tabindex="-1" id="txn-report-detail" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Transaction Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><label>Transaction Number :</label> <span id="txn-no"></span></p>
+                        <p><label>Transaction Date :</label> <span id="txn-date"></span></p>
+                        <p><label>Service Type :</label> <span id="service-type"></span></p>
+                        <p><label>Product Type :</label> <span id="product-type"></span></p>
+                        <p><label>Agent Commission :</label> <span id="agent-comm"></span></p>
+                        <p><label>Message :</label> <span id="message"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><label>Status :</label> <span id="status"></span></p>
+                        @*<p><label>User :</label> <span id="user"></span></p>*@
+                        <p><label>Subscriber Company :</label> <span id="subscriber-company"></span></p>
+                        <p><label>Subscriber No :</label> <span id="subscriber-no"></span></p>
+                        <p><label>Total Amount :</label> <span id="total-amount"></span></p>
+                        <p><label>Agent Name :</label> <span id="agent-name"></span></p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".commission-report-detail").click(function (event) {
+            event.preventDefault();
+            var t = $(this);
+            var txnid = t.data('txnid');
+            //alert(txnid)
+            var RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                    $(document).ready(function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ViewReportDetail", "AdminCommission")',
+                        dataType: 'json',
+                        data: { '__RequestVerificationToken': RequestVerificationToken, TxnId: txnid },
+                        success: function (data) {
+                            console.log(data.TransactionId)
+                            $("#txn-no").html(data.TransactionId)
+                            $("#txn-date").html(data.CreatedDate)
+                            $("#service-type").html(data.Service)
+                            $("#product-type").html(data.TransactionType)
+                            $("#agent-comm").html(data.AdminCommission)
+                            $("#message").html(data.AgentRemark)
+                            $("#status").html(data.Status)
+                           // $("#user").html(data.TransactionId)
+                            $("#subscriber-company").html(data.Company)
+                            $("#subscriber-no").html(data.SubscriberNo)
+                            $("#total-amount").html(data.TotalAmount)
+                            $("#agent-name").html(data.AgentName)
+                             
+                             $("#txn-report-detail").modal('show');
+                        //var chartDataLabel = [];
+                        //var chartData = [];
+                        //var txnDate;
+                        //const monthNames = ["January", "February", "March", "April", "May", "June",
+                        //    "July", "August", "September", "October", "November", "December"
+                        //];
+                        //var xlabel;
+
+                        //myJSON = JSON.parse(data)
+
+                        //    myJSON.forEach(element => {
+                        //        txnDate = '' + element.TransactionYear + "-" + element.TransactionMonth + '-' + element.TransactionDay + '';
+                        //        chartDataLabel.push(element.TransactionDay);
+                        //        chartData.push({ x: txnDate, y: element.TotalAmount? parseInt(element.TotalAmount) : 0 });
+                        ////chartData.push(element.TotalAmount);
+                        //xlabel = monthNames[element.TransactionMonth - 1]
+                        //    });
+
+
+                  
+                },
+                        error: function(ex) {
+                    debugger;
+                }
+            });
+        });
+           
+            //$('#txn-report-detail').on('show.bs.modal', function (event) {
+            //    var modal = $(this)
+            //})
+        });
+
+        getvisibleColumn = [0,1,2,3,4,5,6,7];
+        getTotalOfColumns = [6,7];
+        showDateTableWithExcelTotal("datatable-total", getTotalOfColumns, true, getvisibleColumn);
+    });
+</script>

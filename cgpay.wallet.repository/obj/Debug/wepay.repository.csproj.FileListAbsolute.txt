@@ -1,0 +1,9 @@
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\bin\Debug\wepay.repository.dll
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\bin\Debug\wepay.repository.pdb
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\bin\Debug\wepay.shared.dll
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\bin\Debug\wepay.shared.pdb
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\obj\Debug\wepay.repository.csprojAssemblyReference.cache
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\obj\Debug\wepay.repository.csproj.CoreCompileInputs.cache
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\obj\Debug\wepay.repository.csproj.CopyComplete
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\obj\Debug\wepay.repository.dll
+D:\Files\Office\NPS\Projects\wepay.application\wepay.repository\obj\Debug\wepay.repository.pdb

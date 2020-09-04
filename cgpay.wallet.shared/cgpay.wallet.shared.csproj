@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EB4CD0F3-F5BB-40DE-AF57-B3A71452032A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>cgpay.wallet.shared</RootNamespace>
+    <AssemblyName>cgpay.wallet.shared</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\AgentCommon.cs" />
+    <Compile Include="Models\AgentManagement\AgentCreditLimitCommon.cs" />
+    <Compile Include="Models\AgentManagement\AgentManagementCommon.cs" />
+    <Compile Include="Models\Agent\AgentCommon.cs" />
+    <Compile Include="Models\AppVersionControl\AppVersionControlCommon.cs" />
+    <Compile Include="Models\Balance\BalanceCommon.cs" />
+    <Compile Include="Models\Bank\BankCommon.cs" />
+    <Compile Include="Models\BulkUpload\BulkUploadCommon.cs" />
+    <Compile Include="Models\CardCommon.cs" />
+    <Compile Include="Models\ChartDataCommon.cs" />
+    <Compile Include="Models\ClientCommission\ClientAssignCommissionCommon.cs" />
+    <Compile Include="Models\ClientCommission\ClientCommissionCategoryCommon.cs" />
+    <Compile Include="Models\ClientCommission\ClientCommissionCategoryDetailCommon.cs" />
+    <Compile Include="Models\ClientCommon.cs" />
+    <Compile Include="Models\Commission\AssignCommissionCommon.cs" />
+    <Compile Include="Models\Commission\CommissionCategoryCommon.cs" />
+    <Compile Include="Models\Commission\CommissionCategoryDetailCommon.cs" />
+    <Compile Include="Models\Common.cs" />
+    <Compile Include="Models\CommonDbResponse.cs" />
+    <Compile Include="Models\DistributorCommon.cs" />
+    <Compile Include="Models\DistributorManagement\DistributorCreditLimitCommon.cs" />
+    <Compile Include="Models\DistributorManagement\DistributorManagementCommon.cs" />
+    <Compile Include="Models\DistributorManagement\DistributorManagementRolesCommon.cs" />
+    <Compile Include="Models\DynamicReport\DynamicReportCommon.cs" />
+    <Compile Include="Models\GatewayBalanceCommon.cs" />
+    <Compile Include="Models\GatewayCommon.cs" />
+    <Compile Include="Models\GatewayProductCommon.cs" />
+    <Compile Include="Models\KYC\KYCCommon.cs" />
+    <Compile Include="Models\LoadBalance\FundLoadTransactionLimitCommon.cs" />
+    <Compile Include="Models\LoadBalance\LoadBalanceCommon.cs" />
+    <Compile Include="Models\LoadBalance\LoadBalanceResponseCommon.cs" />
+    <Compile Include="Models\LoadBalance\ViewTransactionReponseModel.cs" />
+    <Compile Include="Models\Login\Login.cs" />
+    <Compile Include="Models\Log\AccessLog.cs" />
+    <Compile Include="Models\Log\AccessLogCommon.cs" />
+    <Compile Include="Models\Log\ActivityLog.cs" />
+    <Compile Include="Models\Log\ApiLog.cs" />
+    <Compile Include="Models\Log\ApiLogCommon.cs" />
+    <Compile Include="Models\Log\ErrorsLog.cs" />
+    <Compile Include="Models\Menus\MenuCommon.cs" />
+    <Compile Include="Models\Merchant\MerchantChartCommon.cs" />
+    <Compile Include="Models\Merchant\MerchantCommon.cs" />
+    <Compile Include="Models\Merchant\MerchantTransactionReportCommon.cs" />
+    <Compile Include="Models\MobileNotification\MobileNotificationCommon.cs" />
+    <Compile Include="Models\MobileTopup\CheckMobileNumber.cs" />
+    <Compile Include="Models\Mobile\MobileTopUp.cs" />
+    <Compile Include="Models\NotificationCommon.cs" />
+    <Compile Include="Models\Role\RoleCommon.cs" />
+    <Compile Include="Models\Services\ServicesCommon.cs" />
+    <Compile Include="Models\SessionIdMapping.cs" />
+    <Compile Include="Models\StaticDataCommon.cs" />
+    <Compile Include="Models\SubAgentManagement\SubAgentcreditLimitCommon.cs" />
+    <Compile Include="Models\SubAgentManagement\SubAgentManagementCommon.cs" />
+    <Compile Include="Models\SubDistributorManagement\SubDistributorCreditLimitCommon.cs" />
+    <Compile Include="Models\SubDistributorManagement\SubDistributorManagementCommon.cs" />
+    <Compile Include="Models\SubDistributorManagement\SubDistributorManagementRolesCommon.cs" />
+    <Compile Include="Models\SubDistributor\AgentNewCommon.cs" />
+    <Compile Include="Models\SubDistributor\SubDistributorCommon.cs" />
+    <Compile Include="Models\TransactionLimit\TransactionLimitCommon.cs" />
+    <Compile Include="Models\UserCommon.cs" />
+    <Compile Include="Models\User\ChangePasswordCommon.cs" />
+    <Compile Include="Models\User\UserRole.cs" />
+    <Compile Include="Models\Utilities\CheckPhoneNumberCommon.cs" />
+    <Compile Include="Models\Utilities\NeaBillPaymentCommon.cs" />
+    <Compile Include="Models\Utilities\NwscBillPaymentcommon.cs" />
+    <Compile Include="Models\Utilities\ProductDetailsCommon.cs" />
+    <Compile Include="Models\Utilities\VianetBillPaymentCommon.cs" />
+    <Compile Include="Models\Utilities\WorldLinkBillPaymentCommon.cs" />
+    <Compile Include="Models\WalletUser\WalletBalanceCommon.cs" />
+    <Compile Include="Models\WalletUser\WalletUserInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Distributor\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

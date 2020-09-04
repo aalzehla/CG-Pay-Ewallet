@@ -1,0 +1,65 @@
+﻿@model cgpay.wallet.shared.Models.Log.AccessLogCommon
+@{
+    ViewBag.Title = "AccessLog";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/Log/AccessLog", "List", ControllerDisplayName: "Access Log");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    @using (Html.BeginForm("AccessLog", "Log", new { area="Admin" }, FormMethod.Post, new { @id = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="card-body">
+            <div class="row">
+                @Html.NTextBoxFor(model => model.fromDate, new { @class = "form-control", placeholder = "From Date", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.toDate, new { @class = "form-control", placeholder = "To Date", autocomplete = "off" }, 3)
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+                </div>
+            </div>
+        </div>
+    }
+    
+</div>
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+
+<script>
+    $(document).ready(function () {
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        $("#fromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#toDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+    });
+</script>
+

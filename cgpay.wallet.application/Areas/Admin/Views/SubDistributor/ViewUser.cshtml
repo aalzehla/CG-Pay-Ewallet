@@ -1,0 +1,56 @@
+﻿@model IEnumerable<cgpay.wallet.application.Models.SubDistributorModel>
+
+
+
+@{
+    ViewBag.Title = "ViewUser";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+@Html.AntiForgeryToken()
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class=""> </i> <span class="font-weight-semibold"></span>  Users </h4>
+            <a href="~/Admin/Distributor/" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Distributor/Index" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>Index</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" listing-container>
+    @Html.Raw(ViewData["grid"].ToString())
+  
+</div>
+<script>
+    $('.icon-lock2').parent().on('click', function e() {
+        /*debugger*/;
+        let userid = $(this).attr("data-val");
+        let agentid = $(this).attr("data-val1");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "UserId:'" + userid + "'," + "agentid:'" + agentid + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/subdistributor/BlockUser','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Block this user?", funcText);
+    })
+    $('.icon-unlocked2').parent().on('click', function e() {
+        let userid = $(this).attr("data-val");
+        let agentid = $(this).attr("data-val1");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "UserId:'" + userid + "'," + "agentid:'" + agentid + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/subdistributor/UnBlockUser','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Un-Block this user?", funcText);
+    })
+
+
+
+
+</script>

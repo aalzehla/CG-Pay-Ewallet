@@ -1,0 +1,23 @@
+﻿@using System.Data
+@using System.Linq
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Content/assets/js/main/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>Print</title>
+</head>
+<body>
+    <div class="content-wrapper">
+        <page size="A4" id="page">
+            @RenderBody()
+        </page>
+    </div>
+</body>
+</html>

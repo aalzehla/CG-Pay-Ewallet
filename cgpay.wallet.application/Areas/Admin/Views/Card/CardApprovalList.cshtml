@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "CardApprovalList";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" listing-container>
+    @if (@ViewBag.EmptyMessage == "True")
+    {
+        <div class="alert bg-info alert-styled-left alert-dismissible">
+            <strong>No Requested Cards  </strong>
+        </div>
+    }
+        @Html.Raw(ViewData["grid"].ToString())
+    </div>

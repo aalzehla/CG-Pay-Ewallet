@@ -1,0 +1,401 @@
+﻿@*@model cgpay.wallet.application.Models.CardModel*@
+@model IEnumerable<cgpay.wallet.application.Models.CardModel>
+@using System.Text.RegularExpressions
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Cards/Cards.css" rel="stylesheet" />
+
+<div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline">
+    <div class="d-flex">
+        <div class="breadcrumb">
+            <a href="/Client/Home/Index" class="breadcrumb-item"><i class="icon-home2 mr-2"></i>Dashboard</a>
+            <a href="/Client/Cards/Index" class="breadcrumb-item">Active Cards</a>
+            @*<span class="breadcrumb-item active">Cards</span>*@
+        </div>
+        <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+    </div>
+    @using (Html.BeginForm("Go", "Cards", new { }, FormMethod.Post, new { @role = "form", @id = "CardsOptions" }))
+    {
+        <div class="header-elements d-none">
+            @Html.DropDownList("CardOption",new SelectList(ViewBag.CardOptions, "Value", "Text"), new { @class = "form-control justify-content-center", autocomplete = "off" })
+            @*<div class="breadcrumb justify-content-center">
+                    <div class="breadcrumb-elements-item dropdown p-0"><a href="/Client/Cards/RequestCard" class="btn btn-primary"><i class="icon-plus2 mr-2"></i> Request Cards</a></div>
+                </div>*@
+        </div>
+    }
+</div>
+<br />
+<div class="card">
+    <div class="card-body">
+        @Html.AntiForgeryToken()
+        @{
+            int i = 1;
+            int j = 1;
+            //var totalGroup = Model.OrderByDescending(x => x.ProductCategory).Where(x => x.Status == "Y").GroupBy(x => x.ProductCategory).Distinct();
+            var totalGroup = Model.Where(x => x.Status.ToUpper() == "Y").GroupBy(x => x.CardType);
+        }
+
+        <input type="hidden" id="refresh" value="no">
+        @foreach (var CatagoryLabel in totalGroup)
+        {
+            <div class="card-category-row row">
+                <div class="col">
+
+
+                    @if (@CatagoryLabel.Key.Equals("1"))
+                    {<label style="position: center;font-weight: bold; font-size: 120%">Virtual Card</label>}
+                    else if (@CatagoryLabel.Key.Equals("2"))
+                    {<label style="position: center;font-weight: bold; font-size: 120%">Gift Card</label>}
+                    else if (@CatagoryLabel.Key.Equals("3"))
+                    {<label style="position: center;font-weight: bold; font-size: 120%">Discount Card</label>}
+                    else if (@CatagoryLabel.Key.Equals("4"))
+                    {<label style="position: center;font-weight: bold; font-size: 120%">Prepaid Card</label>}
+                    else
+                    { <label style="position: center;font-weight: bold; font-size: 120%">Others</label>}
+                    <div class="row">
+                        @foreach (var item in Model.Where(x => x.CardType == @CatagoryLabel.Key && x.Status.ToUpper().ToString() == "Y"))
+                        {
+                            if (@CatagoryLabel.Key.Equals("4"))
+                            {
+                                <div class="wallet-card position-relative" id="pcard_@j">
+                                    <div class="wallet-card-body card-flip">
+                                        <div class="card-front front-pcard_@j">
+                                            <div class="float-left">
+                                                <p class="balance"><small>NPR.</small> @item.Amount</p>
+                                                @*<p class="balance">Rs. @item.Amount</p>*@
+                                            </div>
+
+                                            <div class="float-right">
+                                                <img src="~/Content/Cards/images/prepaid.png" width="80" class="float-left card-logo" alt="">
+                                            </div>
+
+                                            <div class="clearfix info-block">
+                                                <small class="text-muted">CARD HOLDER</small>
+                                                <h3>@item.FullName</h3>
+                                            </div>
+
+                                            <div class="info-block float-left">
+                                                <small class="text-muted">CARD NUMBER</small>
+                                                <h3>
+                                                    <span class="original-card-number_@j" style="display: none">@Regex.Replace(@item.CardNo, @"(\d{4})(\d{4})(\d{4})(\d{4})", "$1 $2 $3 $4")</span>
+                                                    <span class="masked-card-number_@j">@Regex.Replace(@Regex.Replace(@item.CardNo, @"\d(?=\d{4})", "*"), @"(\W{4})(\W{4})(\W{4})(\w{4})", "$1 $2 $3 $4")</span>
+                                                </h3>
+                                            </div>
+
+                                            <div class="info-block float-right text-right">
+                                                <small class="text-muted">EXP</small>
+                                                <h3>
+                                                    <span class="original-exp-date_@j">@Convert.ToDateTime(@item.ExpiryDate).ToString("MM/y")</span>
+                                                    <span class="masked-exp-date_@j" style="display:none">@Regex.Replace(@Convert.ToDateTime(@item.ExpiryDate).ToString("MM/y"), @"\d", "X")</span>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="card-back back-pcard_@j">
+                                            <div class="wallet-card-back-body">
+                                                <div class="float-left">
+                                                    <p>For Customer Service, <br>TOLL Free Number 1234 56 7890</p>
+                                                    @*<p>Sent By:<br>Pratap Shrestha</p>*@
+                                                </div>
+                                                <div class="float-right">
+                                                    <img src="~/Content/Cards/images/prepaid.png" width="80" class="float-left card-logo" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="stripe position-absolute">
+                                                <div class="cvv">
+                                                    206
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            }
+                            else if (@CatagoryLabel.Key.Equals("2"))
+                            {
+                                <div class="wallet-card-gift">
+                                    <div class="wallet-card-body position-relative">
+                                        <div class="float-left">
+                                            <p class="balance"><small>NPR.</small> @item.Amount</p>
+                                        </div>
+                                        <div class="float-right">
+                                            <img src="~/Content/Cards/images/gift.png" width="80" class="float-left card-logo" alt="">
+                                        </div>
+
+                                        <div class="clearfix info-block float-left">
+                                            <small class="text-muted">CARD NUMBER&nbsp;&nbsp;&nbsp;<span class="show-card-number" id="number_@j"><i class="icon-eye"></i></span></small>
+                                            <h3>
+                                                <span class="original-card-number_@j" style="display: none">@Regex.Replace(@item.CardNo, @"(\d{4})(\d{4})(\d{4})(\d{4})", "$1 $2 $3 $4")</span>
+                                                <span class="masked-card-number_@j">@Regex.Replace(@Regex.Replace(@item.CardNo, @"\d(?=\d{4})", "*"), @"(\W{4})(\W{4})(\W{4})(\w{4})", "$1 $2 $3 $4")</span>
+                                            </h3>
+                                        </div>
+
+                                        <div class="info-block float-right text-right">
+                                            <small class="text-muted">EXP</small>
+                                            <h3>@Convert.ToDateTime(@item.ExpiryDate).ToString("MM/y")</h3>
+                                        </div>
+                                        <img src="~/Content/Cards/images/ribbon-silver.png" class="gift-ribbon position-absolute" alt="">
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="wallet-card wallet-card-virtual">
+                                    <div class="wallet-card-body">
+                                        <div class="float-left">
+                                            <p class="balance">@item.Amount</p>
+                                        </div>
+                                        <div class="float-right">
+                                            @{
+                                                if (@CatagoryLabel.Key.Equals("1"))
+                                                {<img src="~/Content/Cards/images/virtual.png" class="float-left card-logo" alt="">}
+                                                else if (@CatagoryLabel.Key.Equals("2"))
+                                                {<img src="~/Content/Cards/images/gift.png" class="float-left card-logo" alt="">}
+                                                else if (@CatagoryLabel.Key.Equals("3"))
+                                                {<img src="~/Content/Cards/images/discount.png" class="float-left card-logo" alt="">}
+                                                else if (@CatagoryLabel.Key.Equals("4"))
+                                                {<img src="~/Content/Cards/images/prepaid.png" class="float-left card-logo" alt="">}
+                                                else
+                                                { <label style="position: center;font-weight: bold; font-size: 120%">Others</label>}
+                                            }
+                                        </div>
+
+                                        <div class="clearfix info-block">
+                                            <div class="float-left">
+                                                <small class="text-muted">CARD NUMBER &nbsp;&nbsp;&nbsp;<span class="show-card-number" id="number_@j"><i class="icon-eye"></i></span></small>
+                                                <h3 class="card-nos">
+                                                    @*@item.CardNo*@
+                                                    <span class="original-card-number_@j" style="display: none">@Regex.Replace(@item.CardNo, @"(\d{4})(\d{4})(\d{4})(\d{4})", "$1 $2 $3 $4")</span>
+                                                    <span class="masked-card-number_@j">@Regex.Replace(@Regex.Replace(@item.CardNo, @"\d(?=\d{4})", "X"), @"(\w{4})(\w{4})(\w{4})(\w{4})", "$1 $2 $3 $4")</span>
+                                                </h3>
+
+                                            </div>
+                                            <div class="float-right">
+                                                @{
+                                                    if (item.IsReceived.ToUpper() == "Y")
+                                                    {
+                                                        if (@item.ReceivedFrom.Equals(Session["UserId"].ToString()))
+                                                        {
+                                                            <small class="text-muted">RECEIVED CARD</small>
+                                                            @*<div class="info-block float-left">
+                                                                </div>*@
+                                                        }
+                                                        else
+                                                        {
+                                                            <small class="text-muted">TRANSFER CARD</small>
+                                                            @*<div class="info-block float-right">
+                                                                </div>*@
+                                                        }
+                                                    }
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div class="info-block float-left">
+                                            <small class="text-muted">CARD HOLDER</small>
+                                            <h3>@item.FullName</h3>
+                                        </div>
+
+                                        <div class="info-block float-right text-right">
+                                            <small class="text-muted">EXP &nbsp;&nbsp;&nbsp;<span class="show-exp-date" id="date_@j"><i class="icon-eye"></i></span></small>
+                                            <h3>
+                                                <span class="original-exp-date_@j" style="display:none">@Convert.ToDateTime(@item.ExpiryDate).ToString("MM/y")</span>
+                                                <span class="masked-exp-date_@j">@Regex.Replace(@Convert.ToDateTime(@item.ExpiryDate).ToString("MM/y"), @"\d", "X")</span>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
+
+                            j++;
+                            if (i % 3 == 0)
+                            {
+                                i = 0;
+                                <br />
+                            }
+                            i = i + 1;
+
+
+                        }
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        @*<div class="wallet-card-gift">
+                <div class="wallet-card-body position-relative">
+                    <div class="float-left">
+                        <p class="balance"><small>NPR.</small> 2500</p>
+                    </div>
+                    <div class="float-right">
+                        <img src="~/Content/Cards/images/gift.png" width="80" class="float-left card-logo" alt="">
+                    </div>
+
+                    <div class="clearfix info-block float-left">
+                        <small class="text-muted">CARD NUMBER</small>
+                        <h3>**** **** **** 5412</h3>
+                    </div>
+
+                    <div class="info-block float-right text-right">
+                        <small class="text-muted">ISSUED</small>
+                        <h3>05/20</h3>
+                    </div>
+                    <img src="~/Content/Cards/images/ribbon-silver.png" class="gift-ribbon position-absolute" alt="">
+                </div>
+            </div>*@
+
+
+
+        @*<div class="wallet-card position-relative">
+                <div class="wallet-card-body card-flip">
+                    <div class="card-front">
+                        <div class="float-left">
+                            <p class="balance">Rs. 21,14,22,300.74</p>
+                        </div>
+                        <div class="float-right">
+                            <img src="~/Content/Cards/images/prepaid.png" width="80" class="float-left card-logo" alt="">
+                        </div>
+
+                        <div class="clearfix info-block">
+                            <small class="text-muted">CARD HOLDER</small>
+                            <h3>DR. SHANKAR PRASAD ACHARYA</h3>
+                        </div>
+
+                        <div class="info-block float-left">
+                            <small class="text-muted">CARD NUMBER</small>
+                            <h3>**** **** **** 4521</h3>
+                        </div>
+
+                        <div class="info-block float-right text-right">
+                            <small class="text-muted">EXP</small>
+                            <h3>07/25</h3>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <div class="stripe position-absolute">
+                            <div class="cvv">
+                                206
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>*@
+
+
+        @*<div class="wallet-card position-relative">
+                <div class="stripe position-absolute">
+                    <div class="cvv">
+                        206
+                    </div>
+                </div>
+            </div>*@
+
+        @*<div class="wallet-card wallet-card-virtual">
+                <div class="wallet-card-body">
+                    <div class="float-left">
+                        <p class="balance">Rs. 21,14,22,300.74</p>
+                    </div>
+                    <div class="float-right">
+                        <img src="~/Content/Cards/images/virtual.png" class="float-left card-logo" alt="">
+                    </div>
+
+                    <div class="clearfix info-block">
+                        <small class="text-muted">CARD HOLDER</small>
+                        <h3>SHANKAR PRASAD ACHARYA</h3>
+                    </div>
+
+                    <div class="info-block float-left">
+                        <small class="text-muted">CARD NUMBER</small>
+                        <h3>**** **** **** 4521</h3>
+                    </div>
+
+                    <div class="info-block float-right text-right">
+                        <small class="text-muted">EXP</small>
+                        <h3>07/25</h3>
+                    </div>
+
+
+                </div>
+            </div>*@
+    </div>
+</div>
+
+
+<script type='text/javascript'>
+    if(!!window.performance && window.performance.navigation.type == 2) {
+        /*debugger*/;
+        window.location.reload();
+    }
+
+    $(document).ready(function (e) {
+        //if(performance.navigation.type == 2){
+        //    location.reload(true);
+        //}
+
+        //Use this inside your document ready jQuery 
+        //$(window).on('popstate', function() {
+        //    location.reload(true);
+        //});
+        //var perfEntries = performance.getEntriesByType("navigation");
+
+        //if (perfEntries[0].type === "back_forward") {
+        //    location.reload(true);
+        //}
+
+        //var $input = $('#refresh');
+
+        //$input.val() == 'yes' ? location.reload(true) : $input.val('yes');
+
+        //if(!!window.performance && window.performance.navigation.type == 2)
+        //{
+        //    window.location.reload();
+        //}
+
+        $('.wallet-card').click(function (e) {
+            e.preventDefault();
+            let id = $(this).attr('id');
+            $('.front-' + id).toggleClass("rotate-card-front");
+            $('.back-' + id).toggleClass("rotate-card-back");
+        });
+        $('.show-card-number').click(function (e) {
+            e.preventDefault();
+            let i = $(this).attr('id');
+            $(".masked-card-" + i).toggle();
+            $(".original-card-" + i).toggle();
+            $('.show-card-number i').toggleClass("icon-eye icon-eye-blocked");
+            //$(".masked-card-"+i).hide();
+            //$(".original-card-"+i).show();
+        });
+
+        $('.show-exp-date').click(function (e) {
+            e.preventDefault();
+            let i = $(this).attr('id');
+            $(".masked-exp-" + i).toggle();
+            $(".original-exp-" + i).toggle();
+            $('.show-exp-date i').toggleClass("icon-eye icon-eye-blocked");
+            //$(".masked-exp-"+i).hide();
+            //$(".original-exp-"+i).show();
+        });
+    });
+    $('[name="CardOption"]').change(function () {
+        /*debugger*/;
+        var cardoption = $('[name="CardOption"]').val();
+        if (cardoption.trim() != '') {
+        $('#CardsOptions').submit();
+        }
+    });
+</script>
+
+
+@*<script>
+        $('#btnSubmit').click(function (e) {
+            document.getElementById("RequestCard").submit();
+        });
+    </script>*@

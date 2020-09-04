@@ -1,0 +1,37 @@
+﻿@model cgpay.wallet.shared.Models.DynamicReport.PaymentGatewayTransactionReport
+
+@{
+    ViewBag.Title = "Payment Gateway Transaction Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/DynamicReport/PaymentGatewayTransactionReport", "Detail", ControllerDisplayName: "Payment Gateway Transaction Report");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            @Html.NLabelFor(model => model.TxnId, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.ServiceCharge, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.TotalAmount, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.Status, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.GatewayName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.GatewayTxnId, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @*@Html.NLabelFor(model => model.UserId, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)*@
+            @Html.NLabelFor(model => model.TxnType, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.AgentName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.CreatedDate, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+        </div>
+        <div class="row mt-1 ml-1">
+            <button type="button" class="btn btn-light btn-sm bg-primary" onclick="window.history.back();">Back</button>
+        </div>
+    </div>
+</div>

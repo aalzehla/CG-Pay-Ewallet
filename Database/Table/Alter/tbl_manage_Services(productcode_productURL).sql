@@ -1,0 +1,1 @@
+alter table tbl_manage_Services add product_code int null , product_url varchar(200)  null, is_deleted char(3) null

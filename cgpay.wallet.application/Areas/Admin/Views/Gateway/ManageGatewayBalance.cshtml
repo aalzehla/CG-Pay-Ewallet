@@ -1,0 +1,49 @@
+﻿@model cgpay.wallet.application.Models.GatewayBalanceModel
+    <fieldset id="SubmitForm">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Gatewayid)
+        <div class="form-group">
+            @Html.NTextBoxFor(model => model.GatewayName, new { @class = "form-control", autocomplete = "off", disabled = "disabled" }, 2)
+        </div>
+
+        <div class="form-group">
+            @Html.NTextBoxFor(model => model.GatewayCurrency, new { @class = "form-control", autocomplete = "off", disabled = "disabled" }, 2)
+
+        </div>
+        <div class="form-group">
+            @Html.NTextBoxFor(model => model.AvaliableBalance, new { @class = "form-control", autocomplete = "off", disabled = "disabled" }, 2)
+
+
+        </div>
+        <div class="form-group">
+            @Html.NTextBoxFor(model => model.BalanceToBeAdd, new { @class = "form-control", autocomplete = "off" }, 2)
+
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remarks, new { @class = "col-lg-6" })
+
+            @Html.ValidationMessageFor(model => model.Remarks)
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control", autocomplete = "off", @placeholder = "Remarks" })
+
+            </div>
+
+
+        </div>
+        <div class="form-group">
+            <a href="#" class="btn btn-block btn-success" id="AddGatewayBalance">Save</a>
+        </div>
+
+    </fieldset>
+<script>
+    $(document).ready(function () {
+
+        $("#BalanceToBeAdd").on("keypress keyup blur", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

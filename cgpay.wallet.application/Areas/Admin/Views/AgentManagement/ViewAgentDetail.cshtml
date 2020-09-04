@@ -1,0 +1,181 @@
+﻿@model cgpay.wallet.application.Models.AgentManagementModel
+@{
+    ViewBag.Title = "View Agent Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/AgentManagement/Index", "Detail", ControllerDisplayName: "Agent");
+}
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">Agent Detail </legend>
+    </div>
+
+
+    @Html.HiddenFor(Model => Model.AgentOperationType)
+    <div class="card-body">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-10" style="float: left">
+                    <table class="table table-borderless table-hover">
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentName</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Registration Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentRegistrationNumber</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Pan</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentPanNumber</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Contract Date</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentContractDate</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Mobile Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentMobileNumber</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Email</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentEmail</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent URL</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentWebUrl</td>
+                        </tr>
+
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Country</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentCountry</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Province</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentProvince</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent District</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentDistrict</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent VDC/Muncipality</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentVDC_Muncipality</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Ward No</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentWardNo</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Street</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentStreet</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Balance</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentBalance</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Credit Limit</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.AgentCreditLimit</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonName</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person Mobile Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonMobileNumber</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person ID Type</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonIdType</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person ID Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonIdNumber</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person ID Issue District</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonIdIssueDistrict</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person ID Issue Date</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonIdIssueDate</td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Contact Person ID Issue Date(BS)</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" height="30" align="left">@Model.ContactPersonIdIssueDate_BS</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Agent Logo</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" align="left">
+                                @if (Model.AgentLogo != null)
+                                {<img style="width: 100%; height: 40%" src="@Model.AgentLogo" />}
+                            </td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Pan Certificate</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" align="left">
+                                @if (Model.AgentPanCertificate != null)
+                                {<img style="width: 100%; height: 40%" src="@Model.AgentPanCertificate" />}
+                            </td>
+                        </tr>
+                        <tr class="Individual_hide">
+                            <td class="font-weight-bold" width="30%" height="30" align="right">Registration Certificate</td>
+                            <td width="10%" height="30"></td>
+                            <td width="60%" align="left">
+                                @if (Model.AgentRegistrationCertificate != null)
+                                {<img style="width: 100%; height: 40%" src="@Model.AgentRegistrationCertificate" />}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-2 ml-2">
+                <button type="button" class="btn btn-light btn-sm bg-primary" onclick="window.history.back();">Back</button>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+<script>
+    $(document).ready(function () {
+        if ($("#AgentOperationType").val().toUpperCase() == "BUSINESS") {
+            $('.Individual_hide').show();
+        }
+        else {
+            $('.Individual_hide').hide();
+        }
+    });
+
+</script>
+

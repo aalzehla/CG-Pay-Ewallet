@@ -1,0 +1,2 @@
+insert into tbl_static_data_type (static_data_name, static_data_description, created_by, created_Date, created_UTC_Date, created_Date_Nepali)
+values('Response Code','Api Response Code',SESSION_USER,GETDATE(),GETUTCDATE(),dbo.func_get_nepali_date(default))

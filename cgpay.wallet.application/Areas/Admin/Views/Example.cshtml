@@ -1,0 +1,113 @@
+﻿
+@using (Html.BeginForm("LogReport", "ApiLog", new { }, FormMethod.Post, new { @role = "form", @id = "ApiLog", @class = "form-validate-jquery" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        @Html.NTextBoxFor(model => model.start_date, new { @class = "form-control pickadate-strings", autocomplete = "off" }, 3, null, "icon-calendar")
+        @Html.NTextBoxFor(model => model.end_date, new { @class = "form-control pickadate-strings", autocomplete = "off" }, 3, null, "icon-calendar")
+        checkbox group
+        @Html.NCheckBoxGroupFor("FunctionList", ViewData["FunctionList"] as IEnumerable<SelectListItem>, 1)
+
+        dropdownlist
+        @Html.NDropDownListFor(model => model.rights, Model.rights_list, new { @class = "form-control", @autocomplete = "off" }, 3)
+
+        radio button (switchbox)
+        @Html.NSwitchBoxFor(model => model.Status, Model.Status == "Y" ? true : false, "Y", 2)
+
+        <div class="col-lg-12">
+            <button type="submit" class="btn btn-success btn-sm"><i class="icon-search4 mr-2"></i> Search</button>
+        </div>
+    </div>
+}
+
+
+                            datatable with button actions
+
+<table class="table datatable">
+    <thead>
+        <tr>
+            <th>SNo</th>
+            <th>Company Name</th>
+            <th>Contact Person</th>
+            <th>Status</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int sno = 1;
+            foreach (var item in Model)
+            {
+                <tr id="@sno">
+                    <td>@sno</td>
+                    <td>@item.company_name</td>
+                    <td>@item.contact_person</td>
+                    <td><span class="badge @Html.Raw("badge-" + (!item.status ? "danger" : "success"))">@Html.Raw(!item.status ? "Blocked" : "Active")</span></td>
+                    <td class="text-center">
+                        <div class="list-icons">
+                            <div class="dropdown">
+                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                    <i class="icon-menu9"></i>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    @Html.NHyperLink("Edit Api User Profile", new { @class = "dropdown-item" }, "~/ApiUser/Manage", "~/ApiUser/Manage?ApiUserId=" + item.sno, true, "icon-pen")
+                                    @Html.NHyperLink("View Users", new { @class = "dropdown-item" }, "~/ApiUser/UsersList", "~/ApiUser/UsersList?ApiUserId=" + item.sno, true, "icon-eye")
+                                    @{ var accessed = item.status ? "y" : "n";
+                                        if (accessed == "n")
+                                        {
+                                            @Html.NHyperLink("UnBlock User", new { @class = "dropdown-item", @data_val = item.sno }, "~/ApiUser/UnBlockUser", "#", true, "icon-unlocked2")
+                                        }
+                                        else
+                                        {
+                                            @Html.NHyperLink("Block User", new { @class = "dropdown-item", @data_val = item.sno }, "~/ApiUser/BlockUser", "#", true, "icon-lock2")
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                sno = sno + 1;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">No Api Users Found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section scripts{
+    <script>
+        $('.icon-lock2').parent().on('click', function e() {
+            let i = $(this).attr("data-val");
+            let tId = $(this).closest("tr").attr("id");
+            jsonData = "{" +
+                "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+                "UserId:'" + i + "'}";
+            var funcText = "CallAjaxDbResponse(" + jsonData + ",'/ApiUser/BlockUser','POST',false,'window.location.reload();')";
+            showConfirmationModal("Are you sure you want to Block this user?", funcText);
+        })
+        $('.icon-unlocked2').parent().on('click', function e() {
+            let i = $(this).attr("data-val");
+            jsonData = "{" +
+                "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+                "UserId:'" + i + "'}";
+            var funcText = "CallAjaxDbResponse(" + jsonData + ",'/ApiUser/UnBlockUser','POST',false,'window.location.reload();')";
+            showConfirmationModal("Are you sure you want to Un-Block this user?", funcText);
+        })
+                                            //function BlockViewModal(i) {
+                                            //    jsonData = "{" +
+                                            //        "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+                                            //        "UserId:'"+i+"'}";
+                                            //    var funcText = "CallAjaxDbResponse("+jsonData+",'/User/BlockUser','POST',false,'/*alert(\"Hello\");*/window.location.reload();')";
+                                            //    showConfirmationModal("Are you sure you want to Block this user?", funcText,true);
+                                            //}
+                                            //function UnBlockViewModal(i) {
+
+                                            //}
+    </script>
+}

@@ -1,0 +1,89 @@
+﻿@model cgpay.wallet.application.Models.Utilities.NeaBillInquiryModel
+
+@{
+    ViewBag.Title = "Nea Bill Inquiry";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Client/Neabillpayment/NeaBillInquiry", "Nea Bill Inquiry", ControllerDisplayName: "Nea Bill Payment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("NeaBillInquiry", "neabillpayment", new { }, FormMethod.Post, new { @role = "form", @id = "NeabillInquiry" }))
+        {
+            @Html.AntiForgeryToken()
+        <fieldset class="mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.NDropDownListFor(model => model.OfficeCode, new SelectList(ViewBag.branchlist, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+                    @Html.NTextBoxFor(model => model.ScNo, new { @class = "form-control", autocomplete = "off", @placeholder = "SC No", @onkeypress = "return alphanumericdot(event)" }, 1)
+                    @Html.NTextBoxFor(model => model.ConsumerId, new { @class = "form-control", autocomplete = "off", @placeholder = "Consumer Id", @onkeypress = "return isNumber(event)" }, 1)
+
+                </div>
+            </div>
+            <div class="row ml-2" >
+                <button type="submit" class="btn btn-success btn-sm" id="proceed"> Proceed <i class="icon-play3"></i></button>
+
+            </div>
+        </fieldset>
+        }
+    </div>
+</div>
+<script>
+     function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+   
+    function alphanumericdot(evt) {
+         evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        debugger;
+          if ((charCode >= 48 && charCode <= 57) || (charCode == 46) || (charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode < 90)) {
+                return true;
+            }
+        return false;
+    }
+    @*$("#CustomerId").onblur()
+
+    function checkvalidation() {
+        var CustomerId = $("CustomerId").val();
+        var ScNo = $("ScNo").val();
+        if (CustomerId != "" && ScNo != "") {
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("NeaOfficeList")',
+                datatype: 'json',
+                data: { CustomerId: CustomerId, ScNo: ScNo },
+                success: function (denomination) {
+                    if (Object.keys(denomination.Denomitation).length > 0) {
+                        var select = $("<select class='form-control input-validation-error' data-val-required='Required' id='Amount' name='Amount'>");
+                        $.each(validlandline.Denomitation, function (i, denominations) {
+                            select.append($("<option>").val(denominations).html(i));
+
+                        });
+
+                        $("#Amount").replaceWith(select);
+                    }                   
+                },
+                error: function (ex) {
+                    alert('Customer No | ScNo Not Valid!!' + ex);
+                }
+            });
+        }
+    }*@
+</script>

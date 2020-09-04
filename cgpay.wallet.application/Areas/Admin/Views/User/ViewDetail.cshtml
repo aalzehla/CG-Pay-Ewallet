@@ -1,0 +1,34 @@
+﻿@model cgpay.wallet.shared.Models.Profile
+
+@{
+    ViewBag.Title = "User Detail";
+     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/User/Index", "User Details", ControllerDisplayName: "User");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            @Html.NLabelFor(model => model.UserName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.FullName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @*@Html.NLabelFor(model => model.Status, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)*@
+            @Html.NLabelFor(model => model.Email, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.MobileNo, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @Html.NLabelFor(model => model.RoleName, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)
+            @*@Html.NLabelFor(model => model.IsActive, new { @class = "form-control", autocomplete = "off", @readonly = "readonly" }, 3)*@
+           
+        </div>
+        <div class="row mt-1 ml-0">
+            <button type="button" class="btn btn-light btn-sm bg-primary" onclick="window.history.back();">Back</button>
+        </div>
+    </div>
+</div>

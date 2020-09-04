@@ -1,0 +1,49 @@
+﻿@model List<cgpay.wallet.shared.Models.BulkUpload.BulkUploadCommon>
+@{
+    ViewBag.Title = "GetErrorDetail";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        @*<h6 class="card-title">
+                <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+            </h6>*@
+    </div>
+    <div class="card-body">
+
+
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Created Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <td>@Html.Raw(item.DataId)</td>
+
+                        <td>@Html.Raw(item.Type)</td>
+                        <td>@Html.Raw(item.Description)</td>
+                        <td>@Html.Raw(item.CreateDate)</td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+    </div>
+    <div>
+        <a href="javascript:history.go(-1)" class="btn btn-primary mt-2">Back</a>
+    </div>
+</div>

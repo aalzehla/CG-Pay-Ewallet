@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/*body {
+  background-color: #ffffff;
+  font-size: 1.1rem;
+}*/
+
+.text-sky {
+  color: #0DB5FF;
+}
+
+.text-black {
+  color: #000000;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-darkblue {
+  color: #193A79;
+}
+
+.text-gray {
+  color: #DFE3E6;
+}
+
+.bg-gray {
+  background-color: #DFE3E6;
+}
+
+table, td, tr, th {
+  border: 0;
+  font-size: 1rem;
+}
+
+.receipt {
+  background: url("../img/nea-bg.png") no-repeat center center #ffffff;
+  width: 900px;
+  padding: 30px;
+  margin: 0 auto;
+  border: solid 1mm #0DB5FF;
+  border-radius: 20px;
+}
+.receipt .logo {
+  width: 80px;
+}
+.receipt .receipt-title {
+  border-radius: 50rem;
+  background-color: #0DB5FF;
+  width: 200px;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.5pt;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  padding: 5px 15px;
+}
+.receipt .receipt-title:before {
+  position: absolute;
+  content: "";
+  height: 2px;
+  background-color: #DFE3E6;
+  width: 300px;
+  left: -315px;
+  top: 15px;
+}
+.receipt .receipt-title:after {
+  position: absolute;
+  content: "";
+  height: 2px;
+  background-color: #DFE3E6;
+  width: 300px;
+  right: -315px;
+  top: 15px;
+}

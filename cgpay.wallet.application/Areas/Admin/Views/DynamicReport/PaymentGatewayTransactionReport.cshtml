@@ -1,0 +1,185 @@
+﻿@model cgpay.wallet.shared.Models.DynamicReport.DynamicReportFilter
+@{
+    ViewBag.Title = "Payment Gateway Transaction Report List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@*<div class="page-header">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-arrow-left52 mr-2" onclick="GoBack();"></i> <span class="font-weight-semibold">Payment Gateway Transaction Report</span> - @Html.Raw(ViewData["Title"])</h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+
+            <div class="header-elements d-none py-0 mb-3 mb-md-0">
+                <div class="breadcrumb">
+                    <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/DynamicReport/PaymentGatewayTransactionReport", "Report", ControllerDisplayName: "Payment Gateway Transaction Report");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("PaymentGatewayTransactionReport", "DynamicReport", new { }, FormMethod.Post, new { @role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset class="mb-3">
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.MobileNumber, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NDropDownListFor(model => model.GatewayId, new SelectList(ViewBag.GatewayList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @*@Html.NTextBoxFor(model => model.GatewayId, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @onkeypress = "return isAlphabateNum(event)" }, 3)*@
+                    @Html.NTextBoxFor(model => model.PgTxnId, new { @class = "form-control", autocomplete = "off"@*, @onkeypress = "return isAlphabateNum(event)"*@ }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.TxnId, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.FromDate, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.ToDate, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.NepFromDate, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.NepToDate, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">search <i class=""></i></button>
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+    </div>
+</div>
+
+@if (ViewData["grid"] != null)
+{
+    @Html.Raw(ViewData["grid"].ToString());
+}
+
+<script>
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    //alphabet number>47<58 -46 /47
+    function isAlphabateNum(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 45 || charCode == 47 || (charCode > 47 && charCode < 58)) {
+            return true;
+        }
+        return false;
+    }
+
+   $(document).ready(function () {
+
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        $("#FromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#ToDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#NepFromDate").nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            //defaultDate: /*nepaliDOB*/,
+            readOnlyInput: true,
+            ndpEnglishInput: 'FromDate',
+            disableAfter: NepalDateToday,
+            onChange: function () {
+                $('#NepFromDate').removeClass("input-validation-error");
+                if ($('#NepFromDate-error').length > 0) {
+                    $('#NepFromDate-error').html("");
+                };
+                $('#FromDate').removeClass("input-validation-error");
+                if ($('#FromDate-error').length > 0) {
+                    $('#FromDate-error').html("");
+                }
+            }
+        });
+        $('#NepToDate').nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            readOnlyInput: true,
+            ndpEnglishInput: 'ToDate',
+            disableAfter: NepalDateToday,
+            onChange: function () {
+                $('#NepToDate').removeClass("input-validation-error");
+                if ($('#NepToDate-error').length > 0) {
+                    $('#NepToDate-error').html("");
+                };
+                $('#ToDate').removeClass("input-validation-error");
+                if ($('#ToDate-error').length > 0) {
+                    $('#ToDate-error').html("");
+                }
+            }
+
+        });
+
+        getvisibleColumn = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        getTotalOfColumns = [ 6, 7];
+        showDateTableWithExcelTotal("datatable-total", getTotalOfColumns, true, getvisibleColumn);
+    });
+
+    $('#FromDate').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#FromDate').val(), "YYYY-MM-DD");
+        $('#NepFromDate').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#FromDate').removeClass("input-validation-error");
+        if ($('#FromDate-error').length > 0) {
+            $('#FromDate-error').html("");
+        }
+        $('#NepFromDate').removeClass("input-validation-error");
+        if ($('#NepFromDate-error').length > 0) {
+            $('#NepFromDate-error').html("");
+        }
+    });
+
+    $('#ToDate').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#ToDate').val(), "YYYY-MM-DD");
+        $('#NepToDate').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#ToDate').removeClass("input-validation-error");
+        if ($('#ToDate-error').length > 0) {
+            $('#ToDate-error').html("");
+        }
+        $('#NepToDate').removeClass("input-validation-error");
+        if ($('#NepToDate-error').length > 0) {
+            $('#NepToDate-error').html("");
+        }
+    });
+</script>
+@*<div class="container" listing-container>
+        @Html.Raw(ViewData["grid"].ToString())
+    </div>*@
+

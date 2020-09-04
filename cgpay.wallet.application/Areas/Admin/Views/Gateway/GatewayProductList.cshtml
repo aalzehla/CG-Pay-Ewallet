@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Gateway Product List";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Gateway</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+
+</div>
+@*<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="ModalTitle"></h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+
+                    @Html.Partial("ManageGatewayCommission")
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function showpopupmodel(Gatewayid,gwpid) {
+        var url = "/Admin/Gateway/ManageGatewayCommission?GatewayID=" + Gatewayid+"&gwpid="+gwpid;
+        $("#ModalTitle").html("Add Gateway Service Commission");
+        $("#MyModal").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#Gatewayid").val(obj.Gatewayid);
+                $("#GatewayName").val(obj.GatewayName);
+                $("#GatewayStatus").val(obj.GatewayStatus);
+                $("#GatewayCurrency").val(obj.GatewayCurrency);
+                $("#AvaliableBalance").val(obj.AvaliableBalance);
+
+
+            }
+        })
+    }
+    *@
+<script>
+    function redirect(ID, pid) {
+        /*debugger*/;
+        window.location.href = "/admin/gateway/ManageGatewayCommission?id="+ID+"&pid="+pid;
+    }   
+</script>
+

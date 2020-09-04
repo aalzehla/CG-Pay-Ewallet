@@ -1,0 +1,1 @@
+alter table tbl_agent_detail add Agent_Name varchar (500) null

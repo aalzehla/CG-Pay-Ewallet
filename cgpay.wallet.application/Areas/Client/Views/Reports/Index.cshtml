@@ -1,0 +1,364 @@
+﻿@model cgpay.wallet.shared.Models.DynamicReport.DynamicReportFilter
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .transaction-container {
+        margin-left: 25px;
+    }
+
+    .transaction-content {
+        margin-bottom: 10px;
+    }
+
+    .single-transaction-content {
+        padding: 10px;
+        padding-top: 20px;
+        border-bottom: 1px #f2f2f2 solid;
+        /*display: flex;*/
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+        background: none transparent;
+        border-radius: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        /*border: none;*/
+        font-size: 0.85rem;
+        /*border-bottom: 1px solid rgba(34,36,38,.15);*/
+    }
+
+    .transaction-date-group {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    .List {
+        width: 100%;
+        margin-bottom: 5px !important;
+        margin-top: 20px !important;
+        padding: 15px 0px;
+        border-top: 1px solid #d9d9d9;
+        border-bottom: 1px solid #d9d9d9;
+    }
+
+    .transaction-date-group > .date-number {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 3rem !important;
+    }
+
+    .date-number {
+        font-family: Roboto,'Helvetica Neue',Arial,Helvetica,sans-serif;
+        font-size: 4rem;
+        font-weight: 400;
+        line-height: 1em;
+        color: #1b1c1d;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .text-date-year {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 0 0 .75em;
+        text-align: left !important;
+        font-family: Roboto,'Helvetica Neue',Arial,Helvetica,sans-serif;
+        font-size: 1em;
+        font-weight: 700;
+        color: rgba(0,0,0,.87);
+        text-transform: uppercase;
+    }
+
+    .closing-balance {
+        width: 100%;
+        text-align: right;
+    }
+
+    .closing-balance-text {
+        color: #555555;
+    }
+
+    .font-bold {
+        font-weight: bold !important;
+    }
+
+    .pointer {
+        cursor: pointer !important;
+    }
+
+    .item {
+        justify-content: space-between;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .left-content {
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .amount-value {
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+    .left-content .transaction-desc {
+        padding-left: 10px;
+    }
+
+    .left-content .transaction-title {
+        /* font-size: 17px; */
+        font-weight: bold;
+    }
+
+    .left-content .transaction-divider {
+        margin-top: 5px;
+        color: grey;
+    }
+
+    .left-content .transaction-value {
+        color: grey;
+        margin: 3px 0px;
+    }
+
+    .left-content .transaction-date-time {
+        color: grey;
+    }
+
+    .left-content .ui.image {
+        width: 50px;
+        height: 50px;
+        background: #f2f2f2;
+        padding: 5px;
+        flex-shrink: 0;
+    }
+
+    .ui.mini.image, .ui.mini.images .image, .ui.mini.images img, .ui.mini.images svg {
+        width: 35px;
+        height: auto;
+        font-size: .78571429rem;
+    }
+
+    .ui.circular.image, .ui.circular.image > *, .ui.circular.images .image, .ui.circular.images .image > * {
+        border-radius: 500rem;
+    }
+
+
+    .ui.circular.image, .ui.circular.images {
+        overflow: hidden;
+    }
+
+    img.ui.image {
+        display: block;
+    }
+
+    .color-green {
+        color: green;
+    }
+
+    .color-red {
+        color: red;
+    }
+
+    #filter-statement {
+        margin-left: 25px;
+        color: #049E39;
+    }
+
+        #filter-statement i {
+            margin-right: 15px;
+        }
+
+        #filter-statement span {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+</style>
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Client/Reports/Index", "Activity List", ControllerDisplayName: "Activity");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+
+        .disabled-select {
+            pointer-events: none;
+            background-color: #fafafa;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-12">
+                <a href="#" id="filter-statement">
+                    <i class="icon-equalizer"></i><span>Filter</span>
+                </a>
+            </div>
+        </div>
+        <div class="row" id="filter-box" style="display:none">
+            <div class="col-md-12">
+                @using (Html.BeginForm("Index", "Reports", new { }, FormMethod.Post, new { @role = "form" }))
+                {<div class="container" listing-container>
+                        <div class="container card-body">
+                            <div class="row">
+                                @Html.NTextBoxFor(Model => Model.UserName, new { @class = "form-control", @placeholder = "Enter MobileNo,Email" })
+                                @Html.NDropDownListFor(model => model.Service, new SelectList(ViewBag.Services, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 2)
+
+                            </div>
+                            <div class="row">
+                                @Html.NDropDownListFor(model => model.TxnType, new SelectList(ViewBag.txnType, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 2)
+                                @Html.NDropDownListFor(model => model.TxnStatus, new SelectList(ViewBag.txnStatus, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 2)
+
+                            </div>
+                            <div class="row">
+                                @Html.NTextBoxFor(Model => Model.FromDate, new { @class = "form-control" })
+                                @Html.NTextBoxFor(Model => Model.ToDate, new { @class = "form-control" })
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>&nbsp;</label>&nbsp;
+                                    <input type="submit" class="btn btn-success form-control" id="btnSearch" name="txtSearch" value="Search" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="transaction-container">
+            <div class="row transaction-content">
+                <div class="col-md-12 ">
+                    @foreach (var item in Model.reportlist)
+                    {
+                        if (string.IsNullOrEmpty(item.TxnTitle.ToString()))
+                        {
+                            DateTime oDate = Convert.ToDateTime(item.TxnDate);
+                            <div class="transaction-date-group List d-flex">
+                                <div class="date-number">
+                                    @Html.Raw(oDate.Day)
+                                </div>
+                                <div class="text-date-year">
+                                    <div>
+
+                                        @Html.Raw(oDate.ToString("dddd"))
+                                    </div>
+                                    <div>
+
+                                        @Html.Raw(oDate.ToString("MMMM"))
+                                        @Html.Raw(oDate.Year)
+                                    </div>
+                                </div>
+                                <div class="closing-balance">
+                                    <div class="closing-balance-text">Closing Balance</div>
+                                    <div class="font-bold">Rs. @Html.Raw(item.Amount)</div>
+                                </div>
+
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col">
+                                    <a href="/client/Reports/TransactionDetail?txnid=@Html.Raw(item.TxnId)&txntype=@Html.Raw(item.TxnType)">
+
+                                        <div class="single-transaction-content d-flex pointer item">
+
+                                            <div class="left-content">
+                                                <div>
+                                                    @*
+                                                        <img class="ui circular mini image" src="">
+                                                        <div style="position: absolute; top: 60%; left: 15px;">
+                                                            <i class="check circle green icon "></i>
+                                                        </div>
+                                                    *@
+                                                </div>
+                                                <div class="transaction-desc">
+                                                    <div class="transaction-title">@Html.Raw(item.TxnTitle) </div>
+                                                    <div class="transaction-divider"></div>
+                                                    <div>
+                                                        @Html.Raw(item.Remarks)
+                                                        @*<div class="transaction-value">To : Ajar Maharjan (9843464004)</div>
+                                                            <div class="transaction-value">From : Sandesh Maharjan Corner Photocopy (9851126242)</div>*@
+                                                    </div>
+                                                    <div class="transaction-date-time">
+                                                        <i class="icon-calendar"></i>&nbsp;@Html.Raw(item.TxnDate)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="amount-value">
+
+                                                &nbsp;@Html.Raw(item.Amount)
+                                            </div>
+
+                                            @*<div class="small-header">@Html.Raw(item.Remarks) </div>
+                                                <p>@Html.Raw(item.TxnDate)</p>*@
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (@ViewBag.EmptyMessage == "True")
+{
+    <div class="alert bg-info alert-styled-left alert-dismissible">
+        <strong>No Recent Activity Found</strong>
+    </div>
+}
+@*<div class="container" listing-container>
+        @Html.Raw(ViewData["grid"].ToString())
+    </div>*@
+
+<script>
+    $(document).ready(function () {
+        let yearRangeDOB = "1944:-10"; //"1944:+0";
+        let yearRangeExpire = "1944:+10"; //"1944:+20";
+        let minimum = "[1943, 04, 14]";
+        let dateFormat = "yy-mm-dd";
+        $("#FromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#ToDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#filter-statement").click(function (e) {
+            e.preventDefault();
+            $("#filter-box").fadeToggle();
+        });
+    });
+</script>

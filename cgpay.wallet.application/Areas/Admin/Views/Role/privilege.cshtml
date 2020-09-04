@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "Privilege";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/Role/Index", "Assign Privilege", ControllerDisplayName:"Role");}
+@section BreadCum{
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <h5 class="card-title">Assign Privilege for <b> [Role : @ViewBag.Name]</b></h5>
+    </div>
+    <div class="card-body">
+        @*@Html.AntiForgeryToken()*@
+        @using (Html.BeginForm("Privilege", "Role", new { }, FormMethod.Post, new { @role = "form", @id = "assignprivilege", @class = "form-validate-jquery" }))
+        {
+            <div class="row">
+                @Html.AntiForgeryToken()
+                @Html.Hidden("RoleID", ViewData["RoleID"])
+                @Html.NCheckBoxGroupFor("RoleList", ViewData["RoleList"] as IEnumerable<SelectListItem>, 1)
+                <div class="col-lg-12">
+                    <button type="button" onclick="SavePrevilege()" class="btn btn-success btn-sm"><i class="icon-floppy-disk mr-2"></i> Save</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-danger btn-sm"><i class="icon-cross mr-2"></i> Reset</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+
+    function SavePrevilege() {
+        debugger;
+        var RoleID = $("#RoleID").val();
+        var list = new Array();
+        var i = 0;
+        $("input").each(function (index) {
+
+            if ($(this).is(":checked")) {
+                list.push($("input")[i].value);
+            }
+            i++;
+        });
+
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "RoleList:'" + list + "'," + "RoleId:'" + RoleID + "'}";
+        //var funcText = "CallAjaxDbResponse(" + jsonData + ",'/admin/role/privilege','POST',false,'debugger;')";
+        showConfirmationModal("Are you sure you want to save this Privilege?", "$('#assignprivilege').submit();");
+
+    }
+
+    $(function () {
+        $(".selectallmenu").click(function (e) {
+            debugger;
+            e.preventDefault();
+            var name = $(this).data('name');
+            $("input[data-type='" + name + "']").prop("checked", true);
+            //$('input[type="checkbox"]').addClass("form-check-input-styled");
+
+
+        });
+        $(".clearallmenu").click(function (e) {
+            debugger;
+            e.preventDefault();
+            var name = $(this).data('name');
+            $('input[data-type="' + name + '"]').prop("checked", false);
+
+        });
+    });
+</script>

@@ -1,0 +1,57 @@
+﻿@model cgpay.wallet.shared.Models.Login.LoginCommon
+@{
+    ViewBag.Title = "Verify Code";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@Html.Raw(ViewBag.Title ?? "Verification Code")</title>
+
+    @Styles.Render("~/UI/DesignCss")
+    @Scripts.Render("~/UI/CoreJs")
+    @Scripts.Render("~/UI/AppJs")
+    @Scripts.Render("~/UI/ThemeJs")
+    @Styles.Render("~/Content/loginSheet.css")
+
+    <style>
+        element.style {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+
+        @using (Html.BeginForm("VerifyCode", "home", new { }, FormMethod.Post, new { @role = "form", @id = "loginform" }))
+        {
+        <div>
+            @Html.AntiForgeryToken()
+            <h1>Verify Code</h1>
+            <span>Enter the Verification code</span>
+            <br />
+
+            <div>
+                @Html.HiddenFor(m => m.Email)
+                @Html.HiddenFor(m => m.MobileNo)
+                @Html.HiddenFor(m => m.FullName)
+                @Html.TextBoxFor(m => m.ActivationCode, new { @placeholder = "Verification Code" })
+                @if (TempData["msg"] != null)
+                {
+                    <span style="color:red">@Html.Raw(TempData["msg"])</span>
+                }
+            </div>        
+     <br /> 
+        </div>
+            <div class="form-group">
+                <button type="submit" name="submit" value="Verifycode">Verify Code</button>
+
+            </div>
+        }
+    </div>
+
+</body>

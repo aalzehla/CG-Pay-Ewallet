@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+@*<div class="page-header">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Transaction Limit</span> - @Html.Raw(ViewData["Title"])</h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+
+            <div class="header-elements d-none py-0 mb-3 mb-md-0">
+                <div class="breadcrumb">
+                    <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/TransactionLimit/Index", "List", ControllerDisplayName: "Transaction Limit");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+
+</div>
+

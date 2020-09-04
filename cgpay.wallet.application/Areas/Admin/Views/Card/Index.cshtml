@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "Cards";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+
+}
+@Html.AntiForgeryToken()
+
+<div class="container" listing-container>
+@if (@ViewBag.EmptyMessage == "True")
+{
+    <div class="alert bg-info alert-styled-left alert-dismissible">
+        <strong>No Linked Cards Found For @ViewBag.UserName </strong>
+    </div>
+}
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+
+<script>
+    $('.icon-lock2').parent().on('click', function e() {
+        /*debugger*/;
+        var userId = $(this).attr("data-val");
+        var agentId = $(this).attr("data-val1");
+        var cardNo = $(this).attr("data-val2");
+        //var tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + userId + "'," + "agentid:'" + agentId + "'," + "cardno:'" + cardNo +"'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/Card/CardDisable','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Disable this card?", funcText);
+    });
+    $('.icon-unlocked2').parent().on('click', function e() {
+        /*debugger*/;
+        var userId = $(this).attr("data-val");
+        var agentId = $(this).attr("data-val1");
+        var cardNo = $(this).attr("data-val2");
+        //var tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + userId + "'," + "agentid:'" + agentId + "'," + "cardno:'" + cardNo +"'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/Card/CardEnable','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Enable this card?", funcText);
+    });
+</script>

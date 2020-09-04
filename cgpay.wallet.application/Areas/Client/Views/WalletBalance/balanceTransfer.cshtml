@@ -1,0 +1,156 @@
+﻿@model cgpay.wallet.application.Models.WalletBalanceModel
+
+@{
+    ViewBag.Title = "balanceTransfer";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/WalletBalance/balanceTransfer", " Request/Transfer", ControllerDisplayName:"Balance");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("balanceTransfer", "WalletBalance", new { }, FormMethod.Post, new { @role = "form", @id = "RequestTransfer" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.Type)
+            string checke = "";
+            if (string.IsNullOrEmpty(Model.Type) || Model.Type.ToUpper()=="T")
+            {
+
+                checke = "checked";
+               
+            }
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-lg-12" style="padding-bottom: 10px">
+                            @Html.LabelFor(model => model.Type, "Select Balance Transfer Type", new { @class = "label", autocomplete = "off" })
+                            <div class="form-check form-check-switchery form-check-switchery-double">
+                                <label class="form-check-label">
+                                    Request
+                                    <input type="checkbox" class="form-input-switchery" id="RTCheckbox" @Html.Raw(checke) data-fouc data-switchery="true" style="display: none;">
+                                    Transfer
+                                </label>
+                            </div>
+                        </div>
+                        @*@Html.NSwitchBoxFor(model => model.Type, Model.Type == "Y" ? true : false, "Y", 1)*@
+                        @Html.NTextBoxFor(model => model.ReceiverAgentId, new { @class = "form-control", @placeholder = "Mobile(10 digits)", autocomplete = "off",@maxlength="10", @onfocusout = "checkValidation()", @onkeypress = "return isNumber(event)" }, 1)
+                        @*<div class="form-group col-md-12" id="MobNoError" style="margin-top:-11px;"></div>*@
+                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @placeholder = "Amount Between 10-1000", @maxlength = "4", @onkeypress = "return isNumber(event)" }, 1)
+                        @Html.NDropDownListFor(model => model.Purpose, new SelectList(Model.PurposeList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+                        @Html.NTextAreaFor(model => model.Remarks, new { @class = "form-control", @maxlength = "500", @title = "Please use Remarks", @placeholder = "Remarks should be less then 500 characters", @style = "min-height: 100px", autocomplete = "off" }, 1)
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Transfer <i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+<script>
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    function checkValidation() {
+        var mobileNo = $("#ReceiverAgentId").val();
+        if (mobileNo.trim() != "" && mobileNo.length >= 10) {
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("CheckMobileNumber")',
+                dataType: 'json',
+                data: { MobileNo: mobileNo },
+                success: function(validMob) {
+                    var Code = validMob.Code;
+                    if (Code == 0) {
+                        $('span[data-valmsg-for="ReceiverAgentId"]').removeClass("field-validation-valid text-danger");
+                        $('span[data-valmsg-for="ReceiverAgentId"]').addClass("field-validation-error text-success").html("Valid User Detail");
+
+                        //$('#MobNoError').removeClass("text-danger");
+                        //$('#MobNoError').addClass("text-success").html("Valid User");
+                        //$("#ReceiverName").show();
+                    } else {
+                        //$('#MobNoError').removeClass("text-success");
+                        //$('#MobNoError').addClass("text-danger").html("Invalid Mobile Number");
+                        $('span[data-valmsg-for="ReceiverAgentId"]').removeClass("field-validation-valid text-success");
+                        $('span[data-valmsg-for="ReceiverAgentId"]').addClass("field-validation-error text-danger").html("Invalid User Detail");
+                        //return false;
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to Determine Mobile Number!!' + ex);
+                }
+            });
+            return false;
+        } else {
+            //$('#MobNoError').removeClass("text-success").html("");
+            //$('#MobNoError').removeClass("text-danger").html("");
+            return false;
+        }
+        }
+    $('#RTCheckbox').change(function (e) {
+        $('#Name').val('');
+        if ($('#RTCheckbox').is(":checked")) {
+            $('#Type').val('T');
+            $(".PurposedivClass").show();
+            $("#btnSubmit").html("").append('<strong>Transfer<i class="icon-floppy-disk ml-2"></i></strong>');
+        } else {
+            $(".PurposedivClass").hide();
+            $("#btnSubmit").html("").append('<strong>Request<i class="icon-floppy-disk ml-2"></i></strong>');
+            $('#Type').val('R');
+        }
+    });
+
+    $('#btnSubmit').click(function (e) {
+        if ($('#RTCheckbox').prop("checked") == false) {
+            $('#Propose').rules('remove');
+            $('#Propose-error').text('');
+        }
+    });
+    $(document).ready(function () {
+        if ($('#RTCheckbox').is(":checked")) {
+            $('#Type').val('T');
+            $(".PurposedivClass").show();
+            $("#btnSubmit").html("").append('<strong>Transfer<i class="icon-floppy-disk ml-2"></i></strong>');
+        } else {
+            $(".PurposedivClass").hide();
+            $("#btnSubmit").html("").append('<strong>Request<i class="icon-floppy-disk ml-2"></i></strong>');
+            $('#Type').val('R');
+        }
+    });
+
+
+</script>
+

@@ -1,0 +1,51 @@
+﻿@model cgpay.wallet.application.Models.CommissionCategoryDetailModel
+@{
+    ViewBag.Title = "Manage Commission Catagory Product";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Commission", "Product Commission");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">Update Product Commission </legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageCommissionCategoryProduct", "Commission", FormMethod.Post, new { @role = "form", @id = "addcommissioncategory", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset class="md-3">
+                @Html.HiddenFor(model => model.CommissionDetailId)
+                @Html.HiddenFor(model => model.CommissionCategoryId)
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.ProductId, new SelectList(ViewBag.productlist, "Value", "Text"), new { @class = "form-control disabled", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NDropDownListFor(model => model.CommissionType,Model.CommissionTypeList, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                    @Html.NTextBoxFor(model => model.CommissionValue, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.CommissionPercentType, Model.CommissionPercentTypeList , new { @class = "form-control", autocomplete = "off" }, 3)
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+    </div>
+</div>
+

@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/*body {
+  background-color: #ffffff;
+  font-size: 1.1rem;
+}*/
+
+.text-black {
+  color: #000000;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-primary {
+  color: #662F8C !important;
+}
+
+.text-gray {
+  color: #DFE3E6;
+}
+
+.bg-gray {
+  background-color: #DFE3E6;
+}
+
+table, td, tr, th {
+  border: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.receipt {
+  background: url("../img/bg-utl.png") no-repeat center center #ffffff;
+  width: 900px;
+  padding: 30px;
+  margin: 0 auto;
+  border: solid 1mm #EA1049;
+  border-radius: 20px;
+  background-size: inherit;
+}
+.receipt .logo {
+  width: 120px;
+}
+.receipt .header-title {
+  font-size: 2rem;
+  padding-top: 50px;
+  padding-left: 20px;
+  color: #EA1049;
+  display: block;
+  text-align: center;
+}
+.receipt .receipt-title {
+  border-radius: 50rem;
+  background-color: #662F8C;
+  width: 200px;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.5pt;
+  margin: 0 auto;
+  font-size: 1.1rem;
+  padding: 5px 15px;
+}
+.receipt .receipt-title:before {
+  position: absolute;
+  content: "";
+  height: 2px;
+  background-color: #DFE3E6;
+  width: 300px;
+  left: -315px;
+  top: 15px;
+}
+.receipt .receipt-title:after {
+  position: absolute;
+  content: "";
+  height: 2px;
+  background-color: #DFE3E6;
+  width: 300px;
+  right: -315px;
+  top: 15px;
+}

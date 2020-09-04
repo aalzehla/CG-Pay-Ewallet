@@ -1,0 +1,67 @@
+﻿@model cgpay.wallet.application.Models.TransactionLimitModel
+@{
+    ViewBag.Title = "ManageTransaction";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum(" Transactionlimit", "Transaction Limit");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">Update Transaction Limit </legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageTransaction", "TransactionLimit", FormMethod.Post, new { @role = "form", @id = "#", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+        <fieldset class="md-3">
+            @Html.HiddenFor(model => model.transacation_id)
+            @Html.HiddenFor(model => model.transacation_type)
+            @Html.HiddenFor(model => model.kyc_status)
+
+            <div class="row">
+                @Html.NTextBoxFor(model => model.transaction_limit_maximum, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.daily_maximum_limit, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.monthly_maximum_limit, new { @class = "form-control", autocomplete = "off" }, 3)
+            </div>
+            @*<div class="col-lg-4">
+                <textarea class="form-control" name="CashInUnverified/" id="txtCashInUnverified"
+                          placeholder="Please Insert Remarks to Reject, maxlength- 200" maxlength="200"
+                          rows="4" cols="50" style="display: none; min-height: 100px; min-width: 200px; max-height: 150px; max-width: 400px;"></textarea>
+                @Html.ValidationMessage("CashInUnverified/transaction_limit_maximum", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-lg-4">
+                <textarea class="form-control" name="CashInUnverified" id="txtCashInUnverified"
+                          placeholder="Please Insert Remarks to Reject, maxlength- 200" maxlength="200"
+                          rows="4" cols="50" style="display: none; min-height: 100px; min-width: 200px; max-height: 150px; max-width: 400px;"></textarea>
+                @Html.ValidationMessage("CashInUnverified/daily_maximum_limit", new { @class = "text-danger" })
+            </div>
+            <div class="col-lg-4">
+                <textarea class="form-control" name="CashInUnverified" id="txtCashInUnverified"
+                          placeholder="Please Insert Remarks to Reject, maxlength- 200" maxlength="200"
+                          rows="4" cols="50" style="display: none; min-height: 100px; min-width: 200px; max-height: 150px; max-width: 400px;"></textarea>
+                @Html.ValidationMessage("CashInUnverified/monthly_maximum_limit", new { @class = "text-danger" })
+            </div>*@          
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </div>
+        </fieldset>
+
+        }
+    </div>
+</div>
+
+

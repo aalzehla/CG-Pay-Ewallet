@@ -1,0 +1,52 @@
+﻿@model cgpay.wallet.application.Models.MerchantModel
+@{
+    ViewBag.Title = "Print QR";
+    Layout = "~/Areas/Admin/Views/Shared/_print_layout.cshtml";
+}
+<link href="~/Content/merchantqr/css/qrboard.css" rel="stylesheet" />
+
+<div id="printMe" class="qr-board float-left">
+    <div class="board-header">
+        <img src="~/Content/merchantqr/img/cg-logo.png" alt="" />
+        <span class="sub-title">Accepted Here</span>
+    </div>
+
+    <div class="qr-box">
+        <img src="@Model.MerchantQr" alt="" class="qr-code" />
+    </div>
+
+    <div class="merchant-info">
+        <div class="merchant-title">@Model.MerchantName</div>
+        <div class="merchant-detail">Merchant Code : #@Html.Raw(@Model.MerchantCode)</div>
+        @*<div class="merchant-detail text-right float-right pr-4">Terminal ID : #023650</div>*@
+    </div>
+    <footer>
+        <ul>
+            <li class="mb-2"><span>01</span>Open your CG Pay app and tap QR icon</li>
+            <li><span>02</span>Bring your phone near to the QR code above.</li>
+        </ul>
+    </footer>
+</div>
+
+@*<input type="button" value="Print" class="d-print-none btn btn-primary ml-5 float-left" onclick="javascript: printDiv('printMe');" />*@
+
+<script>
+    document.addEventListener('DOMContentLoaded',
+        () => {
+            var printContents = document.getElementById('printMe').innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.title='Card Info @Model.MerchantName';
+
+            // document.body.innerHTML = printContents;
+
+            window.print();
+            
+            document.body.innerHTML = originalContents;
+            window.onafterprint = function (event) {
+                history.go(-1);
+                window.close();
+            };
+        });
+
+
+</script>

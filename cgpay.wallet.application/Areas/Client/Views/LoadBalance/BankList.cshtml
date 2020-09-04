@@ -1,0 +1,50 @@
+﻿@model IEnumerable<cgpay.wallet.application.Models.OnePG.BankList>
+
+@{
+    ViewBag.Title = "BankList";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="card-body">
+
+        @{ int counter = 1;}
+        @{ var lists = Model.GroupBy(x => x.BankType).Distinct(); }
+
+        @foreach (var item in lists)
+        {
+            <label style="position: center;font-weight: bold; font-size: 120%">@item.Key</label>
+            <div class="row">
+                @foreach (var items in Model.Where(x => x.BankType == @item.Key))
+                {
+                    object code = items.InstrumentCode.EncryptParameter();
+
+
+                    <div class="col-md-2 fix-service-layout">
+                        <a href=@Url.Action("LoadBalanceIndex", "LoadBalance", new { code })>
+                            <label class="list-item-frame" for=@items.InstrumentCode style="position: center">
+                                @if (string.IsNullOrEmpty(items.LogoUrl))
+                                {
+                                    <img src="~/Content/assets/images/NOIMAGE.png">
+                                }
+                                else
+                                {
+                                    <img src=@Url.Content(items.LogoUrl)>
+                                }
+                                <label class="list-item-text">@items.InstitutionName</label>
+                            </label>
+                        </a>
+                    </div>
+                    @*if (counter % 3 == 0)
+                    {
+                        <br />
+                    }
+                    counter++;*@
+                }
+            </div>
+
+
+        }
+
+    </div>
+</div>
+

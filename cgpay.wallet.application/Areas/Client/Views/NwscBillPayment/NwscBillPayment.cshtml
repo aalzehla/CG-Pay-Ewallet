@@ -1,0 +1,273 @@
+﻿@model cgpay.wallet.application.Models.Utilities.NwscBillInquiryResponseModel
+@{
+    ViewBag.Title = "NwscBillPayment";
+    Layout = "~/Areas/client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/NwscBillPayment/NeaBillInquiry", "NWSC Bill Payment", ControllerDisplayName: "NWSC Bill Payment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("NwscBillPayment", "nwscbillpayment", new { }, FormMethod.Post, new { @role = "form", @id = "NwscbillPayment" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.ProductId)
+            @Html.HiddenFor(Model => Model.CommissionType)
+            @Html.HiddenFor(Model => Model.CommissionValue)
+            @Html.HiddenFor(Model => Model.MinAmount)
+            @Html.HiddenFor(Model => Model.MaxAmount)
+            @Html.HiddenFor(Model => Model.ProductLogo)
+
+
+
+            @Html.HiddenFor(Model => Model.TotalDueAmount)
+            @Html.HiddenFor(Model => Model.TotalServiceCharge)
+            @Html.HiddenFor(Model => Model.CustomerId)
+            @Html.HiddenFor(Model => Model.OfficeCode)
+            @Html.HiddenFor(Model => Model.EncryptedContent)
+
+
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless table-hover">
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Customer Name</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="CustomerName">@Html.DisplayFor(Model => Model.CustomerName)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Customer Id</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="CustomerId">@Html.DisplayFor(Model => Model.CustomerId)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Area</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="Area">@Html.DisplayFor(Model => Model.Area)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Lagat</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="Lagat">@Html.DisplayFor(Model => Model.Lagat)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Office</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="Office">@Html.DisplayFor(Model => Model.Office)+"("+@Html.DisplayFor(model => model.OfficeCode)+")"
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Total Due Amount</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="Lagat">@Html.DisplayFor(Model => Model.TotalDueAmount)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Total Service Charge</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="Lagat">@Html.DisplayFor(Model => Model.TotalServiceCharge)
+                                <td>
+                            </tr>
+                        </table>
+                        <div class="col-md-4">
+                            <div><img id="LogoView" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table border="1">
+                            <thead class="font-weight-bold">
+                                <tr>
+                                    <td>
+                                        Bill From
+                                    </td>
+                                    <td>
+                                        Bill To
+                                    </td>
+                                    <td>
+                                        Bill Amount
+                                    </td>
+                                    <td>
+                                        Fine Amount
+                                    </td>
+                                    <td>
+                                        Meter Rent
+                                    </td>
+                                    <td>
+                                        Discount Amount
+                                    </td>
+                                    <td>
+                                        Payable Amount
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.BillDetail)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.BillFrom
+                                        </td>
+                                        <td>
+                                            @item.BillTo
+                                        </td>
+                                        <td>
+                                            @item.BillAmount
+                                        </td>
+                                        <td>
+                                            @item.FineAmount
+                                        </td>
+                                        <td>
+                                            @item.MeterRent
+                                        </td>
+                                        <td>
+                                            @item.DiscountAmount
+                                        </td>
+                                        <td>
+                                            @item.PayableAmount
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*<div class="col-md-6 alert alert-success bg-white">
+                        <div class="row">
+                            <label style="font-weight: bold; font-size: 80%;">Transaction Limit: @Model.TxnLimitMax</label>
+                        </div>
+                        <div class="row">
+                            <label style="font-weight: bold; font-size: 80%;">Daily Transaction Limit: @Model.TxnDailyLimitMax</label>
+                        </div>
+                        <div class="row">
+                            <label style="font-weight: bold; font-size: 80%;">Monthly Transaction Limit: @Model.TxnMonthlyLimitMax</label>
+                        </div>
+                        <div class="row">
+                            <label style="font-weight: bold; font-size: 80%;">Remaining Daily Transaction Limit: @Model.TxnDailyRemainingLimit</label>
+                        </div>
+                        <div class="row">
+                            <label style="font-weight: bold; font-size: 80%;">Remaining Monthly Transaction Limit: @Model.TxnMonthlyRemainingLimit</label>
+                        </div>
+                    </div>*@
+            </fieldset>
+        }
+    </div>
+</div>
+<div id="modal_backdrop" class="modal fade" data-backdrop="false" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                @*<p id="DetailsHere"></p>*@
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Yes <i class="icon-floppy-disk ml-2"></i></button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnReject" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Content/assets/js/plugins/notifications/sweet_alert.min.js"></script>
+<script>
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+
+    var minAmount = $("#MinAmount").val();
+    var maxAmount = $("#MaxAmount").val();
+    document.getElementById("LogoView").src = $("#ProductLogo").val();
+
+    function amtValid() {
+        debugger;
+        var amount = $("[name='TotalDueAmount']").val();
+        if (amount == "") {
+            amount = 0;
+        }
+        amount = parseFloat(amount);
+        if (amount < minAmount || amount > maxAmount) {
+            $('[name="PayableAmount"]').addClass("input-validation-error");
+            //$('[name="Amount"]').removeClass("valid");
+            $('span[data-valmsg-for="PayableAmount"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="PayableAmount"]').addClass("field-validation-error text-danger").html("Amount is Not Valid");
+        }
+
+        else {
+            $('span[data-valmsg-for="PayableAmount"]').html("");
+        }
+    }
+    $('#ConfirmButton').click(function (e) {
+
+        var Amount = $("[name='TotalDueAmount']").val();
+        debugger;
+
+        if (Amount == "") {
+            Amount = 0;
+        }
+        Amount = parseFloat(Amount);
+        if (Amount < minAmount || Amount > maxAmount) {
+            return false;
+        }
+        var ConsumerId = $("[name='ConsumerId']").val();
+        var CustomerName = $("[name='CustomerName']").val();
+        var commissionType = $("#CommissionType").val();
+        var commissionValue = $("#CommissionValue").val();
+        if (commissionValue == "") {
+            commissionValue = 0;
+        }
+        commissionValue = parseFloat(commissionValue);
+
+        Number.prototype.toFixedDown = function (digits) {
+            var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+                m = this.toString().match(re);
+            return m ? parseFloat(m[1]) : this.valueOf();
+        };
+
+        if (Amount === "") {
+            $(".modal-body").empty().prepend('<p>Please enter Amount</p>');
+            $("#btnSubmit").hide();
+            $("#btnReject").html('Okay');
+        } else {
+            $(".modal-body").empty().prepend("<p><h4 class=" + "modal-title" + ">You're about to perform this transaction. Are you sure?</h4></p>");
+            if (commissionType == "P") {
+                /*debugger*/;
+                var perCashBack = (parseFloat(Amount) / 100) * commissionValue;
+                perCashBack = perCashBack.toFixedDown(2),
+                    $(".modal-body").append("<p>Consumer ID: " + ConsumerId + "</br>Customer Name:" + CustomerName + " </br>Amount: Rs. " + Amount + "</p><br /><p>Cash Back: " + commissionValue + "% <br /> Cashback Amount: Rs." + perCashBack + "</p>");
+            }
+            if (commissionType == "F") {
+                var flatCashBack = commissionValue;
+                $(".modal-body").append("<p>Consumer Id: " + ConsumerId + "</br>Customer Name:" + CustomerName + " </br> Amount: Rs. " + Amount + "</p><br /><p> Cashback Amount: Rs." + flatCashBack + "</p>");
+            }
+
+            $("#btnSubmit").show();
+            $("#btnReject").html('No');
+        }
+        //$("#DetailsHere").empty().prepend("Topup Amount Rs."+$("[name='Amount']").val()+" to "+$("[name='MobileNo']").val());
+    });
+    $('#btnSubmit').click(function (e) {
+        $("#btnSubmit").attr("disabled", true);
+        $("#btnReject").attr("disabled", true);
+
+        document.getElementById("NeabillPayment").submit();
+    });
+
+</script>

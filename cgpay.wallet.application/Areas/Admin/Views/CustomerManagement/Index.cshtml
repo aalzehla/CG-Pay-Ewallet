@@ -1,0 +1,168 @@
+﻿@model cgpay.wallet.application.Models.WalletUserInfoModel
+@{
+    ViewBag.Title = "Customer Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Client Management</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="ModalTitle"></h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+
+                    <fieldset id="SubmitForm">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ParentId)
+                        @*@Html.HiddenFor(m => m.FullName)*@
+                        @*<div class="form-group">
+                            @Html.NTextBoxFor(model => model.AgentId, new { @class = "form-control", autocomplete = "off" }, 1, disable: true)
+                        </div>*@
+                        <div class="form-group">
+                            @Html.NTextBoxFor(model => model.FullName, new { @class = "form-control", autocomplete = "off" }, 1, disable: true)
+                        </div>
+
+                        <div class="form-group">
+                            @Html.NTextBoxFor(model => model.Balance, new { @class = "form-control", autocomplete = "off" }, 1, disable: true)
+
+                        </div>
+                        <div class="form-group">
+                            @Html.NTextBoxFor(model => model.BalanceToAdd, new { @class = "form-control", @maxlength = "6", autocomplete = "off" }, 1)
+
+
+                        </div>
+                        <div class="form-group">
+                            @Html.NTextAreaFor(model => model.Remarks, new { @class = "form-control", autocomplete = "off", @placeholder = "Remarks" }, 1)
+                            @*@Html.LabelFor(model => model.Remarks, new { @class = "col-lg-6" })
+
+                                @Html.ValidationMessageFor(model => model.Remarks)
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control", autocomplete = "off", @placeholder = "Remarks" })
+
+                                </div>*@
+
+
+                        </div>
+                        <div class="form-group">
+                            <a href="#" class="btn btn-block btn-success" id="AddedBalance">Save</a>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#BalanceToAdd").on("keypress keyup blur", function (event) {
+        //this.value = this.value.replace(/[^0-9\.]/g,'');
+        $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
+    function showAddBalance(agentid) {
+        //debugger;
+        var url = "/Admin/CustomerManagement/AddBalance?agentid=" + agentid;
+        var data = " __RequestVerificationToken=" + $('input[name="__RequestVerificationToken"]').val();
+        $("#ModalTitle").html("Add Balance");
+        $("#MyModal").modal();
+        //var agentId = $(this).attr("data-val");
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: data,
+            success: function (result) {
+                /*debugger*/;
+                var obj = JSON.parse(result);
+                var agentId = obj.AgentId;
+                var fullName = obj.FullName;
+                var balance = obj.Balance;
+
+                $("#AgentId").val(agentId);
+                $("#FullName").val(fullName);
+                $("#Balance").val(balance);
+            },
+            error: function (ex) {
+                /*debugger*/;
+                alert('Failed to get' + ex);
+            }
+        });
+    }
+
+    $("#AddedBalance").click(function () {
+        //debugger;
+        var data = $("#SubmitForm").serialize();
+        data += "& __RequestVerificationToken=" + $('input[name="__RequestVerificationToken"]').val();
+        var ParentId = $('#ParentId').val();
+        $.ajax({
+            type: "Post",
+            url: "/Admin/CustomerManagement/AddBalance",
+            data: data,
+            success: function (result) {
+                /*debugger*/;
+                window.location.href = "/Admin/CustomerManagement/Index?ParentId=" + ParentId;
+            },
+            error: function (ex) {
+                /*debugger*/;
+                alert('Failed to post.' + ex);
+            }
+        });
+    });
+
+    $('.icon-lock2').parent().on('click', function e() {
+        /*debugger*/;
+        var agentId = $(this).attr("data-val");
+        var status = $(this).attr("data-val1");
+        var userId = $(this).attr("data-val2");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "agentid:'" + agentId + "'," + "userid:'" + userId + "'," + "status:'" + status + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/CustomerManagement/UserStatusChange','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Deactivate User?", funcText);
+    });
+    $('.icon-unlocked2').parent().on('click', function e() {
+        /*debugger*/;
+        var agentId = $(this).attr("data-val");
+        var status = $(this).attr("data-val1");
+        var userId = $(this).attr("data-val2");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "agentid:'" + agentId + "'," + "userid:'" + userId + "'," + "status:'" + status + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/CustomerManagement/UserStatusChange','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Activate User?", funcText);
+    });
+    $('.icon-key').parent().on('click', function e() {
+        debugger;
+        //var agentId = $(this).attr("data-val");
+        var userId = $(this).attr("data-val2");
+        var agentId = $(this).attr("data-val");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "userid:'" + userId + "'," + "agentid:'" + agentId + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/CustomerManagement/ResetPassword','POST',true,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Reset Password?", funcText);
+    });
+</script>

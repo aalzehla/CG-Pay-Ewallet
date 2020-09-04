@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "BulkTopUp";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+    var i = 1;
+    var success = true;
+}
+@model List<cgpay.wallet.shared.Models.BulkUpload.BulkTopUpCommon>
+<div class="card">
+    <div class="card-header header-elements-inline">
+        @*<h6 class="card-title">
+                <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+            </h6>*@
+    </div>
+    <div class="card-body">
+        <div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Sno</th>
+                        <th>Subscriber Number</th>
+                        <th>Amount</th>
+                        <th>Product</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+
+
+                        foreach (var item in Model)
+                        {
+                            if (item.Code != "0")
+                            {
+                                success = false;
+                                <tr>
+                                    <td colspan="5"><span class="text-danger">@Html.Raw(item.Message)</span></td>
+
+                                </tr>
+                                break;
+                            }
+                            <tr>
+
+                                <td>@i</td>
+                                <td>@Html.Raw(item.SubscriberNumber)</td>
+                                <td>@Html.Raw(item.Amount)</td>
+                                <td>@Html.Raw(item.Product)</td>
+                                <td>@Html.Raw(item.Remark)</td>
+
+                            </tr>
+                            i++;
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div>
+        @if(success){
+            <a href="@Url.Action("BulkTopUpReceiptList","BulkUpload",new { ViewBag.ProcessId })" class="btn btn-primary mt-2">Continue</a>
+            }
+            else{
+            <a href="@Url.Action("Index","BulkUpload")" class="btn btn-primary mt-2">Continue</a>
+            }
+        </div>
+
+
+    </div>
+</div>
+

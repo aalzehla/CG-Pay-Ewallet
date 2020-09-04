@@ -1,0 +1,326 @@
+﻿
+@model cgpay.wallet.application.Models.MerchantModel
+@{
+    ViewBag.Title = "Manage Merchant";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/MerchantManagement", "Manage", ControllerDisplayName: "Merchant List");
+}
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card" style="zoom: 1;">
+    <div class="card-header header-elements-inline">
+        <h6 class="card-title">
+            <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+        </h6>
+    </div>
+    <div class="card-body" style="">
+        @using (Html.BeginForm("ManageMerchant", "MerchantManagement", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "Index", enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.MerchantID)
+            @Html.HiddenFor(model => model.ParentID)
+            @Html.HiddenFor(Model => Model.MerchantRegistrationCertificate)
+            @Html.HiddenFor(Model => Model.MerchantLogo)
+            @Html.HiddenFor(Model => Model.MerchantPanCertificate)
+            @Html.HiddenFor(Model => Model.MerchantOperationType)
+            @Html.HiddenFor(model => model.UserID)
+            @Html.HiddenFor(model => model.MerchantQr)
+
+            @*<ul class="nav nav-tabs nav-tabs-highlight">
+                    <li class="nav-item"><a href="#Merchantinformation" class="nav-link active " data-toggle="tab">Merchant Information</a></li>
+                    <li class="nav-item"><a href="#userinformation" class="nav-link " data-toggle="tab">User Information</a></li>
+                </ul>*@
+            <div class="tab-content">
+                <div id="Merchantinformation" class="tab-pane fade active show">
+
+                    <div class="form-group mb-3 mb-md-2 ">
+                        @Html.Label("Is auto commission :", new { @class = "d-block font-weight-semibold" }) &nbsp;&nbsp;
+                        <label class="form-check-label">
+                            @Html.CheckBoxFor(model => model.MerchantCommissionType, new { @name = "is_auto_commission", @class = "form-check-input-styled" })
+                        </label>
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.MerchantName, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.MerchantRegistrationNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.MerchantPanNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.MerchantContractDate, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                        @Html.NTextBoxFor(model => model.MerchantWebUrl, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NDropDownListFor(model => model.MerchantCountry, new SelectList(ViewBag.MerchantCountryList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NDropDownListFor(model => model.MerchantProvince, new SelectList(ViewBag.MerchantProvinceList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NDropDownListFor(model => model.MerchantDistrict, new SelectList(ViewBag.MerchantDistrictList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NDropDownListFor(model => model.MerchantVDC_Muncipality, new SelectList(ViewBag.MerchantVDC_MuncipilityList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+
+                        @Html.NTextBoxFor(model => model.MerchantWardNo, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.MerchantStreet, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.MerchantPhoneNumber, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                    <h8 class="card-title">
+                        <b>File Upload </b>
+
+                    </h8>
+                    <div class="row">
+
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.MerchantLogo, "Merchant Logo", new { @class = "label", autocomplete = "off" })
+                            <div><img id="logo_view" height="150" width="150" style="border: none" /></div>
+                            <div> <input type="file" title="Merchant Logo" class="mt-1" id="Merchant_Logo" name="Merchant_Logo" accept="image/x-png,image/jpeg,image/jpg" onchange="showLogo(this)" /> </div>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.MerchantPanCertificate, "Pan/VAT Certificate", new { @class = "label", autocomplete = "off" })
+                            <div><img id="pan_view" height="150" width="150" style="border: none" /></div>
+                            <div> <input type="file" title="Pan Certiticate" class="mt-1" id="Pan_Certiticate" name="Pan_Certiticate" accept="image/x-png,image/jpeg,image/jpg" onchange="showpan(this)" /> </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            @Html.LabelFor(model => model.MerchantRegistrationCertificate, "Registration Certificate", new { @class = "label", autocomplete = "off" })
+                            <div><img id="reg_view" height="150" width="150" style="border: none" /></div>
+                            <div> <input type="file" title="Registration Certificate" class="mt-1" id="Registration_Certificate" name="Registration_Certificate" accept="image/x-png,image/jpeg,image/jpg" onchange="showReg(this)" /> </div>
+                        </div>
+                        @*<div class="col-md-3">
+                            <label class="label">QR Image</label>
+                            <div>
+                                <img id="QrImage_view" height="150" width="150" style="border: solid" />
+                            </div>
+                        </div>*@
+
+
+                    </div>
+
+                    @if (Model.MerchantID == null)
+                    {
+                        <hr />
+                        <h8 class="card-title">
+                            <b>[Note: Please Note this details will be your for login] </b>
+                        </h8>
+
+
+                        <div class="row">
+                            @if (string.IsNullOrEmpty(Model.MerchantID))
+
+                            {
+                                @Html.NTextBoxFor(model => model.UserName, new { @class = "form-control", autocomplete = "off" }, 3)
+                            }
+                            else
+                            {
+                                <div class="col-lg-4">
+                                    <label>ChangePassword</label><input type="checkbox" id="changepassword" name="changepassword" class="form-check-input-styled" />
+                                </div>
+                            }
+                            @Html.NTextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                            @Html.NTextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                        </div>
+
+                        <div class="row">
+                            @Html.NTextBoxFor(model => model.FirstName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.MiddleName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.LastName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.UserMobileNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.UserEmail, new { @class = "form-control", autocomplete = "off", @type = "email" }, 3)
+
+                        </div>
+                    }
+                        <div class="row">
+                            @*@Html.NTextBoxFor(model => model.UserMobileNumber, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)*@
+                            @*@Html.NTextBoxFor(model => model.UserEmail, new { @class = "form-control", autocomplete = "off", @type = "email" }, 3)*@
+
+                        </div>
+                    
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save<i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<script type="text/javascript">
+
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+       function AddressInital() {
+
+        if ($("#MerchantProvince").val() === "") {
+            $("#MerchantDistrict").empty().prepend("<option value='' selected>--Select District--</option>");//.prop("disabled", true);
+            $("#MerchantVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");//.prop("disabled", true);
+        }
+    }
+    $(document).ready(function () {
+        AddressInital();
+
+         $("#MerchantContractDate").datepicker({
+                dateFormat: dateFormat,
+                maxDate: new Date,
+                changeMonth: true,
+                changeYear: true,
+                min: [1943, 04, 14],
+              //  yearRange: yearRangeDOB,
+                showAnim: "slideDown",
+                autoSize: true
+         }).attr('readonly', 'readonly');
+
+        /*debugger*/;
+
+        if ($("#MerchantID").val() != "") {
+            document.getElementById("reg_view").src = $("#MerchantRegistrationCertificate").val();
+            document.getElementById("logo_view").src = $("#MerchantLogo").val();
+            document.getElementById("pan_view").src = $("#MerchantPanCertificate").val();
+            document.getElementById("QrImage_view").src = $("#MerchantQr").val();
+          //  $(".MerchantOperationType").prop("disabled", true);
+            // $('#UserEmail').prop("disabled", true);
+            //$('#UserMobileNumber').prop("readonly", "readonly");
+             $('#UserEmail').addClass("disabled"); //prop("disabled", true);
+            $('#UserMobileNumber').addClass("disabled");
+        }
+        //debugger;
+        var merchantid = $("#MerchantID").val();
+        if (merchantid) {
+            $('#Password').prop("disabled", true);
+            $('#ConfirmPassword').prop("disabled", true);
+        }
+    });
+    $("#changepassword").change(function()
+    {
+        debugger;
+        if ($("#changepassword").is(":checked")) {
+             $('#Password').prop("disabled", false);
+            $('#ConfirmPassword').prop("disabled", false);
+
+        } else {
+
+             $('#Password').prop("disabled", true);
+            $('#ConfirmPassword').prop("disabled", true);
+        }
+    });
+        //Merchant Address
+    $("#MerchantProvince").change(function () {
+        /*debugger*/;
+            AddressInital();
+            $("#MerchantDistrict").empty().prepend("<option value=''  selected>--Select District--</option>");
+            $("#MerchantVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");
+            var provinceid = $("#MerchantProvince").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetDistrictsByProvince")',
+                dataType: 'json',
+                data: { provinceId: provinceid },
+                success: function (districts) {
+                    $.each(districts, function (i, district) {
+                        $("#MerchantDistrict").append('<option value="' + district.Value + '">' + district.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Province Districts.' + ex);
+                }
+            });
+            return false;
+    });
+     $("#MerchantDistrict").change(function () {
+
+           // $("#PermanentDistrict").empty().prepend("<option value=''  selected>--Permanent District--</option>");
+            $("#MerchantVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");
+            var district = $("#MerchantDistrict").val();
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: '@Url.Action("GetMuncipalityByDistrict")',
+                dataType: 'json',
+                data: { district: district },
+                success: function (vdc_muncipality) {
+                    $.each(vdc_muncipality, function (i, vdc_munciple) {
+                        $("#MerchantVDC_Muncipality").append('<option value="' + vdc_munciple.Value + '">' + vdc_munciple.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve District VDC/Muncipality.' + ex);
+                }
+            });
+            return false;
+     });
+
+    $('#MerchantContractDate').change(function () {
+            var dateObj = NepaliFunctions.ConvertToDateObject($('#MerchantContractDate').val(), "YYYY-MM-DD");
+            $('#MerchantContractDate').removeClass("input-validation-error");
+            if ($('#MerchantContractDate-error').length > 0) {
+                $('#MerchantContractDate-error').html("");
+            }
+    });
+
+
+      //alphabet and whitespace
+        function isAlphabateOnly(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+                return true;
+            }
+            return false;
+        }
+        //Text and dot
+        function isAlphabaticChar(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 32 && charCode < 46) || (charCode > 46 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127) || (charCode > 47 && charCode < 58)) {
+                return false;
+            }
+            return true;
+        }
+        //Number Only
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+    }
+
+    function showLogo(input) {
+        /*debugger*/;
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#logo_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function showpan(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#pan_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+    function showReg(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#reg_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>

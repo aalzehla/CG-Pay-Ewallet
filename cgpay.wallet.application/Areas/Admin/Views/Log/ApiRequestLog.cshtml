@@ -1,0 +1,25 @@
+﻿@model cgpay.wallet.shared.Models.Log.ApiLogCommon
+@{
+    ViewBag.Title = "ApiRequestLog";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/Log/ApiLog", "List", ControllerDisplayName: "API Log");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+
+</div>
+

@@ -1,0 +1,32 @@
+﻿@model cgpay.wallet.shared.Models.LoadBalance.ViewTransactionReponseModel
+
+@{
+    ViewBag.Title = "ReceivePaymentResponse";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <fieldset class="mb-1">
+            <div class="row">
+                <div class="col-md-6">
+                    @if (Model.code == 0)
+                    {
+                        @Html.NLabelFor(model => model.pmt_gateway_txn_id, new { @class = "form-control", autocomplete = "off" }, 2)
+                        @Html.NLabelFor(model => model.pmt_txn_id, new { @class = "form-control", autocomplete = "off" }, 2)
+                        @Html.NLabelFor(model => model.amount, new { @class = "form-control", autocomplete = "off" }, 2)
+                        @Html.NLabelFor(model => model.BankName, new { @class = "form-control", autocomplete = "off" }, 2)
+                        @Html.NLabelFor(model => model.Type, new { @class = "form-control", autocomplete = "off" }, 2)
+                    }
+                    else
+                    {
+                        Model.gateway_status = "Failed";
+                        @Html.NLabelFor(model => model.gateway_status, new { @class = "form-control", autocomplete = "off" }, 2)
+                        @Html.NLabelFor(model => model.Message, new { @class = "form-control", autocomplete = "off" }, 2)
+                    }
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+

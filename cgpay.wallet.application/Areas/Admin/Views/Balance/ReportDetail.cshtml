@@ -1,0 +1,52 @@
+﻿@model cgpay.wallet.application.Models.BalanceModel
+
+@{
+    ViewBag.Title = "ReportDetail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@*<div class="page-header">
+        <div class="page-header-content header-elements-md-inline">
+            <div class="page-title d-flex">
+                <h4><i class="icon-arrow-left52 mr-2" onclick="GoBack();"></i> <span class="font-weight-semibold">Agent</span> - @Html.Raw(ViewData["Title"])</h4>
+                <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+            </div>
+
+            <div class="header-elements d-none py-0 mb-3 mb-md-0">
+                <div class="breadcrumb">
+                    <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                    <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Balance", "Report Detail");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-body">
+        <fieldset class="mb-1">
+            <div class="row">
+                    @Html.NTextBoxFor(model => model.AgentId, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.Name, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.BankName, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.BankBranch, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.BankAcccountNo, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.OldBalance, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.NewBalance, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.Type, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.CreatedBy, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.CreatedDate, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+                    @Html.NTextBoxFor(model => model.CreatedNepaliDate, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 3)
+            </div>
+        </fieldset>
+    </div>
+</div>

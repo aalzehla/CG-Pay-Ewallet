@@ -1,0 +1,85 @@
+﻿@model cgpay.wallet.application.Models.LoadBalanceModel
+
+@{  
+    ViewBag.Title = "LoadBalanceIndex";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("LoadBalanceIndex", "LoadBalance", new { area = "Client" }, FormMethod.Post, new { @role = "form", @id = "LoadBalancePage" }))
+        {
+            @Html.AntiForgeryToken()
+            @*@Html.HiddenFor(Model => Model.Type)*@
+        <fieldset class="mb-3">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.NTextBoxFor(model => model.amount, new { @class = "form-control", autocomplete = "off", @placeholder = "Amount", @onkeypress = "return isNumber(event)", @onfocusout = "amtValid()" }, 1)
+                    @Html.HiddenFor(model => model.instrument_code)
+
+                    <br />
+                </div>
+                <div class="col-md-2">&nbsp;</div>
+            </div>
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-success btn-sm" id="ConfirmButton">Add <i class="icon-play3"></i></button>
+
+            </div>
+            <br />
+            <div class="col-md-6 alert alert-success bg-white">
+                <div class="row">
+                    <label style="font-weight: bold; font-size: 80%;">Transaction Limit: @Model.transaction_limit_max</label>
+                </div>
+                <div class="row">
+                    <label style="font-weight: bold; font-size: 80%;">Daily Transaction Limit: @Model.transaction_daily_limit_max</label>
+                </div>
+                <div class="row">
+                    <label style="font-weight: bold; font-size: 80%;">Monthly Transaction Limit: @Model.transaction_monthly_limit_max</label>
+                </div>
+                <div class="row">
+                    <label style="font-weight: bold; font-size: 80%;">Remaining Daily Transaction Limit: @Model.daily_remaining_limit</label>
+                </div>
+                <div class="row">
+                    <label style="font-weight: bold; font-size: 80%;">Remaining Monthly Transaction Limit: @Model.monthly_remaining_limit</label>
+                </div>
+            </div>
+
+        </fieldset>
+        }
+    </div>
+</div>
+
+<script>
+    debugger;
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    var minAmount = 10;
+    var maxAmount = 100000;
+    debugger;
+    function amtValid() {
+        var amount = $("[name='amount']").val();
+        if (amount == "") {
+            amount = 0;
+        }
+        amount = parseFloat(amount);
+        if (amount < minAmount || amount > maxAmount) {
+            $('[name="amount"]').addClass("input-validation-error");
+            //$('[name="Amount"]').removeClass("valid");
+            $('span[data-valmsg-for="amount"]').removeClass("field-validation-valid text-success");
+            $('span[data-valmsg-for="amount"]').addClass("field-validation-error text-danger").html("Amount is Not Valid");
+        }
+
+        else {
+            $('span[data-valmsg-for="amount"]').html("");
+        }
+    }
+
+</script>

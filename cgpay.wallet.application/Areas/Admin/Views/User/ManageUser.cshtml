@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "ManageUser";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model cgpay.wallet.shared.Models.UserCommon
+@*@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("User", "Manage User");}*@
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("admin/user/Index", "User", ControllerDisplayName: "Manage User");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-header header-elements-inline">
+
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">@Html.Raw(String.IsNullOrEmpty(Model.UserID) ? "Add New" : "Update") User</legend>
+        @*<div class="header-elements">
+              <div class="list-icons">
+                <a class="list-icons-item" data-action="collapse"></a>
+                <a class="list-icons-item" data-action="reload"></a>
+                <a class="list-icons-item" data-action="remove"></a>
+              </div>
+            </div>*@
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageUser", "User", new { }, FormMethod.Post, new { @role = "form", @id = "adduser" }))
+        {
+            @Html.AntiForgeryToken()
+            @*@Html.ValidationSummary()*@
+            @Html.HiddenFor(m => m.UserID)
+            <fieldset class="mb-3">
+                @if (string.IsNullOrEmpty(Model.UserID))
+                {
+                    <div class="row">
+                        @Html.NTextBoxFor(model => model.UserName, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.UserPwd, new { @class = "form-control", @type = "password", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.ConfirmUserPwd, new { @class = "form-control", @type = "password", autocomplete = "off" }, 3)
+                    </div>
+                }
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.FullName, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.Email, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.PhoneNo, new { @class = "form-control", autocomplete = "off", @maxlength = "10" }, 3)
+                    @Html.NSwitchBoxFor(model => model.Allow_Multiple_Login, Model.Allow_Multiple_Login == "Y" ? true : false, "Y", 3)
+                </div>
+                @if (string.IsNullOrEmpty(Model.UserID))
+                {
+                    <div class="row">
+                        @Html.NDropDownListFor(model => model.RoleId, new SelectList(ViewBag.Roles, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+
+                        <div>
+
+                            @Html.Label("Status")
+                            @Html.NSwitchBoxFor(model => model.IsActive, Model.IsActive == "y" ? true : false, "Y", 2)
+                        </div>
+
+                        @*<div class="form-check form-check-inline">
+                              <label class="form-check-label">
+                                <div class=""><span class=""><input type="checkbox" class="form-check-input-styled" data-fouc="" /></span></div>
+                                Unchecked styled
+                              </label>
+                            </div>*@
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+    </script>
+}

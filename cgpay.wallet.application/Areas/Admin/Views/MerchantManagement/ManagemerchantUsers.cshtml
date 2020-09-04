@@ -1,0 +1,188 @@
+﻿
+@model cgpay.wallet.application.Models.MerchantUserModel
+@{
+    ViewBag.Title = "Manage Merchant User";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/MerchantManagement/ViewMerchantUser?merchantid="+Model.MerchantId, "Manage", ControllerDisplayName: "Merchant User  List");
+}
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card" style="zoom: 1;">
+    <div class="card-header header-elements-inline">
+        <h6 class="card-title">
+            <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+        </h6>
+    </div>
+    <div class="card-body" style="">
+        @using (Html.BeginForm("ManagemerchantUsers", "MerchantManagement", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "Index", enctype = "multipart/form-data" }))
+        {
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.MerchantId)
+     
+            @Html.HiddenFor(model => model.UserId)
+
+            
+            <div class="tab-content">
+                
+
+                        <div class="row">
+                            @if (string.IsNullOrEmpty(Model.UserId))
+
+                            {
+                                @Html.NTextBoxFor(model => model.UserName, new { @class = "form-control", autocomplete = "off" }, 3)
+                            }
+                            else
+                            {
+                                <div class="col-lg-4">
+                                    <label>ChangePassword</label><input type="checkbox" id="changepassword" name="changepassword" class="form-check-input-styled" />
+                                </div>
+                            }
+                            @Html.NTextBoxFor(model => model.Password, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                            @Html.NTextBoxFor(model => model.ConfirmPassword, new { @class = "form-control", autocomplete = "off", @type = "password" }, 3)
+                        </div>
+
+                        <div class="row">
+                            @Html.NTextBoxFor(model => model.FullName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                          
+                            @Html.NTextBoxFor(model => model.UserMobileNumber, new { @class = "form-control", autocomplete = "off",@maxlength="10", @onkeypress = "return isNumber(event)" }, 3)
+                            @Html.NTextBoxFor(model => model.UserEmail, new { @class = "form-control", autocomplete = "off", @type = "email" }, 3)
+                        </div>                
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save<i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<script type="text/javascript">
+
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+       //function AddressInital() {
+
+       // if ($("#MerchantProvince").val() === "") {
+       //     $("#MerchantDistrict").empty().prepend("<option value='' selected>--Select District--</option>");//.prop("disabled", true);
+       //     $("#MerchantVDC_Muncipality").empty().prepend("<option value=''  selected>--Select Municipality--</option>");//.prop("disabled", true);
+       // }
+       // }
+    $(document).ready(function () {
+        //AddressInital();
+
+         $("#MerchantContractDate").datepicker({
+                dateFormat: dateFormat,
+                maxDate: new Date,
+                changeMonth: true,
+                changeYear: true,
+                min: [1943, 04, 14],
+              //  yearRange: yearRangeDOB,
+                showAnim: "slideDown",
+                autoSize: true
+         }).attr('readonly', 'readonly');
+
+        
+
+        if ($("#UserId").val() != "") {
+         
+             $('#UserEmail').addClass("disabled"); //prop("disabled", true);
+            $('#UserMobileNumber').addClass("disabled");
+        }
+        
+        var userid = $("#UserId").val();
+        if (userid) {
+            $('#Password').prop("disabled", true);
+            $('#ConfirmPassword').prop("disabled", true);
+        }
+        else {
+            $('#Password').prop("disabled", false);
+            $('#ConfirmPassword').prop("disabled", false);
+        }
+    });
+    $("#changepassword").change(function()
+    {
+        debugger;
+        if ($("#changepassword").is(":checked")) {
+             $('#Password').prop("disabled", false);
+            $('#ConfirmPassword').prop("disabled", false);
+
+        } else {
+
+             $('#Password').prop("disabled", true);
+            $('#ConfirmPassword').prop("disabled", true);
+        }
+    });
+        //Merchant Address
+  
+
+
+      //alphabet and whitespace
+        function isAlphabateOnly(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+                return true;
+            }
+            return false;
+        }
+        //Text and dot
+        function isAlphabaticChar(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 32 && charCode < 46) || (charCode > 46 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127) || (charCode > 47 && charCode < 58)) {
+                return false;
+            }
+            return true;
+        }
+        //Number Only
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+    }
+
+    function showLogo(input) {
+        /*debugger*/;
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#logo_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function showpan(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#pan_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+    function showReg(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#reg_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+</script>

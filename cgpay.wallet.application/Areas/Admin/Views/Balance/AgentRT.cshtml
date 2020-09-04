@@ -1,0 +1,143 @@
+﻿@model cgpay.wallet.application.Models.BalanceModel
+
+@{
+    ViewBag.Title = "Agent R/T";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Balance", "Agent Retrieve/Transfer");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("AgentRT", "Balance", new { }, FormMethod.Post, new { @role = "form", @id = "RetrieveTransfer" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.Type)
+            @Html.HiddenFor(Model => Model.ParentId)
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-lg-12" style="padding-bottom: 10px">
+                            @Html.LabelFor(model => model.Type, "Select Type", new { @class = "label", autocomplete = "off" })
+                            <div class="form-check form-check-switchery form-check-switchery-double">
+                                <label class="form-check-label">
+                                    Retrieve
+                                    <input type="checkbox" class="form-input-switchery" id="RTCheckbox" checked data-fouc data-switchery="true" style="display: none;">
+                                    TopUp
+                                </label>
+                            </div>
+                        </div>
+                        @*@Html.NSwitchBoxFor(model => model.Type, Model.Type == "Y" ? true : false, "Y", 1)*@
+                        @Html.NDropDownListFor(model => model.Name,new SelectList(Model.NameList, "Value", "Text") , new { @class = "form-control", autocomplete = "off" }, 1)
+                        @Html.NTextBoxFor(model => model.ParentName, new { @class = "form-control", autocomplete = "off",@readonly="readonly" }, 1)
+                        @Html.NDropDownListFor(model => model.BankId, new SelectList(Model.BankAccountList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @maxlength = "7", @title = "Please Specify Amount", @placeholder = "Amount", @onkeypress = "return isNumberDot(event)" }, 1)
+                        @Html.NTextAreaFor(model => model.Remarks, new { @class = "form-control", @maxlength = "500", @title = "Please use Remarks", @placeholder = "Remarks should be less then 500 characters", @style = "min-height: 100px", autocomplete = "off" }, 1)
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Submit</button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+<script>
+    function isNumberDot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46) {
+            return false;
+        }
+        return true;
+    }
+
+    $('#RTCheckbox').change(function (e) {
+        /*debugger*/;
+        $('#Name').val('');
+        $('#ParentName').val('');
+        $('#BankId').val('');
+        $('#Amount').val('');
+        $('#Remarks').val('');
+        $('#Type').val('');
+        $('#ParentId').val('');
+        if ($('#RTCheckbox').is(":checked")) {
+            $('#Type').val('T');
+            $(".BankIddivClass").show();
+            //$(".ParentNamedivClass").show();
+        } else {
+            $(".BankIddivClass").hide();
+            $(".ParentNamedivClass").hide();
+            //document.getElementsByName("Type")
+            $('#Type').val('R');
+        }
+    });
+
+    $('#btnSubmit').click(function (e) {
+        if ($('#RTCheckbox').prop("checked") == false) {
+            $('#BankId').rules('remove');
+            $('#BankId-error').text('');
+        }
+    });
+    $(document).ready(function () {
+        if ($('#RTCheckbox').is(":checked")) {
+            $('#Type').val('T');
+            $(".BankIddivClass").show();
+            $(".ParentNamedivClass").hide();
+        } else {
+            $(".BankIddivClass").hide();
+            $(".ParentNamedivClass").hide();
+            $('#Type').val('R');
+        }
+    });
+
+    $("#Name").change(function () {
+        var AgentName = $("#Name").val();
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: '@Url.Action("Getparent")',
+            dataType: 'json',
+            data: { AgentId: AgentName },
+            success: function (parentDetail) {
+                /*debugger*/;
+                $("#ParentId").val('');
+                $("#ParentName").val('');
+                $.each(parentDetail, function (Key, Value) {
+                    $("#ParentId").val(Key);
+                    $("#ParentName").val(Value);
+                });
+                var parentId = $("#ParentId").val();
+                var parentName = $("#ParentName").val();
+                if ($('#RTCheckbox').is(":checked")) {
+                    if (parentId == "" && parentName == "") {
+                        $(".ParentNamedivClass").hide();
+                    } else {
+                        $(".ParentNamedivClass").show();
+                    }
+                } else {
+                    $(".ParentNamedivClass").hide();
+                }
+            },
+            error: function (ex) {
+                alert('No Distributor id.' + ex);
+            }
+        });
+    });
+</script>
+

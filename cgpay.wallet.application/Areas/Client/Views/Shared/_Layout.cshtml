@@ -1,0 +1,655 @@
+﻿@using System.Data
+@using System.Linq
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Html.Raw(ViewBag.Title ?? "WePay Client Panel")</title>
+    @Styles.Render("~/UI/DesignCss")
+    @Scripts.Render("~/UI/CoreJs")
+    @Scripts.Render("~/UI/ThemeJs")
+    @Scripts.Render("~/UI/FixedSidebar")
+    @*<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">*@
+    <style>
+        .input-validation-error {
+            border-color: #f44336 !important;
+        }
+
+        .dataTable tbody td, .dataTable tbody th,
+        .dataTable_scrollBody td {
+            max-width: 300px;
+            word-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .dataTables_scroll .dataTables_scrollBody td {
+            white-space: normal !important;
+        }
+
+        .balance-title {
+            text-transform: uppercase;
+        }
+
+        .wmin-md-225 {
+            min-width: 250px !important;
+        }
+
+        .new-noticfication {
+            background: #e6ffec;
+        }
+    </style>
+</head>
+<body class="navbar-top">
+    @*Main navbar*@
+    @Html.AntiForgeryToken()
+    @if (ApplicationUtilities.GetSessionValue("UserName").ToString() != "" &&
+                (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "walletuser" ||
+                    ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "merchant" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "AGENT" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "SUB-AGENT"))
+    {
+        <div class="navbar navbar-expand-md navbar-dark fixed-top">
+
+            @*Header with logos*@
+            <div class="navbar-header navbar-dark d-none d-md-flex align-items-md-center">
+                <div class="navbar-brand navbar-brand-md">
+                    <a href="/Home/Index" class="d-inline-block">
+                        <img src="~/Content/assets/images/cg-pay-new.png" class="logo-img"/>
+                        @*<span style="color: white;font-size: 20px;"> Wallet</span>*@
+                    </a>
+                </div>
+
+                <div class="navbar-brand navbar-brand-xs">
+                    <a href="/Home/Index" class="d-inline-block">
+                        <img src="~/Content/assets/images/CG-with-white.png" height="35"/>
+                        @*<font style="color: white;font-size: 20px;">EW</font>*@
+                    </a>
+                </div>
+            </div>
+            @*/header with logos*@
+            @*Mobile controls*@
+            <div class="d-flex flex-1 d-md-none">
+                <div class="navbar-brand mr-auto">
+                    <a href="@ApplicationUtilities.GenerateUrl("~/client/")" class="d-inline-block">
+                        @*<img src="/Content/assets/images/logo_dark.png" alt="">*@
+                        <font style="color: dodgerblue;font-size: 20px;">CG Pay</font>
+                    </a>
+                </div>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+                    <i class="icon-tree5"></i>
+                </button>
+
+                <button class="navbar-toggler sidebar-mobile-main-toggle" type="button">
+                    <i class="icon-paragraph-justify3"></i>
+                </button>
+            </div>
+            @*/mobile controls*@
+
+            @*Navbar content*@
+            <div class="collapse navbar-collapse" id="navbar-mobile">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="#" class="navbar-nav-link sidebar-control sidebar-main-toggle d-none d-md-block">
+                            <i class="icon-paragraph-justify3"></i>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-md-auto">
+                    @*<li class="nav-item dropdown">
+                            <a href="#" class="navbar-nav-link dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/Content/assets/images/lang/gb.png" class="img-flag mr-2" alt="">
+                                English
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a href="#" class="dropdown-item english"><img src="~/Content/assets/images/lang/gb.png" class="img-flag" alt=""> English</a>
+                                <a href="#" class="dropdown-item ukrainian"><img src="~/Content/assets/images/lang/nepal.png" class="img-flag" alt=""> नेपाली </a>
+                            </div>
+                        </li>*@
+                    <li class="nav-item dropdown">
+                        <a href="#" class="navbar-nav-link dropdown-toggle caret-0" data-toggle="dropdown" aria-expanded="false">
+                            <i class="icon-bell3"></i>
+                            <span class="d-md-none ml-2">Notifictions</span>
+                            <span class="badge badge-pill bg-warning-400 ml-auto ml-md-0" id="notification-count"></span>
+
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right dropdown-content wmin-md-350">
+                            <div class="dropdown-content-header">
+                                <span class="font-weight-semibold">Notifications</span>
+                            </div>
+
+                            <div class="dropdown-content-body dropdown-scrollable">
+                                <ul class="media-list" id="notification-list">
+                                    <li class="media">
+                                        <div class="media-body">
+                                            <div class="media-title">
+                                                <a href="#">
+                                                    <span class="font-weight-semibold text-black-50">Top up success</span>
+                                                    <span class="text-muted float-right font-size-sm">04:58</span>
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    </li>
+
+
+
+                                </ul>
+                            </div>
+                            <div class="dropdown-content-footer justify-content-center p-0">
+                                <a href="~/Client/Notification/Index" id="all-notification-link" class="bg-light text-grey w-100 py-2" title="View All Notification" data-original-title="View all"><i class="icon-menu7 d-block top-0"></i></a>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="navbar-nav-link dropdown-toggle caret-0" data-toggle="dropdown" aria-expanded="false">
+
+                            <span id="AvailableBalance">Rs. @Session["Balance"]</span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-content wmin-md-225">
+                            <div class="dropdown-content-header">
+                                <div>
+                                    <div class="font-weight-semibold balance-title">
+                                        Total Balance
+
+                                    </div>
+                                    <div><span id="total-balance">Rs. @Session["Balance"] </span></div>
+                                </div>
+                                <div>
+                                    <a href=@Url.Action("BankList", "LoadBalance") class="btn bg-teal btn-xs btn-load-fund">Load Fund</a>
+                                    @*<button class="btn bg-teal btn-sm btn-load-fund">Load Fund</button>*@
+                                </div>
+
+                            </div>
+
+                            <div class="dropdown-content-body dropdown-scrollable">
+                                <ul class="media-list">
+                                    <li class="media">
+                                        <div class="mr-3">
+                                            <a href="#" class="btn bg-transparent border-primary text-primary rounded-round border-2 btn-icon"><i class="icon-wallet"></i></a>
+                                        </div>
+
+                                        <div class="media-body">
+                                            <span class="font-weight-semibold balance-title">Main Balance</span>
+                                            <div class="text-muted font-size-sm"><span id="main-balance">Rs. @Session["Balance"]</span> </div>
+                                        </div>
+                                    </li>
+
+                                    @*<li class="media">
+                                            <div class="mr-3">
+                                                <a href="#" class="btn bg-transparent border-warning text-warning rounded-round border-2 btn-icon"><i class="icon-gift"></i></a>
+                                            </div>
+
+                                            <div class="media-body">
+                                                <span class="font-weight-semibold balance-title">Bonous Balance</span>
+                                                <div class="text-muted font-size-sm">Rs. 0</div>
+                                            </div>
+                                        </li>*@
+
+                                    @*<li class="media">
+                                        <div class="mr-3">
+                                            <a href="#" class="btn bg-transparent border-info text-info rounded-round border-2 btn-icon"><i class="icon-trophy3"></i></a>
+                                        </div>
+
+                                        <div class="media-body">
+                                            <span class="font-weight-semibold">CG Points</span>
+                                            <div class="text-muted font-size-sm">0</div>
+                                        </div>
+                                    </li>*@
+
+
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </li>
+                    @*<li class="nav-item dropdown">
+                            <span class="navbar-nav-link" id="AvailableBalance">Rs. @Session["Balance"]</span>
+                        </li>*@
+                    <li class="nav-item dropdown dropdown-user">
+                        <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
+                            <img src="/Content/assets/images/placeholders/placeholder.jpg" class="rounded-circle mr-2" height="34" alt="">
+                            <span>@Session["FullName"]</span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            @if (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "merchant")
+                            {
+                                <a href="~/Client/ClientUser/Profile" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
+
+                                <a href="~/Client/ClientUser/ChangePassword" class="dropdown-item"><i class="icon-key"></i> Change Password</a>
+                                <a href="~/Client/ClientUser/ChangePin" class="dropdown-item"><i class="icon-key"></i> Change Pin</a>
+
+
+                                @*<a href="~/Client/Cards/Index" class="dropdown-item"><i class="icon-credit-card"></i> Cards</a>*@
+                                if (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "merchant" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "agent" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "sub-agent")
+                                {
+                                    if (ApplicationUtilities.GetSessionValue("KycStatus").ToString() == "r" || ApplicationUtilities.GetSessionValue("KycStatus").ToString() == "n")
+                                    {
+                                        <a href="~/Client/ClientUser/Kyc" class="dropdown-item"><i class="icon-certificate"></i> Update Kyc</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="~/Client/ClientUser/Kyc" class="dropdown-item"><i class="icon-certificate"></i> Kyc Detail</a>
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                <a href="~/Client/Merchant/Profile" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
+                            }
+                            @*<a href="#" class="dropdown-item"><i class="icon-comment-discussion"></i> Messages <span class="badge badge-pill bg-blue ml-auto">58</span></a>*@
+                            <div class="dropdown-divider"></div>
+                            <a href="~/Home/LogOff" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            @*/navbar content*@
+
+        </div>
+    }
+    @*/main navbar*@
+
+
+
+    @*Page content*@
+    <div class="page-content">
+        @if (ApplicationUtilities.GetSessionValue("UserName").ToString() != "" &&
+                (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "walletuser" ||
+                    ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "merchant" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "AGENT" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "SUB-AGENT")
+                )
+        {
+            @*Main sidebar*@
+            <div class="sidebar sidebar-dark sidebar-main sidebar-fixed sidebar-expand-md">
+
+                @*Sidebar mobile toggler*@
+                <div class="sidebar-mobile-toggler text-center">
+                    <a href="#" class="sidebar-mobile-main-toggle">
+                        <i class="icon-arrow-left8"></i>
+                    </a>
+                    Navigation
+                    <a href="#" class="sidebar-mobile-expand">
+                        <i class="icon-screen-full"></i>
+                        <i class="icon-screen-normal"></i>
+                    </a>
+                </div>
+                @*/sidebar mobile toggler*@
+                @*Sidebar content*@
+                <div class="sidebar-content">
+
+                    @*User menu*@
+                    @*<div class="sidebar-user">
+                            <div class="card-body">
+                                <div class="media">
+                                    <div class="mr-3">
+                                        <a href="#"><img src="../../../../global_assets/images/placeholders/placeholder.jpg" width="38" height="38" class="rounded-circle" alt=""></a>
+                                    </div>
+
+                                    <div class="media-body">
+                                        <div class="media-title font-weight-semibold">Victoria Baker</div>
+                                        <div class="font-size-xs opacity-50">
+                                            <i class="icon-pin font-size-sm"></i> &nbsp;Santa Ana, CA
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-3 align-self-center">
+                                        <a href="#" class="text-white"><i class="icon-cog3"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    @*/user menu*@
+                    @*Main navigation*@
+                    <div class="card card-sidebar-mobile">
+                        <ul class="nav nav-sidebar" data-nav-type="accordion">
+                            @{ var menus = Session["Menus"];
+
+                                if (menus != null)
+                                {
+                                    var menu = menus as List<cgpay.wallet.shared.Models.Menus.MenuCommon>;
+                                    if (null != menu)
+                                    {
+                                        var Group = menu.GroupBy(x => x.ParentGroup).Select(y => y.First());
+
+                                        foreach (var sub in Group)
+                                        {
+
+                                            var menuGroup = menu.Where(s2 => s2.ParentGroup == sub.ParentGroup);
+                                            var num = menu.Where(x => x.ParentGroup == sub.ParentGroup).GroupBy(x => x.MenuGroup);
+                                            if (num.Count() > 1)
+                                            {
+                                                string ParentName = sub.ParentGroup;
+                                                <li class="nav-item nav-item-submenu">
+                                                    <a href="@sub.linkPage" class="nav-link">
+                                                        <i class="@sub.Class"></i>
+                                                        <span>
+                                                            @sub.ParentGroup
+                                                        </span>
+                                                    </a>
+                                                    <ul class="nav nav-group-sub" data-submenu-title="@sub.ParentGroup">
+                                                        @foreach (var sub1 in num)
+                                                        {
+                                                            //if (menu.Where(s2 => s2.menuGroup == sub.menuGroup) != null)
+                                                            //{
+
+                                                            <li class="nav-item nav-item-submenu">
+                                                                <a href="@sub.linkPage" class="nav-link"><span>@sub1.Select(y => y.MenuGroup).FirstOrDefault()</span> </a>
+                                                                <ul class="nav nav-group-sub" data-submenu-title="@sub1.Select(y => y.MenuGroup).FirstOrDefault()">
+                                                                    @foreach (var sub2 in menu.Where(s2 => s2.MenuGroup == @sub1.Select(y => y.MenuGroup).FirstOrDefault()))
+                                                                    {
+                                                                        if (sub2.ParentGroup == ParentName)
+                                                                        {
+                                                                            <li class="nav-item">
+                                                                                <a href="@sub2.linkPage" class="nav-link">@sub2.MenuName</a>
+                                                                            </li>
+                                                                        }
+                                                                    }
+                                                                </ul>
+                                                            </li>
+                                                            //}
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                            else
+                                            {
+                                                <li class="nav-item nav-item-header">
+                                                    @*<a href="@sub.linkPage" class="nav-link">
+                                                            <i class="@sub.Class"></i>
+                                                            <span>@sub.ParentGroup</span> <span class="caret"></span>
+                                                        </a>*@
+                                                    @*<ul class="nav nav-group-sub" data-submenu-title="@sub.ParentGroup">*@
+                                                    @foreach (var sub2 in menu.Where(s2 => s2.MenuGroup == sub.MenuGroup))
+                                                    {
+                                                        @*<li class="nav-item">*@
+                                                        <a href="@sub2.linkPage" class="nav-link" data-toggle="tooltip" data-placement="top" title="@sub2.MenuName"><i class="@sub2.Class"></i><span>@sub2.MenuName</span></a>
+                                                        @*</li>*@
+                                                    }
+                                                    @*</ul>*@
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            @*Main*@
+                            @*@if (Session["Menus"] != null)
+                                {
+                                    var dt = Session["Menus"] as System.Data.DataTable;
+                                    var menu = "";
+                                    foreach (DataRow dr in dt.Rows)
+                                    {
+                                        if (!menu.Contains(dr["parent"].ToString()))
+                                        {
+                                            <li class="nav-item nav-item-submenu">
+                                                <a href="#" class="nav-link"><i class="@dr["PMenuIcon"].ToString()"></i> <span>@dr["parent"].ToString()</span></a>
+
+                                                <ul class="nav nav-group-sub" data-submenu-title="@dr["parent"].ToString()">
+
+                                                    @foreach (DataRow drSub in dt.Select("[Parent]='" + dr["parent"] + "'", ""))
+                                                    {
+                                                        <li class="nav-item"><a href="~/@drSub["MenuLink"]" class="nav-link">@drSub["MenuName"]</a></li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                            menu = menu + dr["parent"].ToString();
+                                        }
+                                    }
+                                }*@
+                        </ul>
+                    </div>
+                    @*/main navigation*@
+
+                </div>
+                @*/sidebar content*@
+
+            </div>
+        }
+        @*/main sidebar*@
+        @*Main content*@
+        <div class="content-wrapper">
+
+            @*Page header*@
+
+            @RenderSection("BreadCum", false)
+            @*/page header*@
+            @*Content area*@
+
+
+            <div class="content" id="MainContent">
+                @RenderBody()
+            </div>
+            @*/content area*@
+            @*Footer*@
+            @if (ApplicationUtilities.GetSessionValue("UserName").ToString() != "" &&
+                (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "walletuser" ||
+                    ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "merchant" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "AGENT" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToUpper() == "SUB-AGENT")
+                )
+            {
+                <div class="navbar navbar-expand-lg navbar-light">
+                    <div class="text-center d-lg-none w-100">
+                        <button type="button" class="navbar-toggler dropdown-toggle" data-toggle="collapse" data-target="#navbar-footer">
+                            <i class="icon-unfold mr-2"></i>
+                            Footer
+                        </button>
+                    </div>
+
+                    <div class="navbar-collapse collapse" id="navbar-footer">
+                        <span class="navbar-text">
+                            Copyright &copy; @DateTime.Now.Year <a href="https://www.chaudharygroup.com/" target="_blank">Chaudhary Group</a>
+                        </span>
+                        <ul class="navbar-nav ml-lg-auto">
+                            @*<li class="nav-item"><a href="#" class="navbar-nav-link"><span class="text-info"><i class="icon-lifebuoy mr-2"></i> support@nepalpayment.com</span></a></li>
+                                <li class="nav-item"><a href="#" class="navbar-nav-link"><span class="text-info"><i class="icon-phone2 mr-2"></i> 9843454567</span></a></li>
+                                <li class="nav-item"><a href="#" class="navbar-nav-link font-weight-semibold"><span class="text-info"><i class="icon-envelop mr-2"></i> info@nepalpayment.com</span></a></li>*@
+
+                            <li><span class="mr-3"><i class="icon-lifebuoy ml-1"></i> support@cgpay.com.np</span></li>
+                            <li><span class="mr-3"><i class="icon-phone2 ml-1"></i> +977–1–5522330, 5529273, 5525169</span></li>
+                            <li><span class="mr-3"><i class="icon-envelop ml-1"></i> info@cgpay.com.np</span></li>
+                        </ul>
+                    </div>
+                </div>
+                @*/footer*@
+            }
+        </div>
+        @*/main content*@
+
+    </div>
+    @*/page content*@
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
+    <script>
+        function resolveurl(url) {
+            if (url.includes("~/")) {
+                url = '@cgpay.wallet.application.Library.ApplicationUtilities.GenerateUrl()' + url.replace('~/', '');
+            }
+            return url;
+        }
+
+    </script>
+    @Scripts.Render("~/UI/Custom")
+    @RenderSection("scripts", required: false)
+    <script>
+        var nepaliCurrencyFormatter = OSREC.CurrencyFormatter.getFormatter
+            ({
+                // If currency is not supplied, defaults to USD
+                currency: 'NPR',
+
+                // Use to override the currency's default symbol
+                symbol: 'Rs.',
+
+                // Use to override the currency's default locale - every locale has
+                // preconfigured decimal, group and pattern
+                //locale: 	'np',
+
+                // Use to override the locale's default decimal character
+                decimal: '.',
+
+                // Use to override the locale's default group (thousand separator) character
+                group: ',',
+
+                // Use to override the locale's default display pattern
+                // Note comma = group separator, dot = decimal separator, exclamation = symbol
+                // Follows standard unicode currency pattern
+                pattern: '!  #,##,##0.00',
+
+                valueOnError: '0'
+
+            });
+
+        $(document).ready(function () {
+            setInterval(getClientNotification, 3000);
+
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetBalance","Home",new {area = "Client"})',
+                dataType: 'json',
+                data: { },
+                success: function (data) {
+                    $('#AvailableBalance').html(nepaliCurrencyFormatter(data.balance));
+                    $('#total-balance').html(nepaliCurrencyFormatter(data.balance));
+                    $('#main-balance').html(nepaliCurrencyFormatter(data.balance));
+                },
+                error: function (ex) {
+                }
+            });
+
+            var RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+
+            function getClientNotification() {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetNotifications", "Notification",new {area = "Client"})',
+                    cache: false,
+                    dataType: 'json',
+                    data: { '__RequestVerificationToken': RequestVerificationToken},
+                    success: function (data) {
+                        let notificationData = "";
+                        let countNotification = 0;
+                        data.forEach(data => {
+
+                            notificationData += `<li class='media ${data.ReadStatus != "y" ? "new-noticfication" : "" }'>
+                                            <div class='media-body' >
+                                                <div class='media-title'>
+                                                    <a href='#' id='${data.Id}' class='yo-notification'>
+                                                        <span class='font-weight-semibold text-black-50'>${data.Subject}</span>
+                                                        <span class='text-muted float-right font-size-sm'>${data.CreatedDate}</span>
+                                                    </a>
+                                                </div>
+                                                <span>${data.Notification}</span>
+                                            </div>
+                                        </li>`;
+
+                            if (data.ReadStatus != "y") {
+                                countNotification++;
+                            }
+
+                        });
+                        $('#notification-list').html(notificationData);
+                        if (countNotification !== 0) {
+
+                            $('#notification-count').text(countNotification);
+                        } else {
+                            $('#notification-count').text("");
+                        }
+                        //console.log(countNotification)
+
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+
+                    }
+                });
+            }
+
+            function updateNotification(id = null, updateFlag = null) {
+                /*debugger*/
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateNotificationReadStatus", "Notification",new {area = "Client"})',
+                    cache: false,
+                    dataType: 'json',
+                    data: {
+                        '__RequestVerificationToken': RequestVerificationToken, 'id': id, 'updateFlag': updateFlag},
+                    success: function (data) {
+                        /*debugger*/
+                             //console.log(data)
+                        getClientNotification();
+                        if (data.Extra1 == 'r') {
+                            window.location = '@Url.Action("index", "Notification")';
+                        }
+
+                    },
+                    error: function (ex) {
+                        /*debugger*/
+                        console.log(ex);
+
+                    }
+                });
+            }
+
+            $(document).on("click",".yo-notification",function (e) {
+                e.preventDefault();
+                let id = $(this).attr("id");
+
+                updateNotification(id,'o');
+
+            });
+
+            $("#all-notification-link").click(function (e) {
+                e.preventDefault();
+
+                updateNotification(0, 'a');
+
+            });
+
+            $(document).on("click", ".clear-all-notification", function (e) {
+                e.preventDefault();
+
+                updateNotification(0, 'd');
+
+            });
+
+            $(document).on("click", ".remove-notification", function (e) {
+                e.preventDefault();
+                let id = $(this).attr("id");
+                updateNotification(id, 's');
+
+            });
+                //$.ajax({
+                //    type: 'POST',
+                //    url: '/Client/Home/GetBalance',
+                //    dataType: 'json',
+                //    success: function (data) {
+                //    },
+                //    error: function (ex) {
+                //    }
+                //});
+            });
+        console.log('loaded');
+             @{
+                var resp=TempData["ResponseDbMessage"];
+                if (resp != null)
+                {
+                    var dbResponse = resp as cgpay.wallet.shared.Models.CommonDbResponse;
+                    if (!String.IsNullOrEmpty(dbResponse.Message))
+                    {
+                    @Html.Raw("ShowPopup('" + ((int)dbResponse.Code).ToString() + "','" + dbResponse.Message.Replace("'","\\'") + "');")
+                    }
+                }
+                @*var dbResponse= MiddlewareDashBoard.Library.ApplicationUtilities.GetMessageFromSession();
+                if (!String.IsNullOrEmpty(dbResponse.Message))
+                {
+                    @Html.Raw("ShowPopup('"+dbResponse.ErrorCode.ToString()+"','"+dbResponse.Message.Replace("'","''")+"');")
+                }*@
+             }
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+﻿@model List<cgpay.wallet.shared.Models.BulkUpload.BulkUploadCommon>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .bulk-upload-sample {
+        width: 600px;
+        margin-top: 50px;
+    }
+</style>
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        @*<h6 class="card-title">
+                <b style="color:red">*</b><b> Note: Please fill out all the field stating *(Mandatory) </b>
+            </h6>*@
+    </div>
+    <div class="card-body">
+        @if (TempData != null && TempData.ContainsKey("msg") != false)
+        {
+            <div class="alert alert-danger">
+
+
+                <span class="error-signup">@Html.Raw(TempData["msg"])</span>
+                
+            </div>
+        }
+
+            @using (Html.BeginForm("BulkUpload", "BulkUpload", new { }, FormMethod.Post, new { @id = "BulkUpload", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label for="bulk_upload">Upload File</label>
+                    <input type="file" title="CSV Upload" class="form-control-file" id="bulk_upload" name="bulk_upload" required/>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Upload<i class="icon-upload ml-2"></i></button>
+                    </div>
+                </div>
+
+
+
+            }
+            <div class="bulk-upload-sample">
+                <h5>Please make sure your CSV file is in following format.</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+
+                            <th>Mobile Number</th>
+                            <th>Amount</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>984XXXXXXX</td>
+                            <td>10</td>
+                            <td>
+                                Your Remarks
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>984XXXXXXX</td>
+                            <td>100</td>
+                            <td>
+                                Test
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>984XXXXXXX</td>
+                            <td>50</td>
+                            <td>
+                                Your Remarks
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-info">
+                    Remarks is not mandatory
+                </p>
+                <p class="text-info">Note: Please, Don't use any comma(,) in the file.</p>
+            </div>
+            <div>You can download sample file <a href="~/Content/Document/CGPAY_sample_data.csv" target="_blank" download>here<i class="icon-download4 ml-2"></i></a></div>
+
+
+
+
+        </div>
+</div>
+
+    
+

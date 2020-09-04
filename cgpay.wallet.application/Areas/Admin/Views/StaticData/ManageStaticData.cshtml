@@ -1,0 +1,51 @@
+﻿@model cgpay.wallet.application.Models.StaticDataModel
+
+@{
+    ViewBag.Title = "Manage Static Data";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/StaticData/StaticDataList?SdatatypeID" + Model.StaticDataTypeId, "Manage", ControllerDisplayName: "Static Data");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">@Html.Raw(String.IsNullOrEmpty(Model.StaticDataId) ? "Add New" : "Update") Static Data</legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageStaticData", "Staticdata", FormMethod.Post, new { @role = "form", @id = "Staticdataform", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(Model => Model.StaticDataTypeId)
+            @Html.HiddenFor(Model => Model.StaticDataId)
+            <fieldset class="mb-3">
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.StaticDataLabel, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.StaticDataValue, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NTextBoxFor(model => model.StaticDataDescription, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                </div>
+                <div class="row">
+                        @Html.NTextBoxFor(model => model.AdditionalValue1, new { @class = "form-control", autocomplete = "off" }, 3)
+
+                        @Html.NTextBoxFor(model => model.AdditionalValue2, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AdditionalValue3, new { @class = "form-control", autocomplete = "off" }, 3)
+                        @Html.NTextBoxFor(model => model.AdditionalValue4, new { @class = "form-control", autocomplete = "off" }, 3)
+                    </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </fieldset>
+
+        }
+    </div>
+</div>

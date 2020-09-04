@@ -1,0 +1,80 @@
+﻿@model cgpay.wallet.shared.Models.Log.ApiLogCommon
+@{
+    ViewBag.Title = "ApiLogByDate";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">API Log</span> </h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm("ApiLogByDate", "Log", new { ReturnUrl = "Index" }, FormMethod.Post, new { @id = "Index", enctype = "multipart/form-data" }))
+{
+    <div class="container" listing-container>
+        <div class="container card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.NTextBoxFor(model => model.fromDate, new { @class = "form-control", id = "FromDate", name = "fromdate", placeholder = "From Date", autocomplete = "off" }, 2)
+                </div>
+                <div class="col-md-6">
+                    @Html.NTextBoxFor(model => model.toDate, new { @class = "form-control", id = "ToDate", name = "todate", placeholder = "To Date", autocomplete = "off" }, 2)
+
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="container" listing-container>
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        $("#FromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#ToDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+    });
+</script>
+
+
+
+

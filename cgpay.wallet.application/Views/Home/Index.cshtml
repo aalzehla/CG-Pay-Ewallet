@@ -1,0 +1,303 @@
+﻿@model cgpay.wallet.shared.Models.Login.LoginCommon
+@{
+    ViewBag.Title = "Login";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@Html.Raw(ViewBag.Title ?? "Middleware Dashboard")</title>
+
+    @Styles.Render("~/UI/DesignCss")
+    @Scripts.Render("~/UI/CoreJs")
+    @Scripts.Render("~/UI/AppJs")
+    @Scripts.Render("~/UI/ThemeJs")
+    @Styles.Render("~/Content/loginSheet.css")
+
+    <style>
+        element.style {
+            overflow: hidden;
+        }
+
+        .disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-in-container">
+            @*Login Form*@
+            @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { @role = "form", @id = "loginform" }))
+            {
+                <img src="~/Content/assets/images/cg-pay-new.png" height="35" />
+                <br /><br />
+                <div class="from-group">
+
+                    @Html.AntiForgeryToken()
+                    <h1>Log In</h1>
+
+
+
+
+                          @if (TempData != null && TempData.ContainsKey("msg") != false)
+                          {
+                              <span class="error-signup">@Html.Raw(TempData["msg"])</span>
+                          }
+                          else
+                          {
+                              <span>Enter Your Credentials Below</span>
+                          }
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "Email Id / Mobile Number", autocomplete = "off" })
+                        @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "form-text text-danger" })
+                        <div class="form-control-feedback">
+
+                        </div>
+                    </div>
+                    @*@Html.NTextBoxFor(m => m.UserName, new { @placeholder = "Email Id / Mobile Number", autocomplete = "off" }, displayName: false, col: 1)
+                    @Html.NTextBoxFor(m => m.Password, new { @type = "password", @placeholder = "Password", autocomplete = "off" }, displayName: false, col: 1)*@
+
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.Password, new { @type = "password", @placeholder = "Password", autocomplete = "off" })
+                        @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-text text-danger" })
+
+                        @*<div class="form-control-feedback">
+
+                        </div>*@
+                    </div>
+                </div>
+
+                    <div class="form-group mt-2">
+                        <button type="submit" name="submit" value="SignIn">Sign in</button>
+
+                    </div>
+                    @Html.ActionLink("Forgot Password ?", "forgotpassword")
+                </div>
+
+            }
+        </div>
+
+        @*Register Form*@
+        <div class="form-container sign-up-container">
+
+            @using (Html.BeginForm("Index", "Home", new { }, FormMethod.Post, new { @role = "form", @id = "registrationform" }))
+            {
+
+                <div class="form-group">
+                    @Html.AntiForgeryToken()
+                    <h1>Create Account</h1>
+
+                    <span> Use your Email and Mobile Number for Registration</span>
+                    <div>
+                        @if (TempData["message"] != null)
+                        {
+                            <span id="registration-error-msg" class="error-signup">@Html.Raw(TempData["message"])</span>
+                        }
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            @Html.TextBoxFor(m => m.FullName, new { @placeholder = "Full Name", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" })
+                            <div class="form-control-feedback">
+                                @*<i class="icon-user text-muted"></i>*@
+                            </div>
+                            @Html.ValidationMessageFor(m => m.FullName, null, new { @class = "form-text error-signup"})
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.Email, new { @type = "Email", @placeholder = "Email", autocomplete = "off" })
+                            <div class="form-control-feedback">
+                                @*<i class="icon-user text-muted"></i>*@
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "form-text error-signup" })
+                        </div>
+                        <div class="col-md-12">
+                            @Html.TextBoxFor(m => m.MobileNo, new { @placeholder = "Mobile Number", @maxlength = "10", @onkeypress = "return isNumber(event)", autocomplete = "off" })
+                            <div class="form-control-feedback">
+                                @*<i class="icon-user text-muted"></i>*@
+                            </div>
+                            @Html.ValidationMessageFor(m => m.MobileNo, null, new { @class = "form-text error-signup" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+
+                        <button type="submit" name="submit" value="SignUp">Sign Up</button>
+                    </div>
+                    @*<input type="submit" value="SignIn" name="submit" />*@
+                </div>
+
+            }
+        </div>
+
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <img src="~/Content/assets/images/cg-pay-logo.png" height="50" />
+                    <br /><br />
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                    <div class="mt-2">
+                        <a href="~/Content/Document/CGPayPrivacyPolicy.html" target="_blank">Privacy Policy </a>&
+                        <a href="~/Content/Document/CGPayTermsandcondition.html" target="_blank"> Terms and Condition</a>
+                    </div>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+
+                    <button class="ghost" id="signUp">Sign Up</button> 
+                 </div>
+
+            </div>
+        </div>
+  </div>
+
+
+
+
+
+
+
+    @* @*Page content
+        <div class="page-content">
+
+            @*Main content
+                    <div class="content-wrapper">
+
+                        @*Content area
+                        <div class="content d-flex justify-content-center align-items-center">
+
+                            @*Login form
+                            @using (Html.BeginForm("", "Home", new { }, FormMethod.Post, new { @role = "form", @id = "loginform", @class = "login-form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="card mb-0">
+                                    <div class="card-body">
+                                        <div class="text-center mb-3">
+                                            <i class="icon-reading icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"></i>
+                                            <h5 class="mb-0">Login to your account</h5>
+                                            <span class="d-block text-muted">Enter your credentials below</span>
+                                            @if (ViewData["msg"] != null)
+                                            {
+                                                <span class="d-block text-danger">@Html.Raw(ViewData["msg"])</span>
+                                            }
+                                        </div>
+
+                                        <div class="form-group form-group-feedback form-group-feedback-left">
+                                            @*<input type="text" class="form-control" placeholder="Username" required>
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @placeholder = "Username" })
+                                            <div class="form-control-feedback">
+                                                <i class="icon-user text-muted"></i>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "form-text text-danger" })
+                                        </div>
+
+                                        <div class="form-group form-group-feedback form-group-feedback-left">
+                                            @*<input type="password" class="form-control" placeholder="Password" required>
+                                            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", @type = "password", @placeholder = "Password" })
+                                            <div class="form-control-feedback">
+                                                <i class="icon-lock2 text-muted"></i>
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "form-text text-danger" })
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary btn-block">Sign in <i class="icon-circle-right2 ml-2"></i></button>
+                                            <button type="button" class="btn btn-outline-info btn-block" onclick="window.location.href='@Url.Action("", "HomeController")'" %>Register <i class="icon-circle-right2 ml-2"></i></button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @using (Html.BeginForm("", "Home", new { }, FormMethod.Post, new { @role = "form", @id = "loginform", @class = "login-form" }))
+                            {
+
+                            }
+                            @*/login form
+
+                        </div>
+                        @*/content area
+                    </div>
+                    @*/main content*
+
+                </div>
+                @*/page content*@
+
+</body>
+</html>
+
+
+<script type="text/javascript">
+    //alphabet and whitespace
+    function isAlphabateOnly(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+            return true;
+        }
+        return false;
+    }
+
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+        let nodeList = document.querySelectorAll("form#registrationform input[type='text'],input[type='email'] ");
+        nodeList.forEach((ele) => {
+            ele.value = "";
+        });
+        window.location= '@Url.Action("index")';
+        //document.getElementById("registration-error-msg").innerHTML = "";
+    });
+
+    //let html = document.getElementById("registration-error-msg").innerHTML;
+    //if (html != null) {
+    //    container.classList.add("right-panel-active");
+    //}
+    @{
+        if (TempData["message"] != null)
+        {
+            @Html.Raw("container.classList.add('right-panel-active');")
+        }
+    }
+
+
+    function isAlphabateOnly(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+</script>

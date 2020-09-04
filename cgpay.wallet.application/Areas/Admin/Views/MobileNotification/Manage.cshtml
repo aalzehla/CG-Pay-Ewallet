@@ -1,0 +1,112 @@
+﻿@model cgpay.wallet.application.Models.MobileNotificationModel
+@{
+    ViewBag.Title = "Manage";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Mobile Notification", "Manage");
+}
+
+
+@section BreadCum{
+    @Html.Raw(BreadCum)}
+
+<div class="card" style="zoom: 1;">
+  
+    <div class="card-body" style="">
+        @using (Html.BeginForm("Manage", "MobileNotification", new { }, FormMethod.Post, new { @role = "form", @id = "MobileNotificationManage", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.NotificationId)
+            @*<fieldset>
+
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.NotificationSubject, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.NotificationSubtitle, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NDropDownListFor(model => model.NotificationImportanceLevel, new SelectList(ViewBag.importancelevel, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextAreaFor(model => model.NotificationBody, new { @class = "form-control", autocomplete = "off", @rows = "4" }, 3)
+
+                </div>
+
+
+
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.NotificationBody, new {  @class = "form-control",@rows = "6", @cols = "4" })
+                        @Html.ValidationMessageFor(model => model.NotificationBody, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+
+
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </fieldset>*@
+
+            <div class="card-body">
+                <fieldset class="mb-1">
+                    <div class="row">
+                        <div class="col-md-6">
+                            @Html.NTextBoxFor(model => model.NotificationSubject, new { @class = "form-control", autocomplete = "off" }, 1)
+                            @Html.NTextBoxFor(model => model.NotificationSubtitle, new { @class = "form-control", autocomplete = "off" }, 1)
+                            @Html.NDropDownListFor(model => model.NotificationImportanceLevel, new SelectList(ViewBag.importancelevel, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+                            @Html.NTextAreaFor(model => model.NotificationBody, new { @class = "form-control", autocomplete = "off", @rows = "4" }, 1)
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="col-md-4 ">
+                                @Html.LabelFor(model => model.ImageUpload, "Image", new { @class = "label", autocomplete = "off" })
+                                <div><img id="image_view" height="150" width="150" style="border: none" /></div>
+                                <div> <input type="file" title="Image Upload" id="Image_Upload" name="Image_Upload" accept="image/x-png,image/jpeg,image/jpg" onchange="showImg(this)" /> </div>
+                            </div>
+                        </div>
+
+                        <br />
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </fieldset>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+        }
+    </div>
+</div>
+
+<script>
+    function showImg(input) {
+        /*debugger*/;
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#image_view').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

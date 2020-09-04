@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "error_404";
+    var Role = Session["UserType"] != null ? Session["UserType"].ToString() : "";
+    var LayoutPage = "";
+    if (Role.ToUpper() == "ADMIN" || Role.ToUpper() == "DISTRIBUTOR" || Role.ToUpper() == "SUB-DISTRIBUTOR")
+    {
+        LayoutPage = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+    else if (Role.ToUpper() == "WALLETUSER" || Role.ToUpper() == "MERCHANT" || Role.ToUpper() == "AGENT" || Role.ToUpper() == "SUB-AGENT")
+    {
+        LayoutPage = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+    }
+    Layout = LayoutPage;
+}
+
+<h2>An Error Occured</h2>
+<h3>Please contact support and report error id @ViewBag.ErrorId</h3>
+
+
+
+

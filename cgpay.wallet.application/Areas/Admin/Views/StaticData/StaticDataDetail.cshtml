@@ -1,0 +1,39 @@
+﻿@model cgpay.wallet.application.Models.StaticDataModel
+
+@{
+    ViewBag.Title = "Static Data Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/StaticData/StaticDataList?SdatatypeID" + Model.StaticDataTypeId, "Detail", ControllerDisplayName: "Static Data");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @Html.HiddenFor(Model => Model.StaticDataTypeId)
+        @Html.HiddenFor(Model => Model.StaticDataId)
+        <fieldset class="mb-3">
+            <div class="row">
+                @Html.NLabelFor(model => model.StaticDataLabel, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.StaticDataValue, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.StaticDataDescription, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.AdditionalValue1, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.AdditionalValue2, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.AdditionalValue3, new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NLabelFor(model => model.AdditionalValue4, new { @class = "form-control", autocomplete = "off" }, 3)
+            </div>
+            <div class="row">
+                <div class="row mt-1 ml-0">
+                    <button type="button" class="btn btn-light btn-sm bg-primary" onclick="window.history.back();">Back</button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

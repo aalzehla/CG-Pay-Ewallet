@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "View Role";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@using cgpay.wallet.shared.Models.Role
+@model IList<RoleCommon>
+@{ var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Role", "Index", "1011");}
+@section BreadCum{
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-body">
+        <table class="table datatable">
+            <thead>
+                <tr>
+                    <th>S.NO</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Created By</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ var counter = 0;}
+                @if (Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        counter++;
+                        <tr>
+                            <td>@counter</td>
+                            <td>@item.RoleName</td>
+                            <td>@item.RoleType</td>
+                            <td>@item.CreatedBy</td>
+                            <td class="text-center">
+                                <div class="list-icons">
+                                    <div class="dropdown">
+                                        <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                            <i class="icon-menu9"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            @Html.NHyperLink("Privileges", new { @class = "dropdown-item" }, "/Admin/Role/privilege", "~/Admin/Role/privilege?Roleid=" + item.sno.EncryptParameter() + "&Name=" + item.RoleName.EncryptParameter(), true, "icon-share2")
+                                            @Html.NHyperLink("Functions", new { @class = "dropdown-item" }, "/Admin/Role/FunctionPrivilege", "~/Admin/Role/FunctionPrivilege?Roleid=" + item.sno.EncryptParameter() + "&Name=" + item.RoleName.EncryptParameter(), true, "icon-share2")
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                }
+                else
+                {
+                    <tr><td>No Admin Roles Defined</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

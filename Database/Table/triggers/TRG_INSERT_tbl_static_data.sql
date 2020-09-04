@@ -1,0 +1,55 @@
+CREATE TRIGGER [dbo].[TRG_INSERT_tbl_static_data] ON [dbo].[tbl_static_data]
+FOR INSERT
+AS
+     BEGIN
+         INSERT INTO tbl_static_data_audit
+         (static_data_row_id, 
+          sdata_type_id, 
+          static_data_value, 
+          static_data_label, 
+          static_data_description, 
+          additional_value1, 
+          additional_value2, 
+          additional_value3, 
+          additional_value4, 
+          is_deleted, 
+          created_UTC_date, 
+          created_local_date, 
+          created_nepali_date, 
+          created_by, 
+          updated_by, 
+          updated_UTC_date, 
+          updated_local_date, 
+          updated_nepali_date, 
+          trigger_log_user, 
+          trigger_action, 
+          trigger_action_local_Date, 
+          trigger_action_UTC_Date, 
+          trigger_action_nepali_date
+         )
+                SELECT 
+				static_data_row_id, 
+                       sdata_type_id, 
+                       static_data_value,
+					   static_data_label, 
+                       static_data_description, 
+                       additional_value1, 
+                       additional_value2, 
+                       additional_value3, 
+                       additional_value4, 
+                       is_deleted, 
+                       created_UTC_date,
+					   created_local_date, 
+                       created_nepali_date, 
+                       created_by, 
+                       updated_by, 
+                       updated_UTC_date, 
+                       updated_local_date, 
+                       updated_nepali_date, 
+                       system_user, 
+                       'Insert', 
+                       GETDATE(), 
+                       GETUTCDATE(), 
+                       dbo.func_get_nepali_date(DEFAULT)
+                FROM Inserted;
+     END;

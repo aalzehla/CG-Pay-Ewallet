@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Static Data";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class="icon-arrow-left52 mr-2"></i> <span class="font-weight-semibold">Agent</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <a href="~/Admin/StaticData/Index" class="breadcrumb-item"><i class="mr-2"></i> Static Data Type</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+@*@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/StaticData/Index", "Static Data", ControllerDisplayName: "Static Data Type");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}*@
+<div>
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+<script>
+    $('.icon-lock2').parent().on('click', function e() {
+        /*debugger*/;
+        let sdatatypeId = $(this).attr("data-val1");
+        let sdataid = $(this).attr("data-val");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+             "sdatatypeId:'" + sdatatypeId + "',sdataid:'"+sdataid+"'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/StaticData/DisableSData','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Disable this Category?", funcText);
+    })
+    $('.icon-unlocked2').parent().on('click', function e() {
+       let sdatatypeId = $(this).attr("data-val1");
+        let sdataid = $(this).attr("data-val");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "sdatatypeId:'" + sdatatypeId + "',sdataid:'"+sdataid+"'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Admin/StaticData/EnableSData','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Enable this Category?", funcText);
+    })
+</script>

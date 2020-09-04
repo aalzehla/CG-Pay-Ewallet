@@ -1,0 +1,104 @@
+﻿@model cgpay.wallet.application.Models.CardModel
+
+@{
+    ViewBag.Title = "RequestCard";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/Cards", "Request Card", ControllerDisplayName: "Cards");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("RequestCard", "Cards", new { }, FormMethod.Post, new { @role = "form", @id = "RequestCard" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.UserId)
+            @*@Html.HiddenFor(Model => Model.Type)*@
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.NDropDownListFor(model => model.CardType, new SelectList(Model.CardTypeList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)", maxlength = "6" }, 1)
+                        @*@Html.NTextBoxFor(model => model.MobileNo, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @placeholder = "Mobile(10 digits)/Landline(8 digits)", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()" }, 1)*@
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Request <i class="icon-floppy-disk ml-2"></i></button>
+                        <a href="/Client/Cards/Index" class="btn btn-primary btn-sm ml-2" id="backbutton">Back  <i class="icon-backward ml-2"></i></a>
+
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>
+
+<script>
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    $('#btnSubmit').click(function (e) {
+        var amount = $("#Amount").val();
+        var cardtype = $("#CardType").val();
+        if (amount != "" && cardtype != "") {
+            $("#btnSubmit").attr("disabled", true);
+            $("#backbutton").attr("disabled", true);
+        }
+        document.getElementById("RequestCard").submit();
+    });
+    //$('#btnSubmit').click(function (e) {
+    //    document.getElementById("RequestCard").submit();
+    //});
+</script>
+
+
+<!-- Disabled backdrop -->
+@*<div id="modal_backdrop" class="modal fade" data-backdrop="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            @using (Html.BeginForm("Index", "Cards", new { }, FormMethod.Post, new { @role = "form", @id = "RequestCard" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(Model => Model.UserId)
+                                <fieldset class="mb-3">
+                                    <div class="row">
+                                        @Html.NDropDownListFor(model => model.CardType, Model.CardTypeList, new { @class = "form-control", autocomplete = "off" }, 1)
+                                        @Html.NTextBoxFor(model => model.Amount, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()" }, 1)
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Request <i class="icon-floppy-disk ml-2"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm" id="btnReject" data-dismiss="modal">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>*@

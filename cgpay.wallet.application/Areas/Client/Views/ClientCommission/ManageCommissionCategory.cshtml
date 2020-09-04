@@ -1,0 +1,41 @@
+﻿@model cgpay.wallet.application.Models.ClientCommissionCategoryModel
+@{
+    ViewBag.Title = "ManageCommissionCategory";
+    Layout = "~/Areas/client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Commission", "Commission Category");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">@Html.Raw(String.IsNullOrEmpty(Model.CategoryId) ? "Add New" : "Update") Commission Category</legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageCommissionCategory", "ClientCommission", FormMethod.Post, new { @role = "form", @id = "addcommissioncategory", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+        <fieldset class="md-3">
+            @Html.HiddenFor(model => model.CategoryId)
+            <div class="row">
+                @Html.NTextBoxFor(model => model.CategoryName, new { @class = "form-control", autocomplete = "off" }, 3)
+
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </div>
+        </fieldset>
+
+        }
+    </div>
+</div>

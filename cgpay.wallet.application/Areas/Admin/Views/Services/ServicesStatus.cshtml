@@ -1,0 +1,172 @@
+﻿@model IEnumerable<cgpay.wallet.application.Models.ServicesModel>
+
+@{
+    ViewBag.Title = "ServicesStatus";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    label {
+        border: 1px solid #fff;
+        height: 160px;
+        width: 160px;
+        display: block;
+        position: relative;
+        margin: 10px;
+        cursor: pointer;
+    }
+
+        label[for] {
+            border-color: #ddd;
+        }
+
+        label:after {
+            background-color: white;
+            color: white;
+            /*content: " ";*/
+            display: block;
+            border-radius: 50%;
+            border: 1px solid grey;
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            line-height: 28px;
+            transition-duration: 0.4s;
+            transform: scale(0);
+        }
+
+        label img {
+            height: 100px;
+            width: 100px;
+            margin-left: 16px;
+            transition-duration: 0.2s;
+            transform-origin: 50% 50%;
+            filter: grayscale(100%);
+            margin-left: 15%;
+            margin-top: 10%;
+        }
+
+
+    @@media (min-width: 992px) {
+        .col-md-2 {
+            -ms-flex: 0 0 16.66667% !important;
+            flex: 0 0 16.66667% !important;
+            max-width: 16.66667% !important;
+        }
+    }
+
+    @@media (max-width: 1352px) {
+        .col-md-2 {
+            max-width: 100% !important;
+        }
+    }
+
+    :checked + label {
+        border-color: #ddd;
+    }
+
+        :checked + label:after {
+            content: "✓";
+            background-color: green;
+            transform: scale(1);
+        }
+
+        :checked + label img {
+            transform: scale(0.9);
+            /* box-shadow: 0 0 5px #333; */
+            filter: none;
+            z-index: -1;
+        }
+
+        :checked + label label {
+            transform: scale(0.9);
+            /* box-shadow: 0 0 5px #333; */
+            /*z-index: -1;*/
+        }
+</style>
+
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/Services/ServiceStatus", "Services List",ControllerDisplayName: "Services");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <span class="card-title text-uppercase font-size-sm font-weight-bold">Available Services</span>
+    </div>
+    <div class="card-body">
+
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            @{int i = 1; }
+            @foreach (var item in Model)
+            {
+
+                <div class="col-md-2">
+                    <input type="checkbox" id=@item.ProductId @if (item.Status.ToString() == "Y") { @Html.Raw("checked") } />
+                    <label for=@item.ProductId style="position:center">
+                        <img src="/Content/assets/images/service logos/@item.ProductLogo" style="float:center;" /><br>
+                        <label style="position: center;text-align: center;margin: 0px;padding: 0px;">@item.ProductLabel</label>
+                    </label>
+                </div>
+
+                if (i % 6 == 0)
+                {
+                @:</div>
+                @:<div class="row">
+                }
+                i = i + 1;
+            }
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="submit" onclick="Savestatus()" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+
+    function Savestatus() {
+        var list = new Array();
+        /*debugger*/;
+        var i = 0
+        $("input").each(function (index) {
+
+            if ($(this).is(":checked")) {
+                list.push($("input")[i].id)
+            }
+
+            i++;
+        });
+
+        $.ajax({
+            url: "/Admin/services/servicesstatus",
+            type: 'POST',
+            data: { servicelist: list, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+            //contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                location.reload();
+            }
+        });
+    }
+</script>

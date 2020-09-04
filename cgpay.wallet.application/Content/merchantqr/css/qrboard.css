@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap");
+
+body {
+    font-family: "Poppins";
+    background-color: #818A91;
+    padding: 40px;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important
+}
+
+.qr-board {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    width: 400px;
+    position: relative;
+    height: auto;
+    padding-top: 666px;
+    background-color: #ffffff
+}
+
+@media (max-width:575.98px) {
+    .qr-board {
+        width: 100%;
+        padding-top: 166.5%
+    }
+}
+
+@media print {
+    .qr-board {
+        width: 15cm !important;
+        height: 25cm !important;
+        display: table-cell !important
+    }
+}
+
+.qr-board .board-header {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    text-align: center;
+    height: 300px;
+    background-color: #002e5f !important;
+    padding-top: 40px;
+    z-index: 1000
+}
+
+@media (max-width:575.98px) {
+    .qr-board .board-header {
+        height: 50%;
+        font-family: "Poppins"
+    }
+}
+
+@media print {
+    .qr-board .board-header {
+        height: 48%;
+        top: 0;
+        padding-top: 70px
+    }
+}
+
+.qr-board .board-header img {
+    width: 50%;
+    display: block;
+    margin: 0 auto
+}
+
+@media print {
+    .qr-board .board-header img {
+        width: 50% !important
+    }
+}
+
+.qr-board .board-header .sub-title {
+    color: #00adbe;
+    text-transform: uppercase;
+    font-size: 1.6rem;
+    font-weight: 600
+}
+
+@media (max-width:575.98px) {
+    .qr-board .board-header .sub-title {
+        font-size: 1.1rem
+    }
+}
+
+@media print {
+    .qr-board .board-header .sub-title {
+        font-size: 2.3rem
+    }
+}
+
+.qr-board .board-header:before {
+    position: absolute;
+    content: "";
+    left: 0;
+    right: 0;
+    bottom: -15px;
+    z-index: 100px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 400px solid #00adbe;
+    border-bottom: 15px solid transparent
+}
+
+@media (max-width:575.98px) {
+    .qr-board .board-header:before {
+        border-right: 400px solid #00adbe !important
+    }
+}
+
+@media print {
+    .qr-board .board-header:before {
+        border-right: 15cm solid #00adbe !important
+    }
+}
+
+.qr-board .qr-box {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 180px;
+    width: 60%;
+    height: auto;
+    background-color: #ffffff;
+    display: inline-block;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0px 0px 0px 12px rgba(238,238,238,0.9);
+    z-index: 100000
+}
+
+@media print {
+    .qr-board .qr-box {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        top: 265px;
+        width: 60%;
+        height: auto;
+        background-color: #ffffff;
+        display: inline-block;
+        border-radius: 30px;
+        padding: 20px;
+        box-shadow: 0px 0px 0px 16px rgba(238,238,238,0.9) !important;
+        z-index: 100000
+    }
+}
+
+.qr-board .qr-box .qr-code {
+    width: 100%
+}
+
+@media print {
+    .qr-board .qr-box .qr-code {
+        width: 100%
+    }
+}
+
+.qr-board .merchant-info {
+    position: absolute;
+    top: 450px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    z-index: 1000
+}
+
+@media print {
+    .qr-board .merchant-info {
+        top: 660px
+    }
+}
+
+.qr-board .merchant-info .merchant-title {
+    font-size: 1.1rem;
+    color: #002e5f;
+    font-weight: 700;
+    width: 70%;
+    line-height: 150%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+}
+
+@media print {
+    .qr-board .merchant-info .merchant-title {
+        font-size: 2rem;
+        width: 80%
+    }
+}
+
+.qr-board .merchant-info .merchant-detail {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+@media print {
+    .qr-board .merchant-info .merchant-detail {
+        font-size: 1.2rem
+    }
+}
+
+.qr-board footer {
+    background-color: #e2ecf1;
+    padding: 20px 30px;
+    border-bottom: solid 20px #002e5f;
+    position: absolute;
+    bottom: 0px;
+    width: 100%
+}
+
+    .qr-board footer ul {
+        padding: 0;
+        margin: 0
+    }
+
+        .qr-board footer ul li {
+            font-size: 0.8rem;
+            list-style-type: none
+        }
+
+@media print {
+    .qr-board footer ul li {
+        font-size: 1rem
+    }
+}
+
+.qr-board footer ul li span {
+    display: inline-block;
+    width: 31px;
+    height: 31px;
+    background-color: #002e5f;
+    color: #ffffff;
+    padding: 6px 8px;
+    border-radius: 50rem;
+    margin-right: 10px;
+    text-align: center
+}

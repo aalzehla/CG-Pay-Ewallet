@@ -1,0 +1,60 @@
+﻿@model cgpay.wallet.application.Models.UserModel
+@{
+    ViewBag.Title = "ChangePin";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/ClientUser/ChangePin", "Change Pin", ControllerDisplayName: "Profile");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold"> Change Pin</legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ChangePin", "ClientUser", FormMethod.Post, new { @role = "form", @id = "ChangePin", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset class="mb-3">
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.OldPassword, new { @class = "form-control", autocomplete = "off", @type = "password", @placeholder = "Enter your password" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.UserPin, new { @class = "form-control", autocomplete = "off", @type = "password", @placeholder = "Enter your 6 digit mPin", @maxlength = "6",@minlength="6", @onkeypress = "return isNumber(event)" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NTextBoxFor(model => model.ConfirmUserPin, new { @class = "form-control", autocomplete = "off", @type = "password", @placeholder = "Enter your 6 digit mPin", @maxlength = "6", @onkeypress = "return isNumber(event)" }, 3)
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save <i class="icon-floppy-disk ml-2"></i></button>
+                        <a href="/Client/Home/Index/" class="btn btn-default">Cancel <i class="icon-cross2  ml-2"></i></a>
+                    </div>
+
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+<script>
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+
+

@@ -1,0 +1,332 @@
+﻿@model cgpay.wallet.application.Models.KYCModelDetail
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Admin/KYC/Index", "KYC Details",ControllerDisplayName:"KYC List");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+        .disabled-select {
+            pointer-events: none;
+            background-color: #fafafa;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("Details", "KYC", new { }, FormMethod.Post, new { @role = "form", @id = "KycDetails", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.AgentId)
+            @Html.HiddenFor(Model => Model.AgentType)
+            @Html.HiddenFor(Model => Model.PPImage)
+            @Html.HiddenFor(Model => Model.Id_type)
+            @Html.HiddenFor(Model => Model.Id_DocumentFront)
+            @Html.HiddenFor(Model => Model.Id_DocumentBack)
+            @Html.HiddenFor(model => model.KycStatus)
+            @Html.HiddenFor(model => model.MobileNo)
+            @Html.HiddenFor(model => model.EmailAddress)
+            <input id="submitbutton" name="submitbutton" type="hidden">
+            <fieldset class="mb-3">
+                <h4>Personal Information</h4>
+                <hr />
+                <div class="row">
+                    <div class="col-md-4">
+                        @*@Html.NLabelFor(model => model.AgentId, new { @class = "form-control", autocomplete = "off" }, 1)*@
+                        @Html.NLabelFor(model => model.FirstName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+                        @Html.NLabelFor(model => model.MiddleName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+                        @Html.NLabelFor(model => model.LastName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 1)
+
+                    </div>
+                    <div class="col-md-4">
+                        @*<div class="col-md-4">&nbsp;</div>*@
+                        @*<div class="col-md-8">*@
+                        @Html.LabelFor(model => model.PPImage, new { @class = "label", autocomplete = "off" })
+                        <div><img id="PPImageView" height="200" width="200" style="border: solid" /></div>
+                        @*<div><input type="file" title="Profile Picture" id="PPImageFile" name="PPImageFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showPPImage(this)" /></div>*@
+                        @Html.ValidationMessageFor(model => model.PPImage, null, new { @class = "form-text text-danger" })
+                        @*</div>*@
+                        @*@Html.NLabelFor(model => model.PPImage, new { @class = "form-control", autocomplete = "off" }, 3)*@
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row">
+                    @Html.NLabelFor(model => model.Gender, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.DOB_Eng, new { @class = "form-control", @id = "DOB_Eng", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.DOB_Nep, new { @class = "form-control", @id = "DOB_Nep", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.PhoneNo, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NLabelFor(model => model.MobileNo, new { @class = "form-control", @id = "MobileNo", autocomplete = "off", @maxlength = "10", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NLabelFor(model => model.EmailAddress, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Occupation,  new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.MaritalStatus,  new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.SpouseName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NLabelFor(model => model.FatherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NLabelFor(model => model.MotherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NLabelFor(model => model.GrandFatherName, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)
+                    @Html.NLabelFor(model => model.Nationality, new { @class = "form-control ", @autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Country,  new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <hr />
+                <h4>Address Information</h4>
+                <hr />
+                <div class="row">
+                    @Html.NLabelFor(model => model.PProvince,  new { @class = "form-control", @id = "PProvince", autocomplete = "off" }, 3)
+                    @*@Html.NLabelFor(model => model.PProvince, new SelectList(ViewBag.PProvinceList, "Value", "Text"), new { @class = "form-control", @id = "PProvince", autocomplete = "off" }, 3)*@
+                    @Html.NLabelFor(model => model.PDistrict,  new { @class = "form-control", @id = "PDistrict", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.PLocalBody,  new { @class = "form-control", @id = "PLocalBody", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.PWardNo, new { @class = "form-control", @maxlength = "2", autocomplete = "off", @onkeypress = "return isNumber(event)" }, 3)
+                    @Html.NLabelFor(model => model.PAddress, new { @class = "form-control", autocomplete = "off", @onkeypress = "return isAlphabateComHyp(event)" }, 3)
+                </div>
+                <hr />
+                @*<div class="form-group mb-3 mb-md-2 ">
+                    @Html.Label("Temporary Address Same as permanent address : ", new { @class = "d-block font-weight-semibold" }) &nbsp;&nbsp;
+                    <label class="form-check-label">
+                        @Html.CheckBoxFor(model => model.SameAsPermanentAddress, new { @name = "is_same_as_permanent", @class = "form-check-input-styled" })
+                    </label>
+                </div>*@
+                <div class="row temporary_hide">
+                    <br />
+                    @Html.NLabelFor(model => model.TProvince,  new { @class = "form-control", @id = "TProvince", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.TDistrict, new { @class = "form-control", @id = "TDistrict", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.TLocalBody, new { @class = "form-control", @id = "TLocalBody", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.TWardNo, new { @class = "form-control", @maxlength = "2", autocomplete = "off"}, 3)
+                    @Html.NLabelFor(model => model.TAddress, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <hr />
+                <h4>Document Information</h4>
+                <hr />
+                <div class="row">
+                    @Html.NLabelFor(model => model.Id_type,  new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Id_No, new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Id_IssuedPlace, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    @Html.NLabelFor(model => model.Id_IssuedDateAD, new { @class = "form-control", @id = "IssueDateAD", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Id_IssuedDateBS, new { @class = "form-control", @id = "IssueDateBS", autocomplete = "off" }, 3)
+
+                    @Html.NLabelFor(model => model.Id_ExpiryDateAD, new { @class = "form-control", @id = "ExpireDateAD", autocomplete = "off" }, 3)
+                    @Html.NLabelFor(model => model.Id_ExpiryDateBS, new { @class = "form-control", @id = "ExpireDateBS", autocomplete = "off" }, 3)
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.LabelFor(model => model.Id_DocumentFront, new { @class = "label", autocomplete = "off" })
+                        <div><img id="Id_DocumentFrontView" height="200" width="200" style="border: solid" /></div>
+                        @*<div> <input type="file" title="Id DocumentFront" id="Id_DocumentFrontFile" name="Id_DocumentFrontFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showDFImage(this)" /> </div>*@
+                        @Html.ValidationMessageFor(model => model.Id_DocumentFront, null, new { @class = "form-text text-danger" })
+
+                    </div>
+                    <div class="col-md-4 CitizenshipShow">
+                        @Html.LabelFor(model => model.Id_DocumentBack, new { @class = "label", autocomplete = "off" })
+                        <div><img id="Id_DocumentBackView" height="200" width="200" style="border: solid" /></div>
+                        @*<div> <input type="file" title="Id DocumentBack" id="Id_DocumentBackFile" name="Id_DocumentBackFile" accept="image/x-png,image/jpeg,image/jpg" onchange="showDBImage(this)" /> </div>*@
+                        @Html.ValidationMessageFor(model => model.Id_DocumentBack, null, new { @class = "form-text text-danger" })
+
+                    </div>
+                </div>
+                <hr />
+                @*<div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm ApproveUpdate" id="btnUpdate" value="Update">Update <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                <hr />*@
+                <div class="row ApprovedOkStatus" style="display: none">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm ApproveUpdate" id="btnGoBack" value="GoBack">Go Back <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                <div class="row ApprovedStatus">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm" id="btnApprove" value="Approve">Approve <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+                <hr />
+                <div class="row ApprovedStatus">
+                    @Html.NDropDownListFor(model => model.Remarks, new SelectList(ViewBag.RemarksList, "Value", "Text"), new { @class = "form-control", @id = "txtRemarks", autocomplete = "off" }, 3)
+                    <b style="color:red">*</b><b> Note Please fill out remarks before rejecting </b>
+                </div>
+                <div class="row ApprovedStatus">
+                    @*@Html.NTextAreaFor(model => model.FirstName, new { @class = "form-control", @rows = "4", @cols = "50", autocomplete = "off", @onkeypress = "return isAlphabateOnly(event)" }, 3)*@
+                    <div class="col-lg-4">
+                        <textarea class="form-control" name="OthersRemarks" id="txtOthersRemarks"
+                                  placeholder="Please Insert Remarks to Reject, maxlength- 200" maxlength="200"
+                                  rows="4" cols="50" style="display: none; min-height: 100px; min-width: 200px; max-height: 150px; max-width: 400px;"></textarea>
+                        @Html.ValidationMessage("OtherRemarks", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <hr />
+                <div class="row ApprovedStatus">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-danger btn-sm" id="btnReject" value="Reject">Reject <i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+            </fieldset>
+
+
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        //var yearRangeDOB = "1944:-10"; //"1944:+0";
+        //var yearRangeIssue = "1944:-0";
+        //var yearRangeExpire = "1944:+10"; //"1944:+20";
+        //var minimum = "[1943, 04, 14]";
+        //var dateFormat = "yy-mm-dd";
+        //var today = new Date();
+        //var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+        //var nepaliDOB=NepaliFunctions.ConvertDateFormat({year: NepaliFunctions.GetCurrentBsYear()-9, month: 1, day: 1}, "YYYY-MM-DD");
+        //var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+        //alphabet and whitespace
+
+        //alphabet and whitespace
+        function isAlphabateOnly(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32)) {
+                return true;
+            }
+            return false;
+        }
+        //alphabet number>47<58 -46 /47
+        function isAlphabateNum(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 45 || charCode == 47 || (charCode>47 && charCode<58)) {
+                return true;
+            }
+            return false;
+        }
+        //alphabet whitespace 32  ,44 -45
+        function isAlphabateComHyp(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            /*debugger*/;
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode==32) || charCode==44 || charCode==45 ) {
+                return true;
+            }
+            return false;
+        }
+        //Number Only
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        
+        //For Remarks..
+        var remarks = $('#txtRemarks');
+        var select = this.value;
+        remarks.change(function () {
+            if ($(this).val().toUpperCase() === 'OTHERS') {
+                $('#txtOthersRemarks').show();
+            } else {
+                $('#txtOthersRemarks').hide();
+                $("#txtOthersRemarks").html("");
+            }
+        });
+
+        //$('#btnUpdate').click(function (e) {
+        //    $("#submitbutton").val('Update');
+        //    $('#txtRemarks').rules('remove');
+        //    $('#txtRemarks-error').text('');
+        //});
+        $('#btnGoBack').click(function (e) {
+            $("#submitbutton").val('GoBack');
+            $('#txtRemarks').rules('remove');
+            $('#txtRemarks-error').text('');
+        });
+        $('#btnApprove').click(function (e) {
+            $("#submitbutton").val('Approve');
+            $('#txtRemarks').rules('remove');
+            $('#txtRemarks-error').text('');
+            //$("#txtRemarks").rules("add", 'required');
+            //            $('#txtRemarks-error').text('Reject remarks is required');
+        });
+        $('#btnReject').click(function (e) {
+            /*debugger*/;
+            $("#FirstName").rules('remove', 'required');
+            //$("#field").removeAttr('required');
+            $("#submitbutton").val('Reject');
+            var remarks = $("#txtRemarks").val();
+            if (remarks) {
+                document.getElementById("KycDetails").submit();
+            }
+        });
+
+        $(document).ready(function () {
+            var KycStatus = @Html.Raw(Json.Encode(Model.KycStatus));
+            if (KycStatus.toUpperCase() === 'APPROVED') {
+                $('.ApprovedStatus').hide();
+                $('.ApprovedOkStatus').show();
+            }
+            debugger;
+            var idType = $('#Id_Type').val();
+            if (($('#Id_type').val() === "Citizenship Card") ||($('#Id_type').val() === "Citizenship") || ($('#Id_type').val() === "")) {
+                $('.CitizenshipShow').show();
+                $('.Id_ExpiryDateADdivClass').hide();
+                $('.Id_ExpiryDateBSdivClass ').hide();
+                $('#ExpireDateAD ').val('');
+                $('#ExpireDateBS ').val('');
+            } else {
+                $('.CitizenshipShow').hide();
+                $('.Id_ExpiryDateADdivClass ').show();
+                $('.Id_ExpiryDateBSdivClass ').show();
+                $('#Id_DocumentBackFile ').val('');
+                $('#ExpireDateAD ').val('@ViewBag.ExpireDateAD');
+                $('#ExpireDateBS ').val('@ViewBag.ExpireDateBS');
+            }
+
+            var OthersRemarks = '@ViewBag.OtherRemarks';
+            if (OthersRemarks !="") {
+                $('#txtOthersRemarks').val(OthersRemarks);
+                $('#txtRemarks').val("Others");
+                $('#txtOthersRemarks').show();
+            } else {
+                $('#txtOthersRemarks').hide();
+                $("#txtOthersRemarks").html("");
+            }
+            
+            if (($('#MaritalStatus').val() === "Single") || ($('#MaritalStatus').val() === "") || ($('#MaritalStatus').val() === "Divorced")) {
+                $('.SpouseNamedivClass  ').hide();
+                $('#SpouseName ').val('');
+            } else {
+                $('.SpouseNamedivClass  ').show();
+                $('#SpouseName ').val('@ViewBag.SpouseName');
+            }
+
+            if ($("#AgentId").val() != null) {
+                //document.getElementById("PPImageView").src = '@ViewBag.FileLocation' + $("#PPImage").val();
+                document.getElementById("PPImageView").src = $("#PPImage").val();
+                document.getElementById("Id_DocumentFrontView").src = $("#Id_DocumentFront").val();
+                document.getElementById("Id_DocumentBackView").src = $("#Id_DocumentBack").val();
+            }
+        });
+
+        // Same as permanent address
+        $("#SameAsPermanentAddress").ready(function () {
+            var permanent_address_check = $('input[name=SameAsPermanentAddress]:checked').val();
+            if (permanent_address_check == "true") {
+                $(".temporary_hide").hide();
+            }
+            else {
+                $(".temporary_hide").show();
+            }
+        });
+    </script>
+}

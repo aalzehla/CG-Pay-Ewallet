@@ -1,0 +1,551 @@
+﻿@model cgpay.wallet.application.Models.DynamicReportModel
+@{
+    ViewBag.Title = "ResultPage";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/receipt/css/receipt.css" rel="stylesheet" />
+
+
+
+
+<div class="card">
+    <div class="card-body">
+
+        @if (@Model.CompanyId.Equals("1") || @Model.CompanyId.Equals("9") || @Model.CompanyId.Equals("10") || @Model.CompanyId.Equals("14"))  //NTC
+        {
+            <!-- START -->
+            <link href="~/Content/receipt/receipt-ntc/css/receipt-ntc.css" rel="stylesheet" />
+
+            <div class="receipt">
+                <table width="100%">
+                    <tr>
+                        <td width="15%"><img src="~/Content/receipt/receipt-ntc/img/logo-ntc.png" class="logo rounded-circle" alt=""></td>
+                        <td width="50%"><img src="~/Content/receipt/receipt-ntc/img/title-ntc.svg" alt=""></td>
+                        <td width="55%" class="text-right" valign="top"></td>
+                    </tr>
+
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td height="80"><div class="receipt-title text-center position-relative">PAYMENT RECEIPT</div></td>
+                    </tr>
+                </table>
+                <table width="100%" class="billinfo">
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Date &amp; Time : </td>
+                        <td height="30px" width="40%" class="">@Model.CreatedLocalDate</td>
+
+                        <td height="30px" width="20%" class="text-primary">Amount : </td>
+                        <td height="30px" width="40%" class=" text-right">NPR. @Model.Amount</td>
+
+
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Transaction ID : </td>
+                        <td height="30px" width="40%" class="">@Model.TxnId</td>
+
+
+
+                        <td height="30px" width="20%" class="text-primary">Bonus : </td>
+                        <td height="30px" width="40%" class="text-right text-success">NPR. @Model.BonusAmount</td>
+                    </tr>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Subscriber No. : </td>
+                        <td height="30px" width="40%" class="">@Model.SubscriberNo</td>
+
+                        <td height="30px" width="20%" class="text-primary">Service Charge : </td>
+                        <td height="30px" width="20%" class=" text-right">NPR. @Model.ServiceCharge</td>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Product : </td>
+                        <td height="30px" width="20%" class="">@Model.ProductName</td>
+
+
+
+                        <td height="30" class="text-primary">Reward Point :</td>
+                        <td height="30" class="text-right">@Model.TxnRewardPoint</td>
+                        <!-- <td height="30px" width="20%" class=" text-right"><div class="badge badge-danger">Penalty - 10%</div></td> -->
+                    </tr>
+
+                    <tr>
+                        <td height="30" class="text-primary">Company : </td>
+                        <td height="30">@Model.Company</td> <!--Nepal Doorsanchar Company Limited-->
+
+                        <td height="30px" width="20%" class="text-primary">Status : </td>
+                        <td height="30px" width="20%" class=" text-right">
+                            <div class="badge badge-success">COMPLETE</div>
+                            <!-- <div class="badge badge-danger">FAILED</div> -->
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+
+                        <td height="30px" width="20%" class="text-primary">Remarks : </td>
+                        <td height="30px" width="20%" class=" text-right">@Model.AdminRemarks</td>
+
+                    </tr>
+
+
+
+
+                </table>
+
+                <table width="100%" class="mt-4">
+                    <tr><td height="2" class="bg-gray"></td></tr>
+                </table>
+
+
+                <table width="100%">
+                    <tr>
+                        <td height="120" width="33.333%" valign="bottom"><img src="~/Content/receipt/receipt-ntc/img/logo-bill-cg.png" alt=""></td>
+                        <td height="120" width="33.333%" class="text-right text-darkblue" valign="top"></td>
+                        <td height="120" width="33.333%" class="text-right" valign="bottom">
+                            <p class="p-0 mb-0">......................................</p>
+                            <p class="p-0 mb-0">Authorized Signature</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+            <!-- END -->
+        }
+
+        else if (@Model.CompanyId.Equals("2"))  //NCELL
+        {
+            <!-- START -->
+            <link href="~/Content/receipt/receipt-ncell/css/receipt-ncell.css" rel="stylesheet" />
+
+            <div class="receipt pt-2">
+                <table width="100%">
+                    <tr>
+                        <td width="26%"><img src="~/Content/receipt/receipt-ncell/img/logo-ncell.png" class="logo" alt=""></td>
+                        <td width="44%" class="text-primary"><h1 class="header-title"><strong>Ncell Axiata Limited</strong></h1></td>
+                        <td width="30%"></td>
+                    </tr>
+
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td height="80"><div class="receipt-title text-center position-relative">PAYMENT RECEIPT</div></td>
+                    </tr>
+                </table>
+                <table width="100%" class="billinfo">
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Date &amp; Time : </td>
+                        <td height="30px" width="40%" class="">@Model.CreatedLocalDate</td>
+
+                        <td height="30px" width="20%" class="text-primary">Amount : </td>
+                        <td height="30px" width="40%" class=" text-right">NPR. @Model.Amount</td>
+
+
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Transaction ID : </td>
+                        <td height="30px" width="40%" class="">@Model.TxnId</td>
+
+
+
+                        <td height="30px" width="20%" class="text-primary">Bonus : </td>
+                        <td height="30px" width="40%" class="text-right text-success">NPR. @Model.BonusAmount</td>
+                    </tr>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Subscriber No. : </td>
+                        <td height="30px" width="40%" class="">@Model.SubscriberNo</td>
+
+                        <td height="30px" width="20%" class="text-primary">Service Charge : </td>
+                        <td height="30px" width="20%" class=" text-right">NPR. @Model.ServiceCharge</td>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Product : </td>
+                        <td height="30px" width="20%" class="">@Model.ProductName</td>
+
+
+
+                        <td height="30" class="text-primary">Reward Point :</td>
+                        <td height="30" class="text-right">@Model.TxnRewardPoint</td>
+                        <!-- <td height="30px" width="20%" class=" text-right"><div class="badge badge-danger">Penalty - 10%</div></td> -->
+                    </tr>
+
+                    <tr>
+                        <td height="30" class="text-primary">Company : </td>
+                        <td height="30">@Model.Company</td> <!--Ncell Axiata Limited-->
+
+                        <td height="30px" width="20%" class="text-primary">Status : </td>
+                        <td height="30px" width="20%" class=" text-right">
+                            <div class="badge badge-success">COMPLETE</div>
+                            <!-- <div class="badge badge-danger">FAILED</div> -->
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+
+                        <td height="30px" width="20%" class="text-primary">Remarks : </td>
+                        <td height="30px" width="20%" class=" text-right">@Model.AdminRemarks</td>
+
+                    </tr>
+
+
+
+
+                </table>
+
+                <table width="100%" class="mt-4">
+                    <tr><td height="2" class="bg-gray"></td></tr>
+                </table>
+
+
+                <table width="100%">
+                    <tr>
+                        <td height="120" width="33.333%" valign="bottom"><img src="~/Content/receipt/receipt-ncell/img/logo-bill-cg.png" alt=""></td>
+                        <td height="120" width="33.333%" class="text-right text-darkblue" valign="top"></td>
+                        <td height="120" width="33.333%" class="text-right" valign="bottom">
+                            <p class="p-0 mb-0">......................................</p>
+                            <p class="p-0 mb-0">Authorized Signature</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+            <!-- END -->
+
+        }
+
+        else if (@Model.CompanyId.Equals("3"))  //UTL
+        {
+            <!-- START -->
+            <link href="~/Content/receipt/receipt-utl/css/receipt-utl.css" rel="stylesheet" />
+            <div class="receipt pt-2">
+                <table width="100%">
+                    <tr>
+                        <td width="26%"><img src="~/Content/receipt/receipt-utl/img/logo-utl.png" class="logo" alt=""></td>
+                        <td width="44%" class="text-primary"><h1 class="header-title"><strong>UTL</strong></h1></td>
+                        <td width="30%"></td>
+                    </tr>
+
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td height="80"><div class="receipt-title text-center position-relative">PAYMENT RECEIPT</div></td>
+                    </tr>
+                </table>
+                <table width="100%" class="billinfo">
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Date &amp; Time : </td>
+                        <td height="30px" width="40%" class="">@Model.CreatedLocalDate</td>
+
+                        <td height="30px" width="20%" class="text-primary">Amount : </td>
+                        <td height="30px" width="40%" class=" text-right">NPR. @Model.Amount</td>
+
+
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Transaction ID : </td>
+                        <td height="30px" width="40%" class="">@Model.TxnId</td>
+
+
+
+                        <td height="30px" width="20%" class="text-primary">Bonus : </td>
+                        <td height="30px" width="40%" class="text-right text-success">NPR. @Model.BonusAmount</td>
+                    </tr>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Subscriber No. : </td>
+                        <td height="30px" width="40%" class="">@Model.SubscriberNo</td>
+
+                        <td height="30px" width="20%" class="text-primary">Service Charge : </td>
+                        <td height="30px" width="20%" class=" text-right">NPR. @Model.ServiceCharge</td>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Product : </td>
+                        <td height="30px" width="20%" class="">@Model.ProductName</td>
+
+
+
+                        <td height="30" class="text-primary">Reward Point :</td>
+                        <td height="30" class="text-right">@Model.TxnRewardPoint</td>
+                        <!-- <td height="30px" width="20%" class=" text-right"><div class="badge badge-danger">Penalty - 10%</div></td> -->
+                    </tr>
+
+                    <tr>
+                        <td height="30" class="text-primary">Company : </td>
+                        <td height="30">@Model.Company</td> <!--UTL-->
+
+                        <td height="30px" width="20%" class="text-primary">Status : </td>
+                        <td height="30px" width="20%" class=" text-right">
+                            <div class="badge badge-success">COMPLETE</div>
+                            <!-- <div class="badge badge-danger">FAILED</div> -->
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+
+                        <td height="30px" width="20%" class="text-primary">Remarks : </td>
+                        <td height="30px" width="20%" class=" text-right">@Model.AdminRemarks</td>
+
+                    </tr>
+
+
+
+
+                </table>
+
+                <table width="100%" class="mt-4">
+                    <tr><td height="2" class="bg-gray"></td></tr>
+                </table>
+
+
+                <table width="100%">
+                    <tr>
+                        <td height="120" width="33.333%" valign="bottom"><img src="~/Content/receipt/receipt-utl/img/logo-bill-cg.png" alt=""></td>
+                        <td height="120" width="33.333%" class="text-right text-darkblue" valign="top"></td>
+                        <td height="120" width="33.333%" class="text-right" valign="bottom">
+                            <p class="p-0 mb-0">......................................</p>
+                            <p class="p-0 mb-0">Authorized Signature</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+            <!-- END -->
+
+        }
+
+        else if (@Model.CompanyId.Equals("4"))  //SMARTCELL
+        {
+            <!-- START -->
+            <link href="~/Content/receipt/receipt-smartcell/css/receipt-smartcell.css" rel="stylesheet" />
+            <div class="receipt pt-2">
+                <table width="100%">
+                    <tr>
+                        <td width="26%"><img src="~/Content/receipt/receipt-smartcell/img/logo-smartcell.png" class="logo" alt=""></td>
+                        <td width="44%" class="text-primary"><h1 class="header-title"><strong>SmartCell</strong></h1></td>
+                        <td width="30%"></td>
+                    </tr>
+
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td height="80"><div class="receipt-title text-center position-relative">PAYMENT RECEIPT</div></td>
+                    </tr>
+                </table>
+                <table width="100%" class="billinfo">
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Date &amp; Time : </td>
+                        <td height="30px" width="40%" class="">@Model.CreatedLocalDate</td>
+
+                        <td height="30px" width="20%" class="text-primary">Amount : </td>
+                        <td height="30px" width="40%" class=" text-right">NPR. @Model.Amount</td>
+
+
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Transaction ID : </td>
+                        <td height="30px" width="40%" class="">@Model.TxnId</td>
+
+
+
+                        <td height="30px" width="20%" class="text-primary">Bonus : </td>
+                        <td height="30px" width="40%" class="text-right text-success">NPR. @Model.BonusAmount</td>
+                    </tr>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Subscriber No. : </td>
+                        <td height="30px" width="40%" class="">@Model.SubscriberNo</td>
+
+                        <td height="30px" width="20%" class="text-primary">Service Charge : </td>
+                        <td height="30px" width="20%" class=" text-right">NPR. @Model.ServiceCharge</td>
+                    </tr>
+
+                    <tr>
+                        <td height="30px" width="20%" class="text-primary">Product : </td>
+                        <td height="30px" width="20%" class="">@Model.ProductName</td>
+
+
+
+                        <td height="30" class="text-primary">Reward Point :</td>
+                        <td height="30" class="text-right">@Model.TxnRewardPoint</td>
+                        <!-- <td height="30px" width="20%" class=" text-right"><div class="badge badge-danger">Penalty - 10%</div></td> -->
+                    </tr>
+
+                    <tr>
+                        <td height="30" class="text-primary">Company : </td>
+                        <td height="30">@Model.Company</td> <!--SmartCell-->
+
+                        <td height="30px" width="20%" class="text-primary">Status : </td>
+                        <td height="30px" width="20%" class=" text-right">
+                            <div class="badge badge-success">COMPLETE</div>
+                            <!-- <div class="badge badge-danger">FAILED</div> -->
+                        </td>
+
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+
+                        <td height="30px" width="20%" class="text-primary">Remarks : </td>
+                        <td height="30px" width="20%" class=" text-right">@Model.AdminRemarks</td>
+
+                    </tr>
+
+
+
+
+                </table>
+
+                <table width="100%" class="mt-4">
+                    <tr><td height="2" class="bg-gray"></td></tr>
+                </table>
+
+
+                <table width="100%">
+                    <tr>
+                        <td height="120" width="33.333%" valign="bottom"><img src="~/Content/receipt/receipt-smartcell/img/logo-bill-cg.png" alt=""></td>
+                        <td height="120" width="33.333%" class="text-right text-darkblue" valign="top"></td>
+                        <td height="120" width="33.333%" class="text-right" valign="bottom">
+                            <p class="p-0 mb-0">......................................</p>
+                            <p class="p-0 mb-0">Authorized Signature</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+
+            <!-- END -->
+
+        }
+
+
+        else
+        {
+            <div class="info-card">
+                <div class="info-card-body">
+                    <div class="text-center">
+                        <img src="~/Content/receipt/images/check.png" alt="">
+                    </div>
+                    <br />
+                    <h2>Transaction Complete</h2>
+                    <p>
+                        Your @Model.Company Topup has been <br> succcessfully completed.
+                    </p>
+                    <h2>Rs. @Model.Amount</h2><br>
+                    <table width="100%" class="card-table">
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Date &amp; Time</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.CreatedLocalDate</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Subscriber Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.SubscriberNo</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Amount</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.Amount</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Bonus</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.BonusAmount</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Service Charge</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.ServiceCharge</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Product Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.ProductName</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Company</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.Company</td>
+                        </tr>
+
+                        <tr>
+                            @if (@Session["UserType"].ToString().ToUpper() == "WALLETUSER")
+                            {
+                                <td width="45%" height="30" align="right">Cash Back</td>
+                            }
+                            @if (@Session["UserType"].ToString().ToUpper() != "WALLETUSER")
+                            {
+                                <td width="45%" height="30" align="right">Agent Commission</td>
+                            }
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.AgentCommission</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Transaction Reward Point</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.TxnRewardPoint</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Transaction ID</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.TxnId</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Remarks</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.AdminRemarks</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        }
+
+        <br />
+        <div class="row" style="padding:0px 0px 0px 200px">
+            <a href="@Url.Action("Index", "Home")"><button type="button" class="btn btn-light btn-sm bg-primary"> << Back</button></a>
+            @*<a href="@Url.Action("PrintTransactionResult","Payment",new {area = "Client", @ViewBag.TxnId})" target="_blank" class="btn btn-success btn-sm">Print <i class="icon-floppy-disk ml-2"></i></a>*@
+            @Html.NHyperLink("Print", new { @class = "btn btn-success btn-sm", @target = "_blank" }, "/Client/Payment/ResultPage", "~/Client/Payment/PrintTransactionResult?txnid=" + @Model.TxnId.EncryptParameter(), true, "icon-floppy-disk")
+        </div>
+
+    </div>
+
+</div>
+
+

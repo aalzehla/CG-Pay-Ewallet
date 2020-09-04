@@ -1,0 +1,13 @@
+{
+  "ConnectionString": {
+    "WePay": "data source=202.79.47.32;User id=WePayNepal;password=W3pay@123; Initial Catalog=WePayNepal",
+    "Kishan": "data source=202.79.47.32;User id=KishanUser;password=Kishan@123; Initial Catalog=Kishan",
+    "CGPay": "data source=202.79.47.32;User id=WePayNepal;password=W3pay@123; Initial Catalog=cgpay"
+  },
+  "ApplicationSetting": {
+    "GatewayUrl": "https://gatewaysandbox.nepalpayment.com/payment/index",
+    "ApiUrl": "https://apisandbox.nepalpayment.com/",
+    "GatewayBaseUrl": "https://gatewaysandbox.nepalpayment.com"
+  }
+
+}

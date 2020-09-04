@@ -1,0 +1,71 @@
+﻿@model cgpay.wallet.application.Models.GatewayProductModel
+@{
+    ViewBag.Title = "Gateway Commission";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Gateway", "Manage Gateway");
+    var comType = ViewBag.CommissionType as List<SelectListItem>;
+    var com = Model.CommissionType;
+    }
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    <div class="card-header header-elements-inline">
+        <legend class="card-title text-uppercase font-size-sm font-weight-bold">@Html.Raw(String.IsNullOrEmpty(Model.ProductId) ? "Add New" : "Update") Gateway Commission</legend>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ManageGatewayCommission", "Gateway", FormMethod.Post, new { @role = "form", @id = "Gatewaycommission", enctype = "multipart/form-data" }))
+        {
+            
+        <fieldset>
+            @Html.AntiForgeryToken()
+           @* @Html.HiddenFor(model => model.ProductId)*@
+            @Html.HiddenFor(model => model.GatewayId)
+            @Html.HiddenFor(model => model.IsProduct)
+
+            <div class="mb-3">
+                <div class="row">
+                    @* @Html.NTextBoxFor(model => model.ProductLabel, new { @class = "form-control", autocomplete = "off" }, 3)*@
+                    @Html.NDropDownListFor(model => model.ProductId, new SelectList(ViewBag.servicelist, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                    @Html.NDropDownListFor(model => model.CommissionType, Model.CommissionTypeList, new { @class = "form-control", autocomplete = "off" }, 3)
+                   
+                   @* @Html.NTextBoxFor(model => model.CommissionType, new { @class = "form-control", autocomplete = "off"}, 3)*@
+                    @Html.NTextBoxFor(model => model.CommissionValue, new { @class = "form-control", autocomplete = "off" }, 3)
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-success btn-sm">Save<i class="icon-floppy-disk ml-2"></i></button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </fieldset>
+        } 
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#CommissionValue").on("keypress keyup blur", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>

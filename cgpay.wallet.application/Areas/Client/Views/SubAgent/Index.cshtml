@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Sub Agent List";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="page-header">
+    <div class="page-header-content header-elements-md-inline">
+        <div class="page-title d-flex">
+            <h4><i class=" mr-2"></i> <span class="font-weight-semibold">Agent</span> - @Html.Raw(ViewData["Title"])</h4>
+            <a href="~/Admin/Agent" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+        </div>
+
+        <div class="header-elements d-none py-0 mb-3 mb-md-0">
+            <div class="breadcrumb">
+                <a href="~/Admin/Home/" class="breadcrumb-item"><i class="icon-home2 mr-2"></i> Home</a>
+                <span class="breadcrumb-item active">@Html.Raw(ViewData["Title"])</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" listing-container>
+    @Html.Raw(ViewData["grid"].ToString())
+</div>
+
+<div class="modal fade" id="MyModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="ModalTitle"></h4>
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+            </div>
+            <div class="modal-body">
+                <form id="form">
+
+                    @Html.Partial("ExtendCreditLimit")
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showpopupmodel(AgentId) {
+            var url = "/Client/SubAgent/ExtendCreditLimit?AgentId=" + AgentId;
+            $("#ModalTitle").html("Extend Credit Limit");
+            $("#MyModal").modal();
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function (data) {
+                    var obj = JSON.parse(data);
+                    /*debugger*/;
+                    $("#AgentId").val(obj.AgentId);
+                    $("#AgentName").val(obj.AgentName);
+                    $("#AgentCurrentCreditLimit").val(obj.AgentCurrentCreditLimit);
+                }
+            })
+        }
+    $("#AddCreditLimit").click(function () {
+        var parentid = $('#ParentId').val();
+            var data = $("#SubmitForm").serialize();
+            data+= "& __RequestVerificationToken=" + $('input[name="__RequestVerificationToken"]').val()
+
+            $.ajax({
+                type: "Post",
+                url: "/Client/SubAgent/ExtendCreditLimit",
+                data:data,
+                success: function (result) {
+
+                    window.location.href = "/Client/SubAgent/Index?agentid="+parentid;
+
+                }
+            })
+    })
+      $('.icon-lock2').parent().on('click', function e() {
+
+        let i = $(this).attr("data-val");
+        let tId = $(this).closest("tr").attr("id");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "AgentId:'" + i + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Client/SubAgent/DisablesubAgent','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Block this Agent?", funcText);
+    })
+    $('.icon-unlocked2').parent().on('click', function e() {
+        /*debugger*/;
+        let i = $(this).attr("data-val");
+        jsonData = "{" +
+            "__RequestVerificationToken: '" + $('input[name="__RequestVerificationToken"]').val() + "'," +
+            "AgentId:'" + i + "'}";
+        var funcText = "CallAjaxDbResponse(" + jsonData + ",'/Client/SubAgent/EnablesubAgent','POST',false,'window.location.reload();')";
+        showConfirmationModal("Are you sure you want to Un-Block this Agent?", funcText);
+    })
+
+</script>
+
+

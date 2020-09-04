@@ -1,0 +1,60 @@
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="css/qrboard.css" type="text/css">
+
+    <title>Merchant QR Code</title>
+  </head>
+  <body>
+    
+    <div id="printMe" class="qr-board float-left">
+    	<div class="board-header">
+    		<img src="img/cg-logo.png" alt="">
+    		<span class="sub-title">Accepted Here</span>
+    	</div>
+
+    	<div class="qr-box">
+    		<img src="img/qr.jpg" alt="" class="qr-code">
+    	</div>
+
+    	<div class="merchant-info">
+    		<div class="merchant-title">Kathmandu Grocery Store</div>
+    		<div class="merchant-detail text-left float-left pl-4">Merchant Code : #CGPAWG</div>
+    		<div class="merchant-detail text-right float-right pr-4">Terminal ID : #023650</div>
+    	</div>
+    	<footer>
+    		<ul>
+    			<li class="mb-2"><span>01</span>Open your CG Pay app and tap QR icon</li>
+    			<li><span>02</span>Bring your phone near to the QR code above.</li>
+    		</ul>
+    	</footer>
+    </div>
+
+    <input type="button" value="Print" class="d-print-none btn btn-primary ml-5 float-left" onclick="javascript:printDiv('printMe')" />
+
+	 <script>
+		function printDiv(divName){
+			var printContents = document.getElementById(divName).innerHTML;
+			var originalContents = document.body.innerHTML;
+
+			// document.body.innerHTML = printContents;
+
+			window.print();
+
+			document.body.innerHTML = originalContents;
+
+		}
+	</script>
+
+    
+  </body>
+</html>

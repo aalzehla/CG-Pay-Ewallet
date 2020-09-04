@@ -1,0 +1,92 @@
+﻿
+@model cgpay.wallet.application.Models.KycFilterModel
+
+@{
+    ViewBag.Title = "KYC ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Admin/KYC/Index", "List", ControllerDisplayName: "KYC");}
+
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+<div class="card">
+    @using (Html.BeginForm("Index", "KYC", new { }, FormMethod.Post, new { @id = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="card-body">
+            <div class="row">
+                @Html.NDropDownListFor(model => model.KycStatus, new SelectList(Model.KycStatusList, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.MobileNumber, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @onkeypress = "return isNumber(event)" }, 3)
+                @Html.NTextBoxFor(model => model.Email, new { @class = "form-control", autocomplete = "off" }, 3)
+            </div>
+            <div class="row">
+                @Html.NTextBoxFor(model => model.FromDate, new { @class = "form-control", placeholder = "From Date", autocomplete = "off" }, 3)
+                @Html.NTextBoxFor(model => model.ToDate, new { @class = "form-control", placeholder = "To Date", autocomplete = "off" }, 3)
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<div>
+    @if (@ViewBag.EmptyMessage == "True")
+    {
+        <div class="alert bg-info alert-styled-left alert-dismissible">
+            <strong>No Data Found </strong>
+        </div>
+    }
+</div>
+<div>
+    @if (ViewData["grid"] != null)
+    {
+        @Html.Raw(ViewData["grid"].ToString());
+    }
+    @*@Html.Raw(ViewData["grid"].ToString())*@
+</div>
+
+<script>
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    $(document).ready(function () {
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        $("#FromDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+
+        $("#ToDate").datepicker({
+            dateFormat: dateFormat,
+            maxDate: new Date,
+            changeMonth: true,
+            changeYear: true,
+            autoSize: true
+        }).attr('readonly', 'readonly');
+    });
+</script>
+

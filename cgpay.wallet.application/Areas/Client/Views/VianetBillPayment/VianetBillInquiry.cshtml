@@ -1,0 +1,67 @@
+﻿
+
+
+@model cgpay.wallet.application.Models.Utilities.Vianet.VianetBillInquiryModel
+
+@{
+    ViewBag.Title = "Vianet Bill Inquiry";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Client/VianetBillPayment/VianetBillInquiry", "Vianet Bill Inquiry", ControllerDisplayName: "VianetBillPayment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("VianetBillInquiry", "VianetBillPayment", new { }, FormMethod.Post, new { @role = "form", @id = "VianetBillInquiry" }))
+        {
+            @Html.AntiForgeryToken()
+            <fieldset class="mb-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        @Html.NTextBoxFor(model => model.VianetCustomerId, new { @class = "form-control", autocomplete = "off",@placeholder="Customer Id" }, 1)
+
+                    </div>
+                    <div class="col-md-3">
+                        <div><img id="LogoView" src="@Model.ProductLogo" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                    </div>
+                </div>
+                <div class="row ml-2">
+                    <button type="submit" class="btn btn-success btn-sm" id="proceed"> Proceed <i class="icon-play3"></i></button>
+
+                </div>
+                <br />
+                @Html.Raw(ViewData["trangrid"].ToString())
+            </fieldset>
+        }
+    </div>
+</div>
+<script>
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    function alphanumericdot(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        debugger;
+        if ((charCode >= 48 && charCode <= 57) || (charCode == 46) || (charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode < 90)) {
+            return true;
+        }
+        return false;
+    }
+
+</script>

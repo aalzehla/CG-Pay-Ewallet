@@ -1,0 +1,74 @@
+﻿@model cgpay.wallet.application.Models.CardModel
+
+@{
+    ViewBag.Title = "AddCard";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Card", "Add Card");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("AddCard", "Card", new { }, FormMethod.Post, new { @role = "form", @id = "AddCard" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(Model => Model.AgentId)
+            @Html.HiddenFor(Model => Model.UserId)
+            @Html.HiddenFor(Model => Model.UserName)
+            <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        @*@Html.NSwitchBoxFor(model => model.Type, Model.Type == "Y" ? true : false, "Y", 1)*@
+                        @Html.NTextBoxFor(model => model.MobileNo, new { @class = "form-control", autocomplete = "off", @maxlength = "10", @placeholder = "Mobile(10 digits)",@onkeypress = "return isNumber(event)" }, 1)
+                        @Html.NTextBoxFor(model => model.Email, new { @class = "form-control", autocomplete = "off",@placeholder = "myemail@email.com" }, 1)
+                        @Html.NDropDownListFor(model => model.CardType, Model.CardTypeList, new { @class = "form-control", autocomplete = "off" }, 1)
+                        @*@Html.NTextBoxFor(model => model.IssueDate, new { @class = "form-control", autocomplete = "off" }, 1)*@
+                    </div>
+                    <div class="col-md-6">&nbsp;</div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-success btn-sm" id="btnSubmit">Create <i class="icon-floppy-disk ml-2"></i></button>
+                </div>
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+<script>
+    var yearRangeDOB = "1944:+1"; //"1944:+0";
+    var yearRangeExpire = "1944:+20"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    $(document).ready(function () {
+        $("#IssueDate").datepicker({
+            dateFormat: dateFormat,
+            defaultDate: new Date(),
+            changeMonth: true,
+            changeYear: true,
+            yearRange: yearRangeDOB,
+            showAnim: "slideDown",
+            autoSize: true
+        }).attr('readonly', 'readonly');
+    });
+</script>

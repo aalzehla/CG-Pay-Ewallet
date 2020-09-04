@@ -1,0 +1,64 @@
+﻿@model cgpay.wallet.application.Models.Utilities.NwscBillInquiryModel
+
+@{
+    ViewBag.Title = "NWSC Bill Inquiry";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("/Client/nwscbillpayment/nwscBillInquiry", "Nwsc Bill Inquiry", ControllerDisplayName: "Nwsc Bill Payment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("NwscBillInquiry", "Nwscbillpayment", new { }, FormMethod.Post, new { @role = "form", @id = "NeabillInquiry" }))
+        {
+            @Html.AntiForgeryToken()
+        <fieldset class="mb-6">
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.NTextBoxFor(model => model.CustomerId, new { @class = "form-control", autocomplete = "off", @placeholder = "Cusstomer Id", @onkeypress = "return isNumber(event)" }, 1)
+                    @Html.NDropDownListFor(model => model.OfficeCode, new SelectList(ViewBag.branchlist, "Value", "Text"), new { @class = "form-control", autocomplete = "off" }, 1)
+
+                </div>
+                <div class="col-md-3">
+                    <div><img id="LogoView" src="@Model.ProductLogo" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                </div>
+            </div>
+            <div class="row ml-2">
+                <button type="submit" class="btn btn-success btn-sm" id="proceed"> Proceed <i class="icon-play3"></i></button>
+
+            </div>
+            
+        </fieldset>
+        }
+    </div>
+</div>
+<script>
+     function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+
+    function alphanumericdot(evt) {
+         evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        debugger;
+          if ((charCode >= 48 && charCode <= 57) || (charCode == 46) || (charCode >= 97 && charCode <= 122) || (charCode >= 65 && charCode < 90)) {
+                return true;
+            }
+        return false;
+    }
+    
+</script>

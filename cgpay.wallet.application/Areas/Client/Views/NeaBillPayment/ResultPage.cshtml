@@ -1,0 +1,100 @@
+﻿@model cgpay.wallet.application.Models.Utilities.NeaBillPaymentResponseModel
+
+@{
+    ViewBag.Title = "Nea Bill Payment";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+@{var BreadCum = cgpay.wallet.application.Library.ApplicationUtilities.GenerateBreadcum("Client/Payment/NeaBillInquiry", "Nea Bill Payment", ControllerDisplayName: "Nea Bill Payment");}
+@section BreadCum{
+    <style>
+        .pull-right {
+            float: right;
+            margin-left: auto;
+        }
+    </style>
+    @Html.Raw(BreadCum)
+}
+
+<div class="card">
+    <div class="card-body">
+        <fieldset class="mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <table class="table table-borderless table-hover">
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Customer Name</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="CustomerName">@Html.DisplayFor(Model => Model.CustomerName)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Office Name</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.OfficeName)
+                                <td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Consumer Id</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left" id="CustomerId">@Html.DisplayFor(Model => Model.ConsumerId)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">SC No</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.ScNo)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold" width="30%" height="30" align="right">Receipt No</td>
+                                <td width="10%" height="30"></td>
+                                <td width="60%" height="30" align="left">@Html.DisplayFor(Model => Model.ReceiptNo)</td>
+                            </tr>
+                           
+                        </table>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Due Bill</td>
+                                    <td>Payable Amount</td>
+                                    <td>Bill Date</td>
+                                    <td>Days</td>
+                                    <td>Bill Amount</td>
+                                    <td>Status</td>
+                                    <td>Paid Amount</td>
+                                    <td>Advance Paid</td>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model.BillDetail)
+                            {
+                                <tr>
+                                    <td>@item.DueBillOf</td>
+                                    <td>@item.PayableAmount</td>
+                                    <td>@item.BillDate</td>
+                                    <td>@item.NoOfDays</td>
+                                    <td>@item.BillAmount</td>
+                                    <td>@item.Status</td>
+                                    <td>@item.PaidAmt</td>
+                                    <td>@item.AdvancePaid</td>
+                                </tr>
+                            }
+                        </table>
+                        
+                    </div>
+
+                    <div class="col-md-4">
+                        <div><img id="LogoView" height="200" width="200" style="border: solid; text-align: center;" /></div>
+                    </div>
+                    <div class="col-md-2">&nbsp;</div>
+                </div>
+
+                <div class="row ml-2" id="model-info-button">
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal_backdrop" id="ConfirmButton">Confirm <i class="icon-play3"></i></button>
+
+                </div>
+               
+            </fieldset>
+
+        
+    </div>
+</div>

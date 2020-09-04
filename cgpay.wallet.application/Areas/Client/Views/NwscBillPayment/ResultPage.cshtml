@@ -1,0 +1,135 @@
+﻿@model cgpay.wallet.application.Models.DynamicReportModel
+@{
+    ViewBag.Title = "ResultPage";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/receipt/css/receipt.css" rel="stylesheet" />
+<div class="card">
+    <div class="card-body">
+        <div>
+            <div class="info-card">
+                <div class="info-card-body">
+                    <div class="text-center">
+                        <img src="~/Content/receipt/images/check.png" alt="">
+                        @*<svg height="40pt" viewBox="0 0 512 512" width="40pt" xmlns="http://www.w3.org/2000/svg"><path d="m256 0c-141.164062 0-256 114.835938-256 256s114.835938 256 256 256 256-114.835938 256-256-114.835938-256-256-256zm0 0" fill="#00ab4e" /><path d="m385.75 201.75-138.667969 138.664062c-4.160156 4.160157-9.621093 6.253907-15.082031 6.253907s-10.921875-2.09375-15.082031-6.253907l-69.332031-69.332031c-8.34375-8.339843-8.34375-21.824219 0-30.164062 8.339843-8.34375 21.820312-8.34375 30.164062 0l54.25 54.25 123.585938-123.582031c8.339843-8.34375 21.820312-8.34375 30.164062 0 8.339844 8.339843 8.339844 21.820312 0 30.164062zm0 0" fill="#fafafa" /></svg>*@
+                    </div>
+                    <br />
+                    <h2>Transaction Complete</h2>
+                    <p>
+                        Your @Model.Company Topup has been <br> succcessfully completed.
+                    </p>
+                    <h2>Rs. @Model.Amount</h2><br>
+                    <table width="100%" class="card-table">
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Date &amp; Time</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.CreatedLocalDate</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Subscriber Number</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.SubscriberNo</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Amount</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.Amount</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Bonus</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.BonusAmount</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Service Charge</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.ServiceCharge</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Product Name</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.ProductName</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Company</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.Company</td>
+                        </tr>
+
+
+                        @*<tr>
+                                <td width="45%" height="30" align="right">Company ID</td>
+                                <td width="10%" height="30"></td>
+                                <td width="45%" height="30" align="left">@Model.CompanyId</td>
+                            </tr>*@
+
+
+                        @*<tr>
+                                <td width="45%" height="30" align="right">Created By</td>
+                                <td width="10%" height="30"></td>
+                                <td width="45%" height="30" align="left">@Model.CreatedBy</td>
+                            </tr>*@
+
+
+                        <tr>
+                            @if (@Session["UserType"].ToString().ToUpper() == "WALLETUSER")
+                            {
+                                <td width="45%" height="30" align="right">Cash Back</td>
+                            }
+                            @if (@Session["UserType"].ToString().ToUpper() != "WALLETUSER")
+                            {
+                                <td width="45%" height="30" align="right">Agent Commission</td>
+                            }
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">NPR. @Model.AgentCommission</td>
+                        </tr>
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Transaction Reward Point</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.TxnRewardPoint</td>
+                        </tr>
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Transaction ID</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.TxnId</td>
+                        </tr>
+
+                        @*<tr>
+                                <td width="45%" height="30" align="right">Agent ID</td>
+                                <td width="10%" height="30"></td>
+                                <td width="45%" height="30" align="left">@Model.AgentId</td>
+                            </tr>*@
+
+
+                        <tr>
+                            <td width="45%" height="30" align="right">Remarks</td>
+                            <td width="10%" height="30"></td>
+                            <td width="45%" height="30" align="left">@Model.AdminRemarks</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <br />
+            <div class="row" style="padding:0px 0px 0px 200px">
+                <a href="@Url.Action("Index", "Home")"><button type="button" class="btn btn-light btn-sm bg-primary"> << Back</button></a>
+                <a href="@Url.Action("PrintTransactionResult","Payment",new {area = "Client", @ViewBag.TxnId})" target="_blank" class="btn btn-success btn-sm">Print <i class="icon-floppy-disk ml-2"></i></a>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

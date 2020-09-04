@@ -1,0 +1,218 @@
+﻿@model IEnumerable<cgpay.wallet.application.Models.ServicesModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Client/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        @if (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "merchant" )
+        {
+            if( ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "agent" || ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() != "sub-agent")
+            {
+
+                if (ApplicationUtilities.GetSessionValue("KycStatus").ToString() == "p")
+                {
+                    <div class="alert alert-info alert-styled-left alert-dismissible">Your KYC is not verified.</div>
+                }
+                else if (ApplicationUtilities.GetSessionValue("KycStatus").ToString() == "n")
+                {
+                    <div class="alert alert-info alert-styled-left alert-dismissible">It looks like you have not submitted KYC form !!</div>
+                }
+                else if (ApplicationUtilities.GetSessionValue("KycStatus").ToString() == "r")
+                {
+                    <div class="alert alert-info alert-styled-left alert-dismissible">Your KYC has been rejected. Please submit again.</div>
+                }
+            }
+
+
+            int i = 1;
+            //var totalGroup = Model.OrderByDescending(x => x.ProductCategory).Where(x => x.Status == "Y").GroupBy(x => x.ProductCategory).Distinct();
+            var totalGroup = Model.Where(x => x.Status == "Y").GroupBy(x => x.ProductCategory).Distinct();
+
+
+
+            foreach (var CatagoryLabel in totalGroup)
+            {
+                <label style="position: center;font-weight: bold; font-size: 120%">@CatagoryLabel.Key</label>
+                <div class="row">
+                    @foreach (var item in Model.Where(x => x.ProductCategory == @CatagoryLabel.Key && x.Status.ToString() == "Y"))
+                    {
+                        if (item.Status.ToString() == "Y")
+                        {
+                            <div class="col-md-2 fix-service-layout">
+                                <a href="@item.ClientPmtUrl">
+                                    @*<input type="checkbox" id=@item.ProductId @if (item.Status.ToString() == "Y") { @Html.Raw("checked") } />*@
+                                    <label class="list-item-frame" for=@item.ProductId style="position: center">
+                                        <img src="/Content/assets/images/service logos/@item.ProductLogo" style="float: center;" /><br>
+                                        <label class="list-item-text">
+                                            <div class="produt-label"></div>
+                                            @item.ProductLabel
+                                            <div class="commission">
+                                                @if (item.CommissionType.ToUpper() == "P")
+                                                {
+                                                    @item.CommissionValue @Html.Raw("%")
+                                                }
+                                                @if (item.CommissionType.ToUpper() == "F")
+                                                {
+                                                    @Html.Raw("Rs.") @item.CommissionValue
+                                                }
+                                            </div>
+
+                                        </label>
+                                    </label>
+                                </a>
+                            </div>
+                            if (i % 6 == 0)
+                            {
+                                i = 0;
+                                <br />
+                            }
+                            i = i + 1;
+                        }
+                    }
+                </div>
+            }
+        }
+
+        else
+        {
+            <div style="width:1000px">
+                <canvas id="chart1"></canvas>
+            </div>
+        }
+    </div>
+</div>
+@if (ApplicationUtilities.GetSessionValue("UserType").ToString().ToLower() == "merchant")
+    {
+        <script>
+            var RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                    $(document).ready(function() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetDailyTransactionChart", "Merchant")',
+                        dataType: 'json',
+                        data: { '__RequestVerificationToken' : RequestVerificationToken},
+                        success: function(data) {
+                        var chartDataLabel = [];
+                        var chartData = [];
+                        var txnDate;
+                        const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+                        var xlabel;
+
+                        myJSON = JSON.parse(data)
+
+                            myJSON.forEach(element => {
+                                txnDate = '' + element.TransactionYear + "-" + element.TransactionMonth + '-' + element.TransactionDay + '';
+                                chartDataLabel.push(element.TransactionDay);
+                                chartData.push({ x: txnDate, y: element.TotalAmount? parseInt(element.TotalAmount) : 0 });
+                        //chartData.push(element.TotalAmount);
+                        xlabel = monthNames[element.TransactionMonth - 1]
+                            });
+
+
+                    getDailyMerchantTxnChart(chartDataLabel, chartData, xlabel);
+
+                },
+                        error: function(ex) {
+                    debugger;
+                }
+            });
+        });
+
+        function getDailyMerchantTxnChart(label, data, xlabel) {
+
+            var ctx = document.getElementById('chart1').getContext('2d');
+            ctx.canvas.width = 1000;
+            ctx.canvas.height = 300;
+
+
+            var cfg = {
+                data: {
+            labels: [1, 2, 3, 4, 5, 6, 7, 8],
+                    datasets: [{
+                label: '',
+                        backgroundColor: '#fff',
+                        borderColor: 'red',
+                        data: data,
+                        type: 'line',
+                        pointRadius: 0,
+                        fill: false,
+                        lineTension: 0,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+            animation: {
+                duration: 0
+                            },
+                    scales: {
+                xAxes: [{
+                    type: 'time',
+                            position: 'bottom',
+                            time: {
+                        unit: 'day',
+                                tooltipFormat: 'DD/MM/YYYY',
+                                displayFormats: {
+                                'day': 'DD'
+                                }
+                        },
+                            distribution: 'series',
+                            scaleLabel: {
+                        display: true,
+                                labelString: xlabel
+                            }
+
+                    }],
+                        yAxes: [{
+                    gridLines: {
+                        drawBorder: false
+                                    },
+                            scaleLabel: {
+                        display: true,
+                                labelString: 'Amount (in Rs)'
+                            }
+                    }]
+                    },
+                    tooltips: {
+                intersect: false,
+                        mode: 'index',
+                        callbacks: {
+                    label: function(tooltipItem, myData) {
+                            var label = myData.datasets[tooltipItem.datasetIndex].label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += parseFloat(tooltipItem.value).toFixed(2);
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        var chart = new Chart(ctx, cfg);
+    }
+        </script>
+    }
+    <script>
+
+        function Savestatus() {
+            var list = new Array();
+            /*debugger*/
+            ;
+            var i = 0;
+            $("input").each(function (index) {
+
+                if ($(this).is("label")) {
+                    list.push($("input")[i].id);
+                }
+
+                i++;
+            });
+        }
+    </script>
+
+
